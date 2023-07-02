@@ -9,7 +9,7 @@ __pycache__/
 # Distribution / packaging
 data
 /data
-DS_Store
+.DS_Store
 .idea
 .Python
 build/
