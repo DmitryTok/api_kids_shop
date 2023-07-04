@@ -15,16 +15,16 @@
 
 ### 1) Create .env file and fill with required data
 ```
-SECRET_KEY=django-insecure--n*k=k^euc4t_*2!=0n*fo1k%slbmzu)#o(a7qjz(c*cz8(&ly
-DB_ENGINE=django.db.backends.postgresql
-DB_NAME=kids_shop
-DB_USER=dmitry_tok
-DB_PASSWORD=postgres
-DB_HOST=db
-DB_PORT=5432
-POSTGRES_USER=dmitry_tok
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=kids_shop
+SECRET_KEY=<SEKRET_KEY>
+DB_ENGINE=<DB ENGINE postgres, mysql ...>
+DB_NAME=<database name>
+DB_USER=<database user>
+DB_PASSWORD=<database password>
+DB_HOST=<database host>
+DB_PORT=<database port>
+POSTGRES_USER=<database user>
+POSTGRES_PASSWORD=<database password>
+POSTGRES_DB=<database name>
 ```
 ***
 ### 2) In folder api_kids_shop run the docker-compose file with command
@@ -32,7 +32,7 @@ POSTGRES_DB=kids_shop
 docker-compose up -d db
 ```
 Output example
-```
+```dockerfile
 [+] Building 0.0s (0/0)                                                                                                                                                
 [+] Running 3/3
  ✔ Network api_kids_shop_mynetwork  Created                                                                                                                       0.0s 
@@ -40,12 +40,23 @@ Output example
  ✔ Container api_kids_shop-db-1     Started 
 ```
 ***
-### 3) Next command prepares a makemigrations file for our new model, or creates a new migrations file for any changes if the models have been modified
+### 3) Run web container
+```
+docker-compose up -d web
+```
+Output example
+```dockerfile
+[+] Building 0.0s (0/0)                                                                                                                                                
+[+] Running 2/2
+ ✔ Container api_kids_shop-db-1   Running                                                                                                                         0.0s 
+ ✔ Container api_kids_shop-web-1  Started 
+```
+### 4) Next command prepares a makemigrations file for our new model, or creates a new migrations file for any changes if the models have been modified
 ```
 docker-compose run web python manage.py makemigrations
 ```
 Output example
-```
+```dockerfile
 [+] Building 0.0s (0/0)                                                                                                                                                
 [+] Creating 1/0
  ✔ Container api_kids_shop-db-1  Running                                                                                                                          0.0s 
@@ -55,12 +66,12 @@ Migrations for 'users':
     - Alter field username on customuser
 ```
 ***
-### 4) Create tables and rows in database with command
+### 5) Create tables and rows in database with command
 ```
 docker-compose run web python manage.py migrate
 ```
 Output example
-```
+```dockerfile
 [+] Building 0.0s (0/0)                                                                                                                                                
 [+] Creating 1/0
  ✔ Container api_kids_shop-db-1  Running                                                                                                                          0.0s 
@@ -93,12 +104,26 @@ Running migrations:
   Applying users.0002_alter_customuser_username... OK
 ```
 ***
-### Finally, run the container with command
+### 6) Load data to database(not required)
+```
+docker-compose run web python manage.py load_data data/goods.csv
+```
+Output example
+```dockerfile
+[+] Building 0.0s (0/0)                                                                                                                                                
+[+] Creating 1/0
+ ✔ Container api_kids_shop-db-1  Running                                                                                                                          0.0s 
+[+] Building 0.0s (0/0)                                                                                                                                                
+2023-07-04 11:23:38,629 - INFO - kids_shop.logger - Starting to upload data from data/goods.csv to the database
+2023-07-04 11:23:38,666 - INFO - kids_shop.logger - Objects created: 20
+2023-07-04 11:23:38,666 - INFO - kids_shop.logger - Data has been uploaded successfully
+```
+### 7) Final command to look on all request urls and status codes
 ```
 docker-compose up
 ```
 Output example
-```
+```dockerfile
 [+] Building 0.0s (0/0)                                                                                                                                                
 [+] Running 2/0
  ✔ Container api_kids_shop-db-1   Running                                                                                                                         0.0s 
@@ -108,12 +133,13 @@ api_kids_shop-web-1  | Watching for file changes with StatReloader
 api_kids_shop-web-1  | Performing system checks...
 api_kids_shop-web-1  | 
 api_kids_shop-web-1  | System check identified no issues (0 silenced).
-api_kids_shop-web-1  | July 02, 2023 - 05:30:47
+api_kids_shop-web-1  | July 04, 2023 - 11:43:26
 api_kids_shop-web-1  | Django version 4.2.2, using settings 'kids_shop.settings'
 api_kids_shop-web-1  | Starting development server at http://0.0.0.0:8000/
 api_kids_shop-web-1  | Quit the server with CONTROL-C.
+
 ```
-### After creating a container application wil be available
+### After all application wil be available
 
 * http://localhost:8000/api/schema/swagger-ui/
 
@@ -127,21 +153,20 @@ api_kids_shop-web-1  | Quit the server with CONTROL-C.
 ctrl + C
 ```
 Output example
-```
-^CGracefully stopping... (press Ctrl+C again to force)
+```dockerfile
 Aborting on container exit...
 [+] Stopping 2/2
  ✔ Container api_kids_shop-web-1  Stopped                                                                                                                         0.2s 
  ✔ Container api_kids_shop-db-1   Stopped                                                                                                                         0.2s 
 canceled
+make: *** [up] Error 130
 ```
-
-#### To delete container
+### To delete container
 ```
 docker-compose down -v
 ```
 Output example
-```
+```dockerfile
 [+] Running 4/0
  ✔ Container api_kids_shop-web-1    Removed                                                                                                                       0.0s 
  ✔ Container api_kids_shop-db-1     Removed                                                                                                                       0.0s 
@@ -149,11 +174,11 @@ Output example
  ✔ Network api_kids_shop_mynetwork  Removed
 ```
 ***
-## Project author:
+### Project author:
 * https://www.linkedin.com/in/dmitry-tokariev/
 * Email: moon0939110824@gmail.com
 ***
-## Technology
+### Technology
 
 - Python 3
 - Django REST Framework

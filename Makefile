@@ -1,5 +1,5 @@
 .PHONY: up
-up: migrate
+up: superuser
 	docker-compose up
 
 .PHONY: close_docker-compose_file
@@ -16,6 +16,8 @@ makemigrations: db
 migrate: makemigrations
 	docker-compose run web python manage.py migrate
 
-.PHONY: superuser
-superuser: migrate
+loaddata: migrate
+	docker-compose run web python manage.py load_data data/goods.csv
+
+superuser: loaddata
 	docker-compose run web python manage.py createsuperuser
