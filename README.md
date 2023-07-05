@@ -25,6 +25,8 @@ DB_PORT=<database port>
 POSTGRES_USER=<database user>
 POSTGRES_PASSWORD=<database password>
 POSTGRES_DB=<database name>
+GET_EMAIL_HOST_USER=<your@email.com>
+GET_EMAIL_HOST_PASSWORD=<tour_password>
 ```
 ***
 ### 2) In folder api_kids_shop run the docker-compose file with command
@@ -32,7 +34,7 @@ POSTGRES_DB=<database name>
 docker-compose up -d db
 ```
 Output example
-```dockerfile
+```
 [+] Building 0.0s (0/0)                                                                                                                                                
 [+] Running 3/3
  ✔ Network api_kids_shop_mynetwork  Created                                                                                                                       0.0s 
@@ -45,7 +47,7 @@ Output example
 docker-compose up -d web
 ```
 Output example
-```dockerfile
+```
 [+] Building 0.0s (0/0)                                                                                                                                                
 [+] Running 2/2
  ✔ Container api_kids_shop-db-1   Running                                                                                                                         0.0s 
@@ -56,7 +58,7 @@ Output example
 docker-compose run web python manage.py makemigrations
 ```
 Output example
-```dockerfile
+```
 [+] Building 0.0s (0/0)                                                                                                                                                
 [+] Creating 1/0
  ✔ Container api_kids_shop-db-1  Running                                                                                                                          0.0s 
@@ -71,7 +73,7 @@ Migrations for 'users':
 docker-compose run web python manage.py migrate
 ```
 Output example
-```dockerfile
+```
 [+] Building 0.0s (0/0)                                                                                                                                                
 [+] Creating 1/0
  ✔ Container api_kids_shop-db-1  Running                                                                                                                          0.0s 
@@ -105,11 +107,12 @@ Running migrations:
 ```
 ***
 ### 6) Load data to database(not required)
+Create a folder 'data' and put inside your file
 ```
 docker-compose run web python manage.py load_data data/goods.csv
 ```
 Output example
-```dockerfile
+```
 [+] Building 0.0s (0/0)                                                                                                                                                
 [+] Creating 1/0
  ✔ Container api_kids_shop-db-1  Running                                                                                                                          0.0s 
@@ -123,7 +126,7 @@ Output example
 docker-compose up
 ```
 Output example
-```dockerfile
+```
 [+] Building 0.0s (0/0)                                                                                                                                                
 [+] Running 2/0
  ✔ Container api_kids_shop-db-1   Running                                                                                                                         0.0s 
@@ -153,7 +156,7 @@ api_kids_shop-web-1  | Quit the server with CONTROL-C.
 ctrl + C
 ```
 Output example
-```dockerfile
+```
 Aborting on container exit...
 [+] Stopping 2/2
  ✔ Container api_kids_shop-web-1  Stopped                                                                                                                         0.2s 
@@ -166,7 +169,7 @@ make: *** [up] Error 130
 docker-compose down -v
 ```
 Output example
-```dockerfile
+```
 [+] Running 4/0
  ✔ Container api_kids_shop-web-1    Removed                                                                                                                       0.0s 
  ✔ Container api_kids_shop-db-1     Removed                                                                                                                       0.0s 
