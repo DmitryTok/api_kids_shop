@@ -164,11 +164,20 @@ Aborting on container exit...
 canceled
 make: *** [up] Error 130
 ```
+### To stop container
+```
+docker-compose stop
+```
+Output example
+```
+[+] Stopping 2/0
+ ✔ Container api_kids_shop-web-1  Stopped                                                                                                                         0.0s 
+ ✔ Container api_kids_shop-db-1   Stopped 
+```
 ### To delete container
 ```
 docker-compose down -v
 ```
-Output example
 ```
 [+] Running 4/0
  ✔ Container api_kids_shop-web-1    Removed                                                                                                                       0.0s 

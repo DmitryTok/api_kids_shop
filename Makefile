@@ -4,7 +4,7 @@ up: superuser
 
 .PHONY: close_docker-compose_file
 down:
-	docker-compose down -v
+	docker-compose stop
 
 .PHONY: db
 db:
