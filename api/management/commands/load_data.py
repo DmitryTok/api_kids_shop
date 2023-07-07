@@ -29,6 +29,5 @@ class Command(BaseCommand):
                     price=item['price'],
                     male=male
                 )
-
         logger.info(f'Objects created: {counter}')
         logger.info('Data has been uploaded successfully')

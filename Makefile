@@ -3,7 +3,7 @@ up: superuser
 	docker-compose up
 
 .PHONY: close_docker-compose_file
-down:
+stop:
 	docker-compose stop
 
 .PHONY: db
@@ -21,3 +21,7 @@ loaddata: migrate
 
 superuser: loaddata
 	docker-compose run web python manage.py createsuperuser
+
+.PHONY: run
+run:
+	docker-compose up
