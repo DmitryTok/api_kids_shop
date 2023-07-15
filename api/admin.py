@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from api.models import Category, Picture, Product, Section
+from api.models import Category, Favorite, Picture, Product, Section, ShoppingCart
 
 
 @admin.register(Category)
@@ -26,6 +26,20 @@ class ProductImage(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'price')
-    search_fields = ('id', 'name', 'description', 'price')
-    list_filter = ('id', 'name', 'description', 'price')
+    list_display = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male')
+    search_fields = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male')
+    list_filter = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male')
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'product')
+    search_fields = ('id', 'user', 'product')
+    list_filter = ('id', 'user', 'product')
+
+
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'product')
+    search_fields = ('id', 'user', 'product')
+    list_filter = ('id', 'user', 'product')

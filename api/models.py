@@ -1,6 +1,8 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 
+from users.models import CustomUser
+
 
 class Section(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -33,6 +35,8 @@ class Product(models.Model):
     description = models.CharField(max_length=2000)
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
+    size = models.FloatField(null=True, blank=True)
+    color = models.CharField(null=True, blank=True)
     male = models.BooleanField(default=True)
 
     def __str__(self):
@@ -49,3 +53,45 @@ class Picture(models.Model):
 
     def __str__(self):
         return f'{self.product}: {self.product_image}'
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('user', 'product'), name='unique_favorite_product'
+            )
+        ]
+
+    def __str__(self):
+        return f'{self.user}: {self.product}'
+
+
+class ShoppingCart(models.Model):
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('user', 'product'), name='unique_shopping_cart'
+            )
+        ]
+
+    def __str__(self):
+        return f'{self.user}: {self.product}'
