@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.models import Category, Picture, Product, Section
+from api.models import Category, Favorite, Picture, Product, Section, ShoppingCart
 
 
 class PictureListSerializer(serializers.ModelSerializer):
@@ -44,3 +44,15 @@ class ProductListSerializer(serializers.ModelSerializer):
             'male'
         )
         read_only_fields = fields
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = ('id', 'user', 'product')
+
+
+class ShoppingCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShoppingCart
+        fields = ('id', 'user', 'product')

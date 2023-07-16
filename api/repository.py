@@ -30,3 +30,17 @@ class CategoryRepository(BaseRepository):
     @property
     def model(self) -> Type[models.Category]:
         return models.Category
+
+
+class FavoriteRepository(BaseRepository):
+
+    @property
+    def model(self) -> Type[models.Favorite]:
+        return models.Favorite
+
+
+class ShoppingCartRepository(BaseRepository):
+
+    @property
+    def model(self) -> Type[models.ShoppingCart]:
+        return models.ShoppingCart
