@@ -48,4 +48,4 @@ class ShoppingCartView(ListCreateDeleteViewset):
     shoppingcart_repository = repository.ShoppingCartRepository()
     queryset = shoppingcart_repository.get_all_objects_order_by_id()
     serializer_class = serializers.ShoppingCartSerializer
-    permission_classes = (IsAuthenticated, IsAdminOrAuthorPermission,)
+    permission_classes = (IsAdminOrAuthorPermission,)

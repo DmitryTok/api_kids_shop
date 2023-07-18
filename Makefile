@@ -16,10 +16,13 @@ makemigrations: db
 migrate: makemigrations
 	docker-compose run web python manage.py migrate
 
-loaddata: migrate
-	docker-compose run web python manage.py load_data data/goods.csv
+load_products: migrate
+	docker-compose run web python manage.py load_products data/goods.csv
 
-superuser: loaddata
+load_category_section: load_products
+	docker-compose run web python manage.py load_category_section
+
+superuser: load_category_section
 	docker-compose run web python manage.py createsuperuser
 
 .PHONY: run

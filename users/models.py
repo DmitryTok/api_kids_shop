@@ -5,3 +5,6 @@ from django.db import models
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, validators=[validate_email])
+
+    class Meta:
+        ordering = ('id',)

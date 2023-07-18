@@ -5,16 +5,16 @@ from api.models import Category, Favorite, Picture, Product, Section, ShoppingCa
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'section')
-    search_fields = ('id', 'name', 'section')
-    list_filter = ('id', 'name', 'section')
+    list_display = ('id', 'name',)
+    search_fields = ('id', 'name',)
+    list_filter = ('id', 'name',)
 
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
-    search_fields = ('id', 'name')
-    list_filter = ('id', 'name')
+    list_display = ('id', 'name', 'category')
+    search_fields = ('id', 'name', 'category')
+    list_filter = ('id', 'name', 'category')
 
 
 @admin.register(Picture)
