@@ -19,10 +19,7 @@ migrate: makemigrations
 load_products: migrate
 	docker-compose run web python manage.py load_products data/goods.csv
 
-load_category_section: load_products
-	docker-compose run web python manage.py load_category_section
-
-superuser: load_category_section
+superuser: load_products
 	docker-compose run web python manage.py createsuperuser
 
 .PHONY: run

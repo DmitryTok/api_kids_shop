@@ -1,8 +1,6 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
-from api.models import Category, Favorite, Picture, Product, Section, ShoppingCart
-from users.serializers import CustomUserShoppingCartSerializer
+from api.models import Category, Favorite, Picture, Product, Section
 
 
 class PictureListSerializer(serializers.ModelSerializer):
@@ -13,7 +11,7 @@ class PictureListSerializer(serializers.ModelSerializer):
 
 
 class SectionListSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField(many=True, read_only=True)
+    category = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Section
@@ -22,7 +20,7 @@ class SectionListSerializer(serializers.ModelSerializer):
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
-    section = SectionListSerializer(read_only=True)
+    section = SectionListSerializer(read_only=True, many=True)
 
     class Meta:
         model = Category
@@ -50,22 +48,7 @@ class ProductListSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Favorite
         fields = ('id', 'user', 'product')
-
-
-class ShoppingCartSerializer(serializers.ModelSerializer):
-    user = CustomUserShoppingCartSerializer()
-
-    class Meta:
-        model = ShoppingCart
-        fields = ('id', 'user')
-
-    def validate(self, data):
-        user = data['user']
-        product_id = data['product'].id
-        if ShoppingCart.objects.filter(
-                user=user, product__id=product_id).exists():
-            raise ValidationError('Item already in shopping cart')
-        return data

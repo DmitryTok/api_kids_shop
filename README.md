@@ -117,16 +117,7 @@ Output example
  ✔ Container api_kids_shop-db-1  Running                                                                                                                          0.0s 
 [+] Building 0.0s (0/0)                                                                                                                                                
 2023-07-04 11:23:38,629 - INFO - kids_shop.logger - Starting to upload data from data/goods.csv to the database
-2023-07-04 11:23:38,666 - INFO - kids_shop.logger - Objects created: 20
-2023-07-04 11:23:38,666 - INFO - kids_shop.logger - Data has been uploaded successfully
-```
-```
-docker-compose run web python manage.py load_category_section
-```
-Output example
-```
-[+] Creating 1/0
- ✔ Container api_kids_shop-db-1  Running                                                                                                                          0.0s 
+2023-07-04 11:23:38,666 - INFO - kids_shop.logger - Objects created: 20                                                                                                                       0.0s 
 2023-07-18 18:58:55,790 - INFO - kids_shop.logger - Starting to upload --- CATEGORY --- to the database
 2023-07-18 18:58:55,804 - INFO - kids_shop.logger - Objects created: 3
 2023-07-18 18:58:55,805 - INFO - kids_shop.logger - Starting to upload --- SECTION --- to the --- ACCESSORIES CATEGORY ---

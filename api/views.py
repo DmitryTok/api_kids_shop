@@ -1,7 +1,9 @@
-from rest_framework import mixins, viewsets
+from rest_framework import generics, mixins, status, viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from api import repository, serializers
+from api.models import Favorite
 from kids_shop.base.base_retrieve_hendler import BaseRetrieveViewSet
 from kids_shop.permissions import IsAdminOrAuthorPermission
 
@@ -37,15 +39,6 @@ class CategoryListView(BaseRetrieveViewSet):
     serializer_class = serializers.CategoryListSerializer
 
 
-class FavoriteView(ListCreateDeleteViewset):
-    favorite_repository = repository.FavoriteRepository()
-    queryset = favorite_repository.get_all_objects_order_by_id()
+class FavoriteViewSet(ListCreateDeleteViewset):
+    queryset = Favorite.objects.all()
     serializer_class = serializers.FavoriteSerializer
-    permission_classes = (IsAuthenticated, IsAdminOrAuthorPermission,)
-
-
-class ShoppingCartView(ListCreateDeleteViewset):
-    shoppingcart_repository = repository.ShoppingCartRepository()
-    queryset = shoppingcart_repository.get_all_objects_order_by_id()
-    serializer_class = serializers.ShoppingCartSerializer
-    permission_classes = (IsAdminOrAuthorPermission,)
