@@ -108,7 +108,7 @@ Running migrations:
 ***
 ### 6) Load data to database(not required)
 ```
-docker-compose run web python manage.py load_data data/goods.csv
+docker-compose run web python manage.py load_products data/goods.csv
 ```
 Output example
 ```

@@ -56,7 +56,7 @@ class Product(models.Model):
         ordering = ('id',)
 
     def __str__(self):
-        return f'{self.name} ${self.price}'
+        return f'{self.name}'
 
 
 class Picture(models.Model):
@@ -95,7 +95,7 @@ class Favorite(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.user}: {self.product}'
+        return f'{self.product}'
 
 
 class ShoppingCart(models.Model):
