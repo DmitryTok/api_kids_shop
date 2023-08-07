@@ -26,9 +26,9 @@ class ProductImage(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male')
-    search_fields = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male')
-    list_filter = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male')
+    list_display = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male', 'category')
+    search_fields = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male', 'category')
+    list_filter = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male', 'category')
 
 
 @admin.register(Favorite)

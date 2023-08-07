@@ -1,4 +1,5 @@
 import csv
+import random
 
 from django.core.management.base import BaseCommand
 
@@ -13,24 +14,6 @@ class Command(BaseCommand):
         parser.add_argument('path', type=str, default='data/goods.csv', help='Path to the CSV file')
 
     def handle(self, *args, **options):
-        path = options['path']
-        logger.info(f'Starting to upload data from {path} to the database')
-
-        with open(path, 'r', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
-            counter = 0
-            for item in reader:
-                counter += 1
-                male_value = item['male'].strip().lower()
-                male = True if male_value == 'true' else False
-                Product.objects.get_or_create(
-                    name=item['name'],
-                    description=item['description'],
-                    price=item['price'],
-                    male=male
-                )
-        logger.info(f'Objects created: {counter}')
-
         category_lst = ['Одяг', 'Взуття', 'Аксесуары']
         section_accessories_lst = [
             'Біжутерія та Шпильки',
@@ -119,5 +102,29 @@ class Command(BaseCommand):
             section, created = Section.objects.get_or_create(name=section_name, category=clothes_category)
             section_counter += 1
         logger.info(f'Objects created: {section_counter}')
+
+        path = options['path']
+        logger.info(f'Starting to upload --- PRODUCTS --- from {path} to the --- DATABASE ---')
+
+        with open(path, 'r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            counter = 0
+            color = ('Blue', 'Green', 'Gray', 'Black')
+            categories = Category.objects.all()
+            for item in reader:
+                counter += 1
+                male_value = item['male'].strip().lower()
+                male = True if male_value == 'true' else False
+                Product.objects.get_or_create(
+                    name=item['name'],
+                    category=random.choice(categories),
+                    description=item['description'],
+                    price=item['price'],
+                    male=male,
+                    age=random.randint(0, 15),
+                    rating=random.randint(0, 10),
+                    color=random.choice(color),
+                )
+        logger.info(f'Objects created: {counter}')
 
         logger.info('Data has been uploaded successfully')

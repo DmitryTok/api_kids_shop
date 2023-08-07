@@ -30,7 +30,6 @@ services:
 
 volumes:
   db_data:
-  test_db_data:
 
 networks:
   mynetwork:

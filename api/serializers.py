@@ -11,20 +11,18 @@ class PictureListSerializer(serializers.ModelSerializer):
 
 
 class SectionListSerializer(serializers.ModelSerializer):
-    category = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Section
-        fields = ('id', 'name', 'category')
+        fields = ('id', 'name')
         read_only_fields = fields
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
-    section = SectionListSerializer(read_only=True, many=True)
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'section')
+        fields = ('id', 'name')
         read_only_fields = fields
 
 
@@ -42,7 +40,9 @@ class ProductListSerializer(serializers.ModelSerializer):
             'price',
             'rating',
             'product_images',
-            'male'
+            'male',
+            'color',
+            'age',
         )
         read_only_fields = fields
 
