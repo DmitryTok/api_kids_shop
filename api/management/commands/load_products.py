@@ -3,7 +3,7 @@ import random
 
 from django.core.management.base import BaseCommand
 
-from api.models import Category, Product, Section
+from api.models import Brand, Category, Product, Section
 from kids_shop.logger import logger
 
 
@@ -72,12 +72,32 @@ class Command(BaseCommand):
             'Сорочки',
         ]
 
+        brands_lst = [
+            "Nike",
+            "Adidas",
+            "Zara",
+            "H&M",
+            "Gucci",
+            "Louis Vuitton",
+            "Chanel",
+            "Calvin Klein",
+            "Ralph Lauren",
+            "Forever 21"
+        ]
+
         logger.info('Starting to upload --- CATEGORY --- to the database')
         category_counter = 0
         for category in category_lst:
             category_counter += 1
             Category.objects.get_or_create(name=category)
         logger.info(f'Objects created: {category_counter}')
+
+        logger.info('Starting to upload --- BRAND --- to the database')
+        brand_counter = 0
+        for brand in brands_lst:
+            brand_counter += 1
+            Brand.objects.get_or_create(name=brand)
+        logger.info(f'Objects created: {brand_counter}')
 
         logger.info('Starting to upload --- SECTION --- to the --- ACCESSORIES CATEGORY ---')
         section_counter = 0
@@ -111,6 +131,8 @@ class Command(BaseCommand):
             counter = 0
             color = ('Blue', 'Green', 'Gray', 'Black')
             categories = Category.objects.all()
+            sections = Section.objects.all()
+            brand = Brand.objects.all()
             for item in reader:
                 counter += 1
                 male_value = item['male'].strip().lower()
@@ -118,8 +140,11 @@ class Command(BaseCommand):
                 Product.objects.get_or_create(
                     name=item['name'],
                     category=random.choice(categories),
+                    section=random.choice(sections),
+                    brand=random.choice(brand),
                     description=item['description'],
                     price=item['price'],
+                    size=random.randint(1, 30),
                     male=male,
                     age=random.randint(0, 15),
                     rating=random.randint(0, 10),

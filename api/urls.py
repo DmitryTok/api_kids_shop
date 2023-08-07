@@ -8,6 +8,7 @@ router.register(r'products', views.ProductListView)
 router.register(r'pictures', views.PictureListView)
 router.register(r'category', views.CategoryListView)
 router.register(r'section', views.SectionListView)
+router.register(r'brand', views.BranListView)
 router.register(r'favorite', views.FavoriteViewSet)
 
 urlpatterns = [

@@ -32,6 +32,13 @@ class CategoryRepository(BaseRepository):
         return models.Category
 
 
+class BrandRepository(BaseRepository):
+
+    @property
+    def model(self) -> Type[models.Product]:
+        return models.Brand
+
+
 class FavoriteRepository(BaseRepository):
 
     @property

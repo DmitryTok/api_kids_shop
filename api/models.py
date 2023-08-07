@@ -1,7 +1,19 @@
+import uuid
+
 from django.core.validators import MinValueValidator
 from django.db import models
 
 from users.models import CustomUser
+
+
+class Brand(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+
+    class Meta:
+        ordering = ('id',)
+
+    def __str__(self):
+        return self.name
 
 
 class Category(models.Model):
@@ -38,9 +50,24 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name='product'
+        related_name='product_category'
+    )
+    section = models.ForeignKey(
+        Section,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='product_section'
     )
     description = models.CharField(max_length=2000)
+    brand = models.ForeignKey(
+        Brand,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='product_brand'
+    )
+    item_number = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
     size = models.FloatField(null=True, blank=True)
