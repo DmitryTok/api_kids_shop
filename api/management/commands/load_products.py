@@ -130,6 +130,7 @@ class Command(BaseCommand):
             reader = csv.DictReader(file)
             counter = 0
             color = ('Blue', 'Green', 'Gray', 'Black')
+            is_sale = (True, False)
             categories = Category.objects.all()
             sections = Section.objects.all()
             brand = Brand.objects.all()
@@ -149,6 +150,7 @@ class Command(BaseCommand):
                     age=random.randint(0, 15),
                     rating=random.randint(0, 10),
                     color=random.choice(color),
+                    is_sale=random.choice(is_sale)
                 )
         logger.info(f'Objects created: {counter}')
 

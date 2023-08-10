@@ -78,6 +78,7 @@ class Product(models.Model):
         validators=[MinValueValidator(0)]
     )
     male = models.BooleanField(default=True)
+    is_sale = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('id',)

@@ -10,6 +10,9 @@ class ProductRepository(BaseRepository):
     def model(self) -> Type[models.Product]:
         return models.Product
 
+    def get_sorted_product_by_rate(self):
+        return self.model.objects.all().order_by('-rating')
+
 
 class SectionRepository(BaseRepository):
 

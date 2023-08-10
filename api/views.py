@@ -45,3 +45,15 @@ class PictureListView(BaseRetrieveViewSet):
 class FavoriteViewSet(ListCreateDeleteViewset):
     queryset = Favorite.objects.all()
     serializer_class = serializers.FavoriteSerializer
+
+
+class TOPProductView(BaseRetrieveViewSet):
+    product_repository = repository.ProductRepository()
+    queryset = product_repository.get_sorted_product_by_rate()
+    serializer_class = serializers.TOPProductListSerializer
+    pagination_class = None
+
+
+# Added admin panel for brand
+# Create is_sale field
+# Create new url for top product by rating

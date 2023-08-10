@@ -10,6 +10,7 @@ router.register(r'category', views.CategoryListView)
 router.register(r'section', views.SectionListView)
 router.register(r'brand', views.BranListView)
 router.register(r'favorite', views.FavoriteViewSet)
+router.register(r'top', views.TOPProductView)
 
 urlpatterns = [
     path('', include(router.urls)),
