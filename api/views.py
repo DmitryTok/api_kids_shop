@@ -54,6 +54,8 @@ class TOPProductView(BaseRetrieveViewSet):
     pagination_class = None
 
 
-# Added admin panel for brand
-# Create is_sale field
-# Create new url for top product by rating
+class OnSaleProductView(BaseRetrieveViewSet):
+    product_repository = repository.ProductRepository()
+    queryset = product_repository.get_sorted_products_by_sale()
+    serializer_class = serializers.OnSaleProductSerializer
+    pagination_class = None

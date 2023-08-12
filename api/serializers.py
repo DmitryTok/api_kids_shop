@@ -71,29 +71,9 @@ class FavoriteSerializer(serializers.ModelSerializer):
         fields = ('id', 'product')
 
 
-class TOPProductListSerializer(serializers.ModelSerializer):
-    product_images = PictureListSerializer(many=True, read_only=True)
-    category = CategoryListSerializer(read_only=True)
-    section = SectionListSerializer(read_only=True)
-    brand = BrandListSerializer(read_only=True)
+class TOPProductListSerializer(ProductListSerializer):
+    pass
 
-    class Meta:
-        model = Product
-        fields = (
-            'id',
-            'name',
-            'brand',
-            'category',
-            'section',
-            'description',
-            'price',
-            'size',
-            'rating',
-            'product_images',
-            'male',
-            'color',
-            'age',
-            'is_sale',
-            'item_number',
-        )
-        read_only_fields = fields
+
+class OnSaleProductSerializer(ProductListSerializer):
+    pass
