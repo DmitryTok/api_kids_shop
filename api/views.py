@@ -50,12 +50,12 @@ class FavoriteViewSet(ListCreateDeleteViewset):
 class TOPProductView(BaseRetrieveViewSet):
     product_repository = repository.ProductRepository()
     queryset = product_repository.get_sorted_product_by_rate()
-    serializer_class = serializers.TOPProductListSerializer
+    serializer_class = serializers.ProductListSerializer
     pagination_class = None
 
 
 class OnSaleProductView(BaseRetrieveViewSet):
     product_repository = repository.ProductRepository()
     queryset = product_repository.get_sorted_products_by_sale()
-    serializer_class = serializers.OnSaleProductSerializer
+    serializer_class = serializers.ProductListSerializer
     pagination_class = None

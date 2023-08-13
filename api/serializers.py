@@ -69,11 +69,3 @@ class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = ('id', 'product')
-
-
-class TOPProductListSerializer(ProductListSerializer):
-    pass
-
-
-class OnSaleProductSerializer(ProductListSerializer):
-    pass

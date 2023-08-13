@@ -25,3 +25,7 @@ superuser: load_products
 .PHONY: run
 run:
 	docker-compose up
+
+.PHONY: down
+down:
+	docker-compose down -v
