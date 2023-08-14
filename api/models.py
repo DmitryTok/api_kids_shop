@@ -6,6 +6,16 @@ from django.db import models
 from users.models import CustomUser
 
 
+class Discount(models.Model):
+    name = models.PositiveIntegerField(validators=[MinValueValidator(0)])
+
+    class Meta:
+        ordering = ('id',)
+
+    def __str__(self):
+        return str(self.name)
+
+
 class Brand(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
@@ -79,6 +89,12 @@ class Product(models.Model):
     )
     male = models.BooleanField(default=True)
     is_sale = models.BooleanField(default=False)
+    discount = models.ForeignKey(
+        Discount,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
 
     class Meta:
         ordering = ('id',)

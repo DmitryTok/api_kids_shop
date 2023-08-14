@@ -3,6 +3,13 @@ from django.contrib import admin
 from api import models
 
 
+@admin.register(models.Discount)
+class DiscountAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name',)
+    search_fields = ('id', 'name',)
+    list_filter = ('id', 'name',)
+
+
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name',)
@@ -33,9 +40,9 @@ class ProductImage(admin.ModelAdmin):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male', 'category')
-    search_fields = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male', 'category')
-    list_filter = ('id', 'name', 'description', 'price', 'rating', 'size', 'color', 'male', 'category')
+    list_display = ('id', 'name', 'price', 'rating', 'size', 'male', 'is_sale', 'discount')
+    search_fields = ('id', 'name', 'price', 'rating', 'size', 'male', 'is_sale', 'discount')
+    list_filter = ('id', 'name', 'price', 'rating', 'size', 'male', 'is_sale', 'discount')
 
 
 @admin.register(models.Favorite)

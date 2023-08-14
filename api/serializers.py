@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.models import Brand, Category, Favorite, Picture, Product, Section
+from api.models import Brand, Category, Discount, Favorite, Picture, Product, Section
 
 
 class PictureListSerializer(serializers.ModelSerializer):
@@ -35,32 +35,25 @@ class CategoryListSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
+class DiscountListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Discount
+        fields = ('id', 'name')
+        read_only_fields = fields
+
+
 class ProductListSerializer(serializers.ModelSerializer):
     product_images = PictureListSerializer(many=True, read_only=True)
     category = CategoryListSerializer(read_only=True)
     section = SectionListSerializer(read_only=True)
     brand = BrandListSerializer(read_only=True)
+    discount = DiscountListSerializer(read_only=True)
 
     class Meta:
         model = Product
-        fields = (
-            'id',
-            'name',
-            'brand',
-            'category',
-            'section',
-            'description',
-            'price',
-            'size',
-            'rating',
-            'product_images',
-            'male',
-            'color',
-            'age',
-            'is_sale',
-            'item_number',
-        )
-        read_only_fields = fields
+        fields = '__all__'
+        read_only_fields = (fields,)
 
 
 class FavoriteSerializer(serializers.ModelSerializer):

@@ -3,7 +3,7 @@ import random
 
 from django.core.management.base import BaseCommand
 
-from api.models import Brand, Category, Product, Section
+from api.models import Brand, Category, Discount, Product, Section
 from kids_shop.logger import logger
 
 
@@ -88,6 +88,8 @@ class Command(BaseCommand):
             "Forever 21"
         ]
 
+        discount_lst = [5, 10, 15, 20, 25, 30, 35]
+
         """
         First part of script that uploads categories from category_lst into the database.
         At the end, the logger will show how many objects are created
@@ -109,6 +111,17 @@ class Command(BaseCommand):
             brand_counter += 1
             Brand.objects.get_or_create(name=brand)
         logger.info(f'Objects created: {brand_counter}')
+
+        """
+        Third part of script that uploads discount from discount_lst into the database.
+        At the end, the logger will show how many objects are created
+        """
+        logger.info('Starting to upload --- DISCOUNT --- to the database')
+        discount_counter = 0
+        for discount in discount_lst:
+            discount_counter += 1
+            Discount.objects.get_or_create(name=discount)
+        logger.info(f'Objects created: {discount_counter}')
 
         """
         Here, we begin the process of uploading sections all at once
@@ -160,6 +173,7 @@ class Command(BaseCommand):
             categories = Category.objects.all()
             sections = Section.objects.all()
             brand = Brand.objects.all()
+            discount = Discount.objects.all()
             for item in reader:
                 counter += 1
                 male_value = item['male'].strip().lower()
@@ -176,8 +190,19 @@ class Command(BaseCommand):
                     age=random.randint(0, 15),  # random age from 0 to 15
                     rating=random.randint(0, 10),  # random rating from 0 to 10
                     color=random.choice(color),  # random color
-                    is_sale=random.choice(is_sale)  # random on sale flag
+                    is_sale=random.choice(is_sale),  # random on sale flag
                 )
         logger.info(f'Objects created: {counter}')
+
+        logger.info('Put --- DISCOUNT --- to all IS_SALE --- PRODUCTS ---')
+        sale_products = Product.objects.filter(is_sale=True)
+        discount_sale_counter = 0
+        for product in sale_products:
+            discount_sale_counter += 1
+            Product.objects.update_or_create(
+                id=product.id,
+                defaults={'discount': random.choice(discount)}
+            )
+        logger.info(f'Objects created: {discount_sale_counter}')
 
         logger.info('Data has been uploaded successfully')
