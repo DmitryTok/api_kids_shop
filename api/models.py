@@ -6,6 +6,16 @@ from django.db import models
 from users.models import CustomUser
 
 
+class Color(models.Model):
+    name = models.CharField(max_length=120, unique=True)
+
+    class Meta:
+        ordering = ('id',)
+
+    def __str__(self):
+        return self.name
+
+
 class Discount(models.Model):
     name = models.PositiveIntegerField(validators=[MinValueValidator(0)])
 
@@ -81,7 +91,11 @@ class Product(models.Model):
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
     size = models.FloatField(null=True, blank=True)
-    color = models.CharField(null=True, blank=True)
+    color = models.ManyToManyField(
+        Color,
+        blank=True,
+        null=True
+    )
     age = models.PositiveSmallIntegerField(
         null=True,
         blank=True,

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.models import Brand, Category, Discount, Favorite, Picture, Product, Section
+from api.models import Brand, Category, Color, Discount, Favorite, Picture, Product, Section
 
 
 class PictureListSerializer(serializers.ModelSerializer):
@@ -43,12 +43,21 @@ class DiscountListSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
+class ColorListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Color
+        fields = ('id', 'name')
+        read_only_fields = fields
+
+
 class ProductListSerializer(serializers.ModelSerializer):
     product_images = PictureListSerializer(many=True, read_only=True)
     category = CategoryListSerializer(read_only=True)
     section = SectionListSerializer(read_only=True)
     brand = BrandListSerializer(read_only=True)
     discount = DiscountListSerializer(read_only=True)
+    color = ColorListSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product

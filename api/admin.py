@@ -10,6 +10,13 @@ class DiscountAdmin(admin.ModelAdmin):
     list_filter = ('id', 'name',)
 
 
+@admin.register(models.Color)
+class ColorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+    search_fields = ('id', 'name')
+    list_filter = ('id', 'name')
+
+
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name',)

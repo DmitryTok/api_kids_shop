@@ -3,7 +3,7 @@ import random
 
 from django.core.management.base import BaseCommand
 
-from api.models import Brand, Category, Discount, Product, Section
+from api.models import Brand, Category, Color, Discount, Product, Section
 from kids_shop.logger import logger
 
 
@@ -90,6 +90,8 @@ class Command(BaseCommand):
 
         discount_lst = [5, 10, 15, 20, 25, 30, 35]
 
+        color_lst = ['Blue', 'Green', 'Gray', 'Black']
+
         """
         First part of script that uploads categories from category_lst into the database.
         At the end, the logger will show how many objects are created
@@ -122,6 +124,13 @@ class Command(BaseCommand):
             discount_counter += 1
             Discount.objects.get_or_create(name=discount)
         logger.info(f'Objects created: {discount_counter}')
+
+        logger.info('Starting to upload --- COLOR --- to the database')
+        color_counter = 0
+        for color in color_lst:
+            color_counter += 1
+            Color.objects.get_or_create(name=color)
+        logger.info(f'Objects created: {color_counter}')
 
         """
         Here, we begin the process of uploading sections all at once
@@ -168,17 +177,17 @@ class Command(BaseCommand):
         with open(path, 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             counter = 0
-            color = ('Blue', 'Green', 'Gray', 'Black')
             is_sale = (True, False)
             categories = Category.objects.all()
             sections = Section.objects.all()
             brand = Brand.objects.all()
             discount = Discount.objects.all()
+            color = Color.objects.all()
             for item in reader:
                 counter += 1
                 male_value = item['male'].strip().lower()
                 male = True if male_value == 'true' else False
-                Product.objects.get_or_create(
+                product, _ = Product.objects.get_or_create(
                     name=item['name'],
                     category=random.choice(categories),  # random category
                     section=random.choice(sections),  # random section
@@ -189,9 +198,9 @@ class Command(BaseCommand):
                     male=male,
                     age=random.randint(0, 15),  # random age from 0 to 15
                     rating=random.randint(0, 10),  # random rating from 0 to 10
-                    color=random.choice(color),  # random color
                     is_sale=random.choice(is_sale),  # random on sale flag
                 )
+                product.color.add(*random.sample(list(color), random.randint(1, 4)))
         logger.info(f'Objects created: {counter}')
 
         logger.info('Put --- DISCOUNT --- to all IS_SALE --- PRODUCTS ---')
