@@ -94,7 +94,6 @@ class Product(models.Model):
     color = models.ManyToManyField(
         Color,
         blank=True,
-        null=True
     )
     age = models.PositiveSmallIntegerField(
         null=True,
