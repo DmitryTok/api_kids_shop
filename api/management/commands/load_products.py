@@ -90,7 +90,7 @@ class Command(BaseCommand):
 
         discount_lst = [5, 10, 15, 20, 25, 30, 35]
 
-        color_lst = ['Blue', 'Green', 'Gray', 'Black']
+        color_lst = ['Blue', 'Green', 'Gray', 'Black', 'White', 'Yellow']
 
         """
         First part of script that uploads categories from category_lst into the database.
@@ -200,7 +200,7 @@ class Command(BaseCommand):
                     rating=random.randint(0, 10),  # random rating from 0 to 10
                     is_sale=random.choice(is_sale),  # random on sale flag
                 )
-                product.color.add(*random.sample(list(color), random.randint(1, 4)))
+                product.color.add(*random.sample(list(color), random.randint(1, 5)))
         logger.info(f'Objects created: {counter}')
 
         logger.info('Put --- DISCOUNT --- to all IS_SALE --- PRODUCTS ---')
