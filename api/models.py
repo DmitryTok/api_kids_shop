@@ -68,36 +68,36 @@ class Product(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
         related_name='product_category'
     )
     section = models.ForeignKey(
         Section,
         on_delete=models.CASCADE,
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
         related_name='product_section'
     )
     description = models.CharField(max_length=2000)
     brand = models.ForeignKey(
         Brand,
         on_delete=models.CASCADE,
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
         related_name='product_brand'
     )
     item_number = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
-    size = models.FloatField(null=True, blank=True)
+    size = models.FloatField(null=False, blank=False)
     color = models.ManyToManyField(
         Color,
-        blank=True,
+        blank=False,
     )
     age = models.PositiveSmallIntegerField(
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
         validators=[MinValueValidator(0)]
     )
     male = models.BooleanField(default=True)
