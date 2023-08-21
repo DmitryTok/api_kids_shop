@@ -232,8 +232,9 @@ class Command(BaseCommand):
         image_folder = 'data/kids'
 
         logger.info('Start to insert --- IMAGES --- in to --- DATABASE ---')
+        count_images = 0
         for product in Product.objects.all():
-
+            count_images += 1
             image_filenames = [
                 f for f in os.listdir(image_folder) if f.startswith(f'{product.id}_')
             ]
@@ -246,5 +247,6 @@ class Command(BaseCommand):
                     picture.product_image.save(image_filename, File(image_file))
 
                     picture.save()
+        logger.info(f'Insert images {count_images}')
 
-    logger.info('Data has been uploaded successfully')
+        logger.info('Data has been uploaded successfully')
