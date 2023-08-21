@@ -122,7 +122,7 @@ class Picture(models.Model):
         related_name='product_images',
         on_delete=models.CASCADE,
     )
-    product_image = models.ImageField(upload_to='product_images')
+    product_image = models.ImageField()
 
     class Meta:
         ordering = ('id',)
