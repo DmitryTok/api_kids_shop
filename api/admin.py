@@ -39,17 +39,24 @@ class BrandAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Picture)
-class ProductImage(admin.ModelAdmin):
+class ProductImageAdmin(admin.ModelAdmin):
     list_display = ('id', 'product', 'product_image')
     search_fields = ('id', 'product', 'product_image')
     list_filter = ('id', 'product', 'product_image')
 
 
+@admin.register(models.Size)
+class SizeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'height', 'age', 'brand_size', 'insole_size', 'letter_size', 'country_size')
+    search_fields = ('id', 'height', 'age', 'brand_size', 'insole_size', 'letter_size', 'country_size')
+    list_filter = ('id', 'height', 'age', 'brand_size', 'insole_size', 'letter_size', 'country_size')
+
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price', 'rating', 'size', 'male', 'is_sale', 'discount')
-    search_fields = ('id', 'name', 'price', 'rating', 'size', 'male', 'is_sale', 'discount')
-    list_filter = ('id', 'name', 'price', 'rating', 'size', 'male', 'is_sale', 'discount')
+    list_display = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount')
+    search_fields = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount')
+    list_filter = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount')
 
 
 @admin.register(models.Favorite)

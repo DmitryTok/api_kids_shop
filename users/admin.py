@@ -13,7 +13,6 @@ class CustomUserAdmin(admin.ModelAdmin):
         'date_joined',
         'last_login',
         'groups',
-
     ]
 
 

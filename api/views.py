@@ -5,7 +5,7 @@ from api.models import Favorite
 from kids_shop.base.base_retrieve_hendler import BaseRetrieveViewSet
 
 
-class ListCreateDeleteViewset(mixins.CreateModelMixin,
+class ListCreateDeleteViewSet(mixins.CreateModelMixin,
                               mixins.ListModelMixin,
                               mixins.DestroyModelMixin,
                               viewsets.GenericViewSet):
@@ -42,7 +42,7 @@ class PictureListView(BaseRetrieveViewSet):
     serializer_class = serializers.PictureListSerializer
 
 
-class FavoriteViewSet(ListCreateDeleteViewset):
+class FavoriteViewSet(ListCreateDeleteViewSet):
     queryset = Favorite.objects.all()
     serializer_class = serializers.FavoriteSerializer
 

@@ -181,6 +181,23 @@ class Command(BaseCommand):
             section_counter += 1
         logger.info(f'Objects created: {section_counter}')
 
+        # logger.info('Starting to upload --- SIZE --- in to --- DATABASE ---')
+        # count_size = 0
+        # Size.objects.get_or_create(
+        #     height,
+        #     chest_size
+        #     waist_size
+        #     arm_length
+        #     age
+        #     brand
+        #     brand_size
+        #     insole_size
+        #     letter_size
+        #     country_size
+        #
+        # )
+        # logger.info(f'Objects created: {count_size}')
+
         path = options['path']  # Get path to file with data
         logger.info(f'Starting to upload --- PRODUCTS --- from {path} to the --- DATABASE ---')
 
@@ -209,7 +226,6 @@ class Command(BaseCommand):
                     brand=random.choice(brand),  # random brand
                     description=item['description'],
                     price=item['price'],
-                    size=random.randint(1, 30),  # random size from 1 to 30
                     male=male,
                     age=random.randint(0, 15),  # random age from 0 to 15
                     rating=random.randint(0, 10),  # random rating from 0 to 10

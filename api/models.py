@@ -1,4 +1,5 @@
 import uuid
+from enum import Enum
 
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -9,18 +10,12 @@ from users.models import CustomUser
 class Color(models.Model):
     name = models.CharField(max_length=120, unique=True)
 
-    class Meta:
-        ordering = ('id',)
-
     def __str__(self):
         return self.name
 
 
 class Discount(models.Model):
     name = models.PositiveIntegerField(validators=[MinValueValidator(0)])
-
-    class Meta:
-        ordering = ('id',)
 
     def __str__(self):
         return str(self.name)
@@ -29,18 +24,12 @@ class Discount(models.Model):
 class Brand(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
-    class Meta:
-        ordering = ('id',)
-
     def __str__(self):
         return self.name
 
 
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
-
-    class Meta:
-        ordering = ('id',)
 
     def __str__(self):
         return self.name
@@ -56,11 +45,53 @@ class Section(models.Model):
         related_name='section'
     )
 
-    class Meta:
-        ordering = ('id',)
-
     def __str__(self):
         return self.name
+
+
+class Size(models.Model):
+    class LetterSizeChoices(Enum):
+        DOUBLE_EXTRA_SMALL = 'XXS'
+        EXTRA_SMALL = 'XS'
+        SMALL = 'S'
+        MEDIUM = 'M'
+        LARGE = 'L'
+        EXTRA_LARGE = 'XL'
+        DOUBLE_EXTRA_LARGE = 'XXL'
+
+    class CountrySizeChoices(Enum):
+        Europe = 'Європа'
+        England = 'Англія'
+        America = 'Америка'
+
+    height = models.PositiveSmallIntegerField(blank=True, null=True)
+    chest_size = models.PositiveSmallIntegerField(blank=True, null=True)
+    waist_size = models.PositiveSmallIntegerField(blank=True, null=True)
+    arm_length = models.PositiveSmallIntegerField(blank=True, null=True)
+    age = models.PositiveSmallIntegerField(blank=True, null=True)
+    brand = models.ForeignKey(
+        Brand,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
+    brand_size = models.PositiveSmallIntegerField(blank=True, null=True)
+    insole_size = models.PositiveSmallIntegerField(blank=True, null=True)
+    letter_size = models.CharField(
+        choices=[(choice.name, choice.value) for choice in LetterSizeChoices],
+        default=None,
+        blank=True,
+        null=True
+    )
+    country_size = models.CharField(
+        choices=[(choice.name, choice.value) for choice in CountrySizeChoices],
+        default=None,
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return f'{self.height}, {self.age}, {self.letter_size}, {self.country_size}'
 
 
 class Product(models.Model):
@@ -90,7 +121,10 @@ class Product(models.Model):
     item_number = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
-    size = models.FloatField(null=False, blank=False)
+    size = models.ManyToManyField(
+        Size,
+        blank=False
+    )
     color = models.ManyToManyField(
         Color,
         blank=False,
@@ -109,11 +143,8 @@ class Product(models.Model):
         null=True
     )
 
-    class Meta:
-        ordering = ('id',)
-
     def __str__(self):
-        return f'{self.name}'
+        return self.name
 
 
 class Picture(models.Model):
@@ -123,9 +154,6 @@ class Picture(models.Model):
         on_delete=models.CASCADE,
     )
     product_image = models.ImageField(upload_to='product_images')
-
-    class Meta:
-        ordering = ('id',)
 
     def __str__(self):
         return f'{self.product}: {self.product_image}'
@@ -152,7 +180,7 @@ class Favorite(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.product}'
+        return self.product
 
 
 class ShoppingCart(models.Model):

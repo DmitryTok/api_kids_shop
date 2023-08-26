@@ -1,7 +1,13 @@
 repos:
-  - repo: local
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
     hooks:
-     - id: isort
-       name: isort
-       entry: isort .
-       language: system
+      - id: isort
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+ci:
+  autoupdate_schedule: weekly
+  skip: []
+  submodules: false

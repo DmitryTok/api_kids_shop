@@ -25,8 +25,8 @@ DB_PORT=<database port>
 POSTGRES_USER=<database user>
 POSTGRES_PASSWORD=<database password>
 POSTGRES_DB=<database name>
-GET_EMAIL_HOST_USER=<your@email.com>
-GET_EMAIL_HOST_PASSWORD=<tour_password>
+EMAIL_HOST_USER=<your@email.com>
+EMAIL_HOST_PASSWORD=<tour_password>
 ```
 ***
 ### 2) In folder api_kids_shop run the docker-compose file with command
