@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from api.models import Brand, Category, Color, Discount, Favorite, Picture, Product, Section
+from api.models import Brand, Category, Color, Country, CountrySize, Discount, Favorite, Picture, Product, Section, Size
 
 
 class PictureListSerializer(serializers.ModelSerializer):
@@ -51,6 +51,37 @@ class ColorListSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = '__all__'
+
+
+class CountrySizeSerializer(serializers.ModelSerializer):
+    country = CountrySerializer()
+
+    class Meta:
+        model = CountrySize
+        fields = ('size', 'country')
+
+
+class SizeSerializer(serializers.ModelSerializer):
+    country_size = CountrySizeSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Size
+        exclude = [
+            'brand',
+            'height',
+            'chest_size',
+            'waist_size',
+            'arm_length',
+            'age',
+            'brand_size',
+            'insole_size'
+        ]
+
+
 class ProductListSerializer(serializers.ModelSerializer):
     product_images = PictureListSerializer(many=True, read_only=True)
     category = CategoryListSerializer(read_only=True)
@@ -58,6 +89,7 @@ class ProductListSerializer(serializers.ModelSerializer):
     brand = BrandListSerializer(read_only=True)
     discount = DiscountListSerializer(read_only=True)
     color = ColorListSerializer(many=True, read_only=True)
+    product_size = SizeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product

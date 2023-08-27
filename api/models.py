@@ -49,6 +49,26 @@ class Section(models.Model):
         return self.name
 
 
+class Country(models.Model):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+
+class CountrySize(models.Model):
+    country = models.ForeignKey(
+        Country,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
+    )
+    size = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.size
+
+
 class Size(models.Model):
     class LetterSizeChoices(Enum):
         DOUBLE_EXTRA_SMALL = 'XXS'
@@ -58,11 +78,6 @@ class Size(models.Model):
         LARGE = 'L'
         EXTRA_LARGE = 'XL'
         DOUBLE_EXTRA_LARGE = 'XXL'
-
-    class CountrySizeChoices(Enum):
-        Europe = 'Європа'
-        England = 'Англія'
-        America = 'Америка'
 
     height = models.PositiveSmallIntegerField(blank=True, null=True)
     chest_size = models.PositiveSmallIntegerField(blank=True, null=True)
@@ -83,15 +98,14 @@ class Size(models.Model):
         blank=True,
         null=True
     )
-    country_size = models.CharField(
-        choices=[(choice.name, choice.value) for choice in CountrySizeChoices],
-        default=None,
+    country_size = models.ManyToManyField(
+        CountrySize,
         blank=True,
-        null=True
+        related_name='sizes'
     )
 
     def __str__(self):
-        return f'{self.height}, {self.age}, {self.letter_size}, {self.country_size}'
+        return f'{self.letter_size}, {self.country_size}'
 
 
 class Product(models.Model):
@@ -121,13 +135,14 @@ class Product(models.Model):
     item_number = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
-    size = models.ManyToManyField(
-        Size,
-        blank=False
-    )
     color = models.ManyToManyField(
         Color,
         blank=False,
+    )
+    product_size = models.ManyToManyField(
+        Size,
+        blank=True,
+        related_name='product_size'
     )
     age = models.PositiveSmallIntegerField(
         null=False,

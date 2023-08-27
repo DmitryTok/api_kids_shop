@@ -5,7 +5,7 @@ import random
 from django.core.files import File
 from django.core.management.base import BaseCommand
 
-from api.models import Brand, Category, Color, Discount, Picture, Product, Section
+from api.models import Brand, Category, Color, Country, CountrySize, Discount, Picture, Product, Section, Size
 from kids_shop.logger import logger
 
 
@@ -107,6 +107,8 @@ class Command(BaseCommand):
             '#43464B'
         ]
 
+        country_lst = ['Європа', 'Америка', 'Англія']
+
         """
         First part of script that uploads categories from category_lst into the database.
         At the end, the logger will show how many objects are created
@@ -181,22 +183,39 @@ class Command(BaseCommand):
             section_counter += 1
         logger.info(f'Objects created: {section_counter}')
 
-        # logger.info('Starting to upload --- SIZE --- in to --- DATABASE ---')
-        # count_size = 0
-        # Size.objects.get_or_create(
-        #     height,
-        #     chest_size
-        #     waist_size
-        #     arm_length
-        #     age
-        #     brand
-        #     brand_size
-        #     insole_size
-        #     letter_size
-        #     country_size
-        #
-        # )
-        # logger.info(f'Objects created: {count_size}')
+        logger.info('Starting to upload --- COUNTRY --- to the --- DATABASE ---')
+        country_counter = 0
+        for item in country_lst:
+            country_counter += 1
+            country_instance = Country.objects.create(name=item)
+            num_sizes = random.randint(1, 20)
+
+            for _ in range(num_sizes):
+                CountrySize.objects.create(country=country_instance, size=random.randint(10, 34))
+
+        logger.info(f'Objects created: {country_counter}')
+
+        logger.info('Starting to upload --- SIZE --- in to --- DATABASE ---')
+        for _ in range(0, 21):
+            brand = Brand.objects.all()
+            country_size = CountrySize.objects.all()
+            size_instance, _ = Size.objects.get_or_create(
+                height=random.randint(45, 168),
+                chest_size=random.randint(40, 90),
+                waist_size=random.randint(40, 90),
+                arm_length=random.randint(34, 80),
+                age=random.randint(0, 15),
+                brand=random.choice(brand),
+                brand_size=random.randint(15, 38),
+                insole_size=random.randint(10, 36),
+                letter_size=random.choice([choice.name for choice in Size.LetterSizeChoices]),
+            )
+            num_country_sizes = len(country_size)
+            if num_country_sizes > 0:
+                num_samples = min(random.randint(1, 5), num_country_sizes)
+                random_country_sizes = random.sample(list(country_size), num_samples)
+                size_instance.country_size.set(random_country_sizes)
+        logger.info(f'Objects created: {section_counter}')
 
         path = options['path']  # Get path to file with data
         logger.info(f'Starting to upload --- PRODUCTS --- from {path} to the --- DATABASE ---')
@@ -206,15 +225,15 @@ class Command(BaseCommand):
         Additionally, it retrieves all previously generated objects and populates the corresponding fields
         The objects will be assigned randomly
         """
-        with open(path, 'r', encoding='utf-8') as file:
+        with open(path, encoding='utf-8') as file:
             reader = csv.DictReader(file)
             counter = 0
             is_sale = (True, False)
             categories = Category.objects.all()
             sections = Section.objects.all()
-            brand = Brand.objects.all()
             discount = Discount.objects.all()
             color = Color.objects.all()
+            size = Size.objects.all()
             for item in reader:
                 counter += 1
                 male_value = item['male'].strip().lower()
@@ -231,7 +250,8 @@ class Command(BaseCommand):
                     rating=random.randint(0, 10),  # random rating from 0 to 10
                     is_sale=random.choice(is_sale),  # random on sale flag
                 )
-                product.color.add(*random.sample(list(color), random.randint(1, len(color))))
+                product.color.add(*random.sample(list(color), random.randint(1, 8)))
+                product.product_size.add(*random.sample(list(size), random.randint(1, 12)))
         logger.info(f'Objects created: {counter}')
 
         logger.info('Put --- DISCOUNT --- to all IS_SALE --- PRODUCTS ---')
