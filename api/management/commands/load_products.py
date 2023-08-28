@@ -191,7 +191,11 @@ class Command(BaseCommand):
             num_sizes = random.randint(1, 20)
 
             for _ in range(num_sizes):
-                CountrySize.objects.create(country=country_instance, size=random.randint(10, 34))
+                CountrySize.objects.create(
+                    country=country_instance,
+                    size=random.randint(10, 34),
+                    letter_size=random.choice([choice.value for choice in CountrySize.LetterSizeChoices])
+                )
 
         logger.info(f'Objects created: {country_counter}')
 
@@ -208,7 +212,6 @@ class Command(BaseCommand):
                 brand=random.choice(brand),
                 brand_size=random.randint(15, 38),
                 insole_size=random.randint(10, 36),
-                letter_size=random.choice([choice.name for choice in Size.LetterSizeChoices]),
             )
             num_country_sizes = len(country_size)
             if num_country_sizes > 0:

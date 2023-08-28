@@ -57,6 +57,14 @@ class Country(models.Model):
 
 
 class CountrySize(models.Model):
+    class LetterSizeChoices(Enum):
+        DOUBLE_EXTRA_SMALL = 'XXS'
+        EXTRA_SMALL = 'XS'
+        SMALL = 'S'
+        MEDIUM = 'M'
+        LARGE = 'L'
+        EXTRA_LARGE = 'XL'
+        DOUBLE_EXTRA_LARGE = 'XXL'
     country = models.ForeignKey(
         Country,
         on_delete=models.CASCADE,
@@ -64,9 +72,15 @@ class CountrySize(models.Model):
         null=True
     )
     size = models.PositiveSmallIntegerField(blank=True, null=True)
+    letter_size = models.CharField(
+        choices=[(choice.name, choice.value) for choice in LetterSizeChoices],
+        default=None,
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
-        return self.size
+        return f'{self.country}, {str(self.size)}'
 
 
 class Size(models.Model):
@@ -92,12 +106,6 @@ class Size(models.Model):
     )
     brand_size = models.PositiveSmallIntegerField(blank=True, null=True)
     insole_size = models.PositiveSmallIntegerField(blank=True, null=True)
-    letter_size = models.CharField(
-        choices=[(choice.name, choice.value) for choice in LetterSizeChoices],
-        default=None,
-        blank=True,
-        null=True
-    )
     country_size = models.ManyToManyField(
         CountrySize,
         blank=True,
@@ -105,7 +113,7 @@ class Size(models.Model):
     )
 
     def __str__(self):
-        return f'{self.letter_size}, {self.country_size}'
+        return str(self.country_size)
 
 
 class Product(models.Model):

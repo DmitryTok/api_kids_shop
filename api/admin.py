@@ -54,21 +54,21 @@ class CountryAdmin(admin.ModelAdmin):
 
 @admin.register(models.CountrySize)
 class CountrySizeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'country', 'size')
-    search_fields = ('id', 'country', 'size')
-    list_filter = ('id', 'country', 'size')
+    list_display = ('id', 'country', 'size', 'letter_size')
+    search_fields = ('id', 'country', 'size', 'letter_size')
+    list_filter = ('id', 'country', 'size', 'letter_size')
 
 
 @admin.register(models.Size)
 class SizeAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'height', 'age', 'brand_size', 'insole_size', 'letter_size'
+        'id', 'height', 'age', 'brand_size', 'insole_size'
     )
     search_fields = (
-        'id', 'height', 'age', 'brand_size', 'insole_size', 'letter_size'
+        'id', 'height', 'age', 'brand_size', 'insole_size'
     )
     list_filter = (
-        'id', 'height', 'age', 'brand_size', 'insole_size', 'letter_size'
+        'id', 'height', 'age', 'brand_size', 'insole_size'
     )
 
 

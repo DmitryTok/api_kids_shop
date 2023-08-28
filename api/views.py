@@ -15,31 +15,31 @@ class ListCreateDeleteViewSet(mixins.CreateModelMixin,
 class ProductListView(BaseRetrieveViewSet):
     product_repository = repository.ProductRepository()
     queryset = product_repository.get_all_objects_order_by_id()
-    serializer_class = serializers.ProductListSerializer
+    serializer_class = serializers.ProductSerializer
 
 
 class CategoryListView(BaseRetrieveViewSet):
     category_repository = repository.CategoryRepository()
     queryset = category_repository.get_all_objects_order_by_id()
-    serializer_class = serializers.CategoryListSerializer
+    serializer_class = serializers.CategorySerializer
 
 
 class SectionListView(BaseRetrieveViewSet):
     section_repository = repository.SectionRepository()
     queryset = section_repository.get_all_objects_order_by_id()
-    serializer_class = serializers.SectionListSerializer
+    serializer_class = serializers.SectionSerializer
 
 
 class BranListView(BaseRetrieveViewSet):
     brand_repository = repository.BrandRepository()
     queryset = brand_repository.get_all_objects_order_by_id()
-    serializer_class = serializers.BrandListSerializer
+    serializer_class = serializers.BrandSerializer
 
 
 class PictureListView(BaseRetrieveViewSet):
     picture_repository = repository.PictureRepository()
     queryset = picture_repository.get_all_objects_order_by_id()
-    serializer_class = serializers.PictureListSerializer
+    serializer_class = serializers.PictureSerializer
 
 
 class FavoriteViewSet(ListCreateDeleteViewSet):
@@ -50,12 +50,12 @@ class FavoriteViewSet(ListCreateDeleteViewSet):
 class TOPProductView(BaseRetrieveViewSet):
     product_repository = repository.ProductRepository()
     queryset = product_repository.get_sorted_product_by_rate()
-    serializer_class = serializers.ProductListSerializer
+    serializer_class = serializers.ProductSerializer
     pagination_class = None
 
 
 class OnSaleProductView(BaseRetrieveViewSet):
     product_repository = repository.ProductRepository()
     queryset = product_repository.get_sorted_products_by_sale()
-    serializer_class = serializers.ProductListSerializer
+    serializer_class = serializers.ProductSerializer
     pagination_class = None
