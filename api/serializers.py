@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 
 from api.models import (Brand, Category, Color, Country, Discount, Favorite,
-                        Picture, Product, Section, Size)
+                        Picture, Product, Section, ShoppingCart, Size)
 
 
 class PictureSerializer(ModelSerializer):
@@ -95,3 +95,10 @@ class FavoriteSerializer(ModelSerializer):
     class Meta:
         model = Favorite
         fields = ('id', 'product')
+
+
+class ShoppingCartSerializer(ModelSerializer):
+
+    class Meta:
+        model = ShoppingCart
+        fields = '__all__'
