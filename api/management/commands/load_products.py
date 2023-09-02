@@ -5,7 +5,8 @@ import random
 from django.core.files import File
 from django.core.management.base import BaseCommand
 
-from api.models import Brand, Category, Color, Country, CountrySize, Discount, Picture, Product, Section, Size
+from api.models import (Brand, Category, Color, Country, Discount, Picture,
+                        Product, Section, Size)
 from kids_shop.logger import logger
 
 
@@ -94,7 +95,7 @@ class Command(BaseCommand):
 
         color_lst = [
             '#FF5733',
-            '#3498DBб',
+            '#3498Dб',
             '#2ECC71',
             '#E74C3C',
             '#9B59B6',
@@ -187,22 +188,12 @@ class Command(BaseCommand):
         country_counter = 0
         for item in country_lst:
             country_counter += 1
-            country_instance = Country.objects.create(name=item)
-            num_sizes = random.randint(1, 20)
-
-            for _ in range(num_sizes):
-                CountrySize.objects.create(
-                    country=country_instance,
-                    size=random.randint(10, 34),
-                    letter_size=random.choice([choice.value for choice in CountrySize.LetterSizeChoices])
-                )
-
+            Country.objects.create(name=item)
         logger.info(f'Objects created: {country_counter}')
 
         logger.info('Starting to upload --- SIZE --- in to --- DATABASE ---')
         for _ in range(0, 21):
             brand = Brand.objects.all()
-            country_size = CountrySize.objects.all()
             size_instance, _ = Size.objects.get_or_create(
                 height=random.randint(45, 168),
                 chest_size=random.randint(40, 90),
@@ -212,12 +203,8 @@ class Command(BaseCommand):
                 brand=random.choice(brand),
                 brand_size=random.randint(15, 38),
                 insole_size=random.randint(10, 36),
+                letter_size=random.choice([choice.value for choice in Size.LetterSizeChoices])
             )
-            num_country_sizes = len(country_size)
-            if num_country_sizes > 0:
-                num_samples = min(random.randint(1, 5), num_country_sizes)
-                random_country_sizes = random.sample(list(country_size), num_samples)
-                size_instance.country_size.set(random_country_sizes)
         logger.info(f'Objects created: {section_counter}')
 
         path = options['path']  # Get path to file with data

@@ -42,7 +42,7 @@ class Section(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name='section'
+        related_name='sections'
     )
 
     def __str__(self):
@@ -56,34 +56,8 @@ class Country(models.Model):
         return self.name
 
 
-class CountrySize(models.Model):
-    class LetterSizeChoices(Enum):
-        DOUBLE_EXTRA_SMALL = 'XXS'
-        EXTRA_SMALL = 'XS'
-        SMALL = 'S'
-        MEDIUM = 'M'
-        LARGE = 'L'
-        EXTRA_LARGE = 'XL'
-        DOUBLE_EXTRA_LARGE = 'XXL'
-    country = models.ForeignKey(
-        Country,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True
-    )
-    size = models.PositiveSmallIntegerField(blank=True, null=True)
-    letter_size = models.CharField(
-        choices=[(choice.name, choice.value) for choice in LetterSizeChoices],
-        default=None,
-        blank=True,
-        null=True
-    )
-
-    def __str__(self):
-        return f'{self.country}, {str(self.size)}'
-
-
 class Size(models.Model):
+
     class LetterSizeChoices(Enum):
         DOUBLE_EXTRA_SMALL = 'XXS'
         EXTRA_SMALL = 'XS'
@@ -106,14 +80,15 @@ class Size(models.Model):
     )
     brand_size = models.PositiveSmallIntegerField(blank=True, null=True)
     insole_size = models.PositiveSmallIntegerField(blank=True, null=True)
-    country_size = models.ManyToManyField(
-        CountrySize,
+    letter_size = models.CharField(
+        choices=[(choice.name, choice.value) for choice in LetterSizeChoices],
+        default=None,
         blank=True,
-        related_name='sizes'
+        null=True
     )
 
     def __str__(self):
-        return str(self.country_size)
+        return f'{self.letter_size}({str(self.brand_size)})'
 
 
 class Product(models.Model):
@@ -123,14 +98,14 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         null=False,
         blank=False,
-        related_name='product_category'
+        related_name='product_categories'
     )
     section = models.ForeignKey(
         Section,
         on_delete=models.CASCADE,
         null=False,
         blank=False,
-        related_name='product_section'
+        related_name='product_sections'
     )
     description = models.CharField(max_length=2000)
     brand = models.ForeignKey(
@@ -138,7 +113,7 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         null=False,
         blank=False,
-        related_name='product_brand'
+        related_name='product_brands'
     )
     item_number = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
@@ -150,7 +125,7 @@ class Product(models.Model):
     product_size = models.ManyToManyField(
         Size,
         blank=True,
-        related_name='product_size'
+        related_name='product_sizes'
     )
     age = models.PositiveSmallIntegerField(
         null=False,
@@ -186,12 +161,12 @@ class Favorite(models.Model):
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name='favorite'
+        related_name='favorites'
     )
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        related_name='favorite'
+        related_name='favorites'
     )
 
     class Meta:
@@ -210,12 +185,12 @@ class ShoppingCart(models.Model):
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name='shoppingcart'
+        related_name='shopping_carts'
     )
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        related_name='shoppingcart'
+        related_name='shopping_carts'
     )
 
     class Meta:

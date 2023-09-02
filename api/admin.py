@@ -52,13 +52,6 @@ class CountryAdmin(admin.ModelAdmin):
     list_filter = ('id', 'name')
 
 
-@admin.register(models.CountrySize)
-class CountrySizeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'country', 'size', 'letter_size')
-    search_fields = ('id', 'country', 'size', 'letter_size')
-    list_filter = ('id', 'country', 'size', 'letter_size')
-
-
 @admin.register(models.Size)
 class SizeAdmin(admin.ModelAdmin):
     list_display = (
