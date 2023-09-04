@@ -101,4 +101,4 @@ class ShoppingCartSerializer(ModelSerializer):
 
     class Meta:
         model = ShoppingCart
-        fields = '__all__'
+        fields = ('user', 'product')

@@ -95,7 +95,6 @@ class Command(BaseCommand):
 
         color_lst = [
             '#FF5733',
-            '#3498Dб',
             '#2ECC71',
             '#E74C3C',
             '#9B59B6',
