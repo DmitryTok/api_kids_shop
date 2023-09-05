@@ -73,7 +73,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'kids_shop.wsgi.application'''
+WSGI_APPLICATION = 'kids_shop.wsgi.application'
+
 DATABASES = {
     'default': {
         'ENGINE': os.environ.get('DB_ENGINE'),
