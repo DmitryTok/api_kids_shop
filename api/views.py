@@ -1,4 +1,3 @@
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets
 
 from api.repository import (BrandRepository, CategoryRepository,
@@ -23,8 +22,7 @@ class ProductListView(BaseRetrieveViewSet):
     product_repository = ProductRepository()
     queryset = product_repository.get_all_objects_order_by_id()
     serializer_class = ProductSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['category__name']
+    filterset_fields = ['category__name', 'section__name', 'brand', 'price', 'rating', 'age', 'male']
 
 
 class CategoryListView(BaseRetrieveViewSet):
