@@ -2,8 +2,6 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from api.serializers import FavoriteSerializer
-
 from .models import CustomUser
 
 
@@ -30,8 +28,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
-    favorite = FavoriteSerializer(many=True)
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'id', 'first_name', 'last_name', 'favorite')
+        fields = ('email', 'id', 'first_name', 'last_name')
