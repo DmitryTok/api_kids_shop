@@ -22,25 +22,38 @@ class ProductListView(BaseRetrieveViewSet):
     product_repository = ProductRepository()
     queryset = product_repository.get_all_objects_order_by_id()
     serializer_class = ProductSerializer
-    filterset_fields = ['category__name', 'section__name', 'brand', 'price', 'rating', 'age', 'male']
+    filterset_fields = [
+        'category__name',
+        'section__name',
+        'brand__name',
+        'price',
+        'rating',
+        'age',
+        'male',
+        'color__name',
+        'product_size__brand_size',
+    ]
 
 
 class CategoryListView(BaseRetrieveViewSet):
     category_repository = CategoryRepository()
     queryset = category_repository.get_all_objects_order_by_id()
     serializer_class = CategorySerializer
+    filterset_fields = ['name']
 
 
 class SectionListView(BaseRetrieveViewSet):
     section_repository = SectionRepository()
     queryset = section_repository.get_all_objects_order_by_id()
     serializer_class = SectionSerializer
+    filterset_fields = ['name', 'category__name']
 
 
 class BranListView(BaseRetrieveViewSet):
     brand_repository = BrandRepository()
     queryset = brand_repository.get_all_objects_order_by_id()
     serializer_class = BrandSerializer
+    filterset_fields = ['name']
 
 
 class PictureListView(BaseRetrieveViewSet):
