@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-
+.ruff_cache
 .DS_Store
 .idea
 .Python
