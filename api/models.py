@@ -24,12 +24,20 @@ class Discount(models.Model):
 class Brand(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super().save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
 
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
+
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -45,12 +53,9 @@ class Section(models.Model):
         related_name='sections'
     )
 
-    def __str__(self):
-        return self.name
-
-
-class Country(models.Model):
-    name = models.CharField(max_length=200)
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower()
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -67,19 +72,7 @@ class Size(models.Model):
         EXTRA_LARGE = 'XL'
         DOUBLE_EXTRA_LARGE = 'XXL'
 
-    height = models.PositiveSmallIntegerField(blank=True, null=True)
-    chest_size = models.PositiveSmallIntegerField(blank=True, null=True)
-    waist_size = models.PositiveSmallIntegerField(blank=True, null=True)
-    arm_length = models.PositiveSmallIntegerField(blank=True, null=True)
-    age = models.PositiveSmallIntegerField(blank=True, null=True)
-    brand = models.ForeignKey(
-        Brand,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True
-    )
     brand_size = models.PositiveSmallIntegerField(blank=True, null=True)
-    insole_size = models.PositiveSmallIntegerField(blank=True, null=True)
     letter_size = models.CharField(
         choices=[(choice.name, choice.value) for choice in LetterSizeChoices],
         default=None,

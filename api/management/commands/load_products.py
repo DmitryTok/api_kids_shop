@@ -5,8 +5,8 @@ import random
 from django.core.files import File
 from django.core.management.base import BaseCommand
 
-from api.models import (Brand, Category, Color, Country, Discount, Picture,
-                        Product, Section, Size)
+from api.models import (Brand, Category, Color, Discount, Picture, Product,
+                        Section, Size)
 from kids_shop.logger import logger
 
 
@@ -107,8 +107,6 @@ class Command(BaseCommand):
             '#43464B'
         ]
 
-        country_lst = ['Європа', 'Америка', 'Англія']
-
         """
         First part of script that uploads categories from category_lst into the database.
         At the end, the logger will show how many objects are created
@@ -155,7 +153,7 @@ class Command(BaseCommand):
         """
         logger.info('Starting to upload --- SECTION --- to the --- ACCESSORIES CATEGORY ---')
         section_counter = 0
-        accessories_category = Category.objects.get(name='Аксесуары')
+        accessories_category = Category.objects.get(name='аксесуары')
         for section_name in section_accessories_lst:
             _, created = Section.objects.get_or_create(name=section_name, category=accessories_category)
             section_counter += 1
@@ -166,7 +164,7 @@ class Command(BaseCommand):
         """
         logger.info('Starting to upload --- SECTION --- to the --- CHOSE CATEGORY ---')
         section_counter = 0
-        chose_category = Category.objects.get(name='Взуття')
+        chose_category = Category.objects.get(name='взуття')
         for section_name in section_chose_lst:
             section, _ = Section.objects.get_or_create(name=section_name, category=chose_category)
             section_counter += 1
@@ -177,31 +175,17 @@ class Command(BaseCommand):
         """
         logger.info('Starting to upload --- SECTION --- to the --- CLOTHES CATEGORY ---')
         section_counter = 0
-        clothes_category = Category.objects.get(name='Одяг')
+        clothes_category = Category.objects.get(name='одяг')
         for section_name in section_clothes_lst:
             _, created = Section.objects.get_or_create(name=section_name, category=clothes_category)
             section_counter += 1
         logger.info(f'Objects created: {section_counter}')
 
-        logger.info('Starting to upload --- COUNTRY --- to the --- DATABASE ---')
-        country_counter = 0
-        for item in country_lst:
-            country_counter += 1
-            Country.objects.create(name=item)
-        logger.info(f'Objects created: {country_counter}')
-
         logger.info('Starting to upload --- SIZE --- in to --- DATABASE ---')
         for _ in range(0, 21):
             brand = Brand.objects.all()
             size_instance, _ = Size.objects.get_or_create(
-                height=random.randint(45, 168),
-                chest_size=random.randint(40, 90),
-                waist_size=random.randint(40, 90),
-                arm_length=random.randint(34, 80),
-                age=random.randint(0, 15),
-                brand=random.choice(brand),
                 brand_size=random.randint(15, 38),
-                insole_size=random.randint(10, 36),
                 letter_size=random.choice([choice.value for choice in Size.LetterSizeChoices])
             )
         logger.info(f'Objects created: {section_counter}')

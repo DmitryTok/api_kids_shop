@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 
-from api.models import (Brand, Category, Color, Country, Discount, Favorite,
-                        Picture, Product, Section, ShoppingCart, Size)
+from api.models import (Brand, Category, Color, Discount, Favorite, Picture,
+                        Product, Section, ShoppingCart, Size)
 
 
 class PictureSerializer(ModelSerializer):
@@ -52,26 +52,11 @@ class ColorSerializer(ModelSerializer):
         read_only_fields = fields
 
 
-class CountrySerializer(ModelSerializer):
-    class Meta:
-        model = Country
-        fields = ('name',)
-
-
 class SizeSerializer(ModelSerializer):
 
     class Meta:
         model = Size
-        exclude = [
-            'id',
-            'brand',
-            'height',
-            'chest_size',
-            'waist_size',
-            'arm_length',
-            'age',
-            'insole_size',
-        ]
+        fields = '__all__'
 
 
 class ProductSerializer(ModelSerializer):

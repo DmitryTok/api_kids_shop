@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "api_kids_shop"
+version = "0.1.0"
+description = "Kids online shop"
+authors = ["DmitryTok <moon0939110824@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+exclude = [
+    ".mypy_cache",
+    ".ruff_cache",
+    "venv",
+    "management",
+    "migrations",
+    "media",
+]
+
+line-length = 120
+

@@ -45,24 +45,11 @@ class ProductImageAdmin(admin.ModelAdmin):
     list_filter = ('id', 'product', 'product_image')
 
 
-@admin.register(models.Country)
-class CountryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
-    search_fields = ('id', 'name')
-    list_filter = ('id', 'name')
-
-
 @admin.register(models.Size)
 class SizeAdmin(admin.ModelAdmin):
-    list_display = (
-        'id', 'height', 'age', 'brand_size', 'insole_size'
-    )
-    search_fields = (
-        'id', 'height', 'age', 'brand_size', 'insole_size'
-    )
-    list_filter = (
-        'id', 'height', 'age', 'brand_size', 'insole_size'
-    )
+    list_display = ('id', 'brand_size', 'letter_size')
+    search_fields = ('id', 'brand_size', 'letter_size')
+    list_filter = ('id', 'brand_size', 'letter_size')
 
 
 @admin.register(models.Product)
