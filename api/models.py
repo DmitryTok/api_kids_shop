@@ -138,6 +138,7 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+#123
 
 class Picture(models.Model):
     product = models.ForeignKey(
