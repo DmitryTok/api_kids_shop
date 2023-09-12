@@ -133,6 +133,7 @@ class Product(models.Model):
         blank=True,
         null=True
     )
+    in_stock = models.SmallIntegerField(default=0)
 
     def __str__(self):
         return self.name
