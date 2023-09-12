@@ -138,7 +138,6 @@ class Product(models.Model):
         return self.name
 
 
-
 class Picture(models.Model):
     product = models.ForeignKey(
         Product,
