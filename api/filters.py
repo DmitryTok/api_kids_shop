@@ -4,8 +4,8 @@ from api.models import Product
 
 
 class ProductFilter(filters.FilterSet):
-    age = filters.CharFilter(method='filter_age')
-    price = filters.CharFilter(method='filter_price')
+    age_range = filters.CharFilter(method='filter_diapason')
+    price_range = filters.CharFilter(method='filter_diapason')
 
     class Meta:
         model = Product
@@ -19,26 +19,20 @@ class ProductFilter(filters.FilterSet):
             'product_size__brand_size',
         ]
 
-    def filter_age(self, queryset, name, value):
+    def filter_diapason(self, queryset, name, value):
         try:
-            age_parts = value.split('-')
-            if len(age_parts) == 2:
-                start_age, end_age = map(int, age_parts)
-                return queryset.filter(age__range=(start_age, end_age))
+            parts = value.split('-')
+            if len(parts) == 2:
+                start_value, end_value = map(int, parts)
+                if name == 'age_range':
+                    return queryset.filter(age__range=(start_value, end_value))
+                elif name == 'price_range':
+                    return queryset.filter(price__range=(start_value, end_value))
             else:
-                age = int(age_parts[0])
-                return queryset.filter(age=age)
-        except ValueError:
-            return queryset.none()
-
-    def filter_price(self, queryset, name, value):
-        try:
-            price_parts = value.split('-')
-            if len(price_parts) == 2:
-                start_price, end_price = map(int, price_parts)
-                return queryset.filter(price__range=(start_price, end_price))
-            else:
-                price = int(price_parts[0])
-                return queryset.filter(price=price)
+                single_value = int(parts[0])
+                if name == 'age_range':
+                    return queryset.filter(age=single_value)
+                elif name == 'price_range':
+                    return queryset.filter(price=single_value)
         except ValueError:
             return queryset.none()
