@@ -1,4 +1,3 @@
-from django.db.models import Q
 from django_filters import rest_framework as filters
 
 from api.models import Product
@@ -11,11 +10,9 @@ class ProductFilter(filters.FilterSet):
     class Meta:
         model = Product
         fields = [
-            'age',
             'category__name',
             'section__name',
             'brand__name',
-            'price',
             'rating',
             'male',
             'color__name',
@@ -30,7 +27,7 @@ class ProductFilter(filters.FilterSet):
                 return queryset.filter(age__range=(start_age, end_age))
             else:
                 age = int(age_parts[0])
-                return queryset.filter(Q(age=age) | Q(age=age))
+                return queryset.filter(age=age)
         except ValueError:
             return queryset.none()
 
@@ -39,9 +36,9 @@ class ProductFilter(filters.FilterSet):
             price_parts = value.split('-')
             if len(price_parts) == 2:
                 start_price, end_price = map(int, price_parts)
-                return queryset.filter(age__range=(start_price, end_price))
+                return queryset.filter(price__range=(start_price, end_price))
             else:
                 price = int(price_parts[0])
-                return queryset.filter(Q(price=price) | Q(price=price))
+                return queryset.filter(price=price)
         except ValueError:
             return queryset.none()
