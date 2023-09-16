@@ -1,5 +1,6 @@
 from rest_framework import mixins, viewsets
 
+# from api.filters import ProductFilter
 from api.repository import (BrandRepository, CategoryRepository,
                             FavoriteRepository, PictureRepository,
                             ProductRepository, SectionRepository,
@@ -22,17 +23,7 @@ class ProductListView(BaseRetrieveViewSet):
     product_repository = ProductRepository()
     queryset = product_repository.get_all_objects_order_by_id()
     serializer_class = ProductSerializer
-    filterset_fields = [
-        'category__name',
-        'section__name',
-        'brand__name',
-        'price',
-        'rating',
-        'age',
-        'male',
-        'color__name',
-        'product_size__brand_size',
-    ]
+    # filterset_class = ProductFilter
 
 
 class CategoryListView(BaseRetrieveViewSet):

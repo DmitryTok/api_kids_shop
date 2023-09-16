@@ -140,11 +140,24 @@ class Command(BaseCommand):
             Discount.objects.get_or_create(name=discount)
         logger.info(f'Objects created: {discount_counter}')
 
+        logger.info('Starting to upload --- SIZE --- in to --- DATABASE ---')
+        size_counter = 0
+        for _ in range(0, 21):
+            size_counter += 1
+            brand = Brand.objects.all()
+            size_instance, _ = Size.objects.get_or_create(
+                brand_size=random.randint(15, 38),
+                letter_size=random.choice([choice.value for choice in Size.LetterSizeChoices]),
+                in_stock=random.randint(15, 40)
+            )
+        logger.info(f'Objects created: {size_counter}')
+
         logger.info('Starting to upload --- COLOR --- to the database')
         color_counter = 0
         for color in color_lst:
             color_counter += 1
-            Color.objects.get_or_create(name=color)
+            size = Size.objects.all()
+            Color.objects.get_or_create(name=color, product_size=random.choice(size))
         logger.info(f'Objects created: {color_counter}')
 
         """
@@ -224,7 +237,7 @@ class Command(BaseCommand):
                     is_sale=random.choice(is_sale),  # random on sale flag
                 )
                 product.color.add(*random.sample(list(color), random.randint(1, 8)))
-                product.product_size.add(*random.sample(list(size), random.randint(1, 12)))
+                # product.product_size.add(*random.sample(list(size), random.randint(1, 12)))
         logger.info(f'Objects created: {counter}')
 
         logger.info('Put --- DISCOUNT --- to all IS_SALE --- PRODUCTS ---')

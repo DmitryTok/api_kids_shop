@@ -7,13 +7,6 @@ from django.db import models
 from users.models import CustomUser
 
 
-class Color(models.Model):
-    name = models.CharField(max_length=120, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Discount(models.Model):
     name = models.PositiveIntegerField(validators=[MinValueValidator(0)])
 
@@ -79,9 +72,23 @@ class Size(models.Model):
         blank=True,
         null=True
     )
+    in_stock = models.SmallIntegerField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.letter_size}({str(self.brand_size)})'
+
+
+class Color(models.Model):
+    name = models.CharField(max_length=120, unique=True)
+    product_size = models.ForeignKey(
+        Size,
+        blank=True,
+        related_name='product_sizes',
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return self.name
 
 
 class Product(models.Model):
@@ -115,11 +122,7 @@ class Product(models.Model):
         Color,
         blank=False,
     )
-    product_size = models.ManyToManyField(
-        Size,
-        blank=True,
-        related_name='product_sizes'
-    )
+
     age = models.PositiveSmallIntegerField(
         null=False,
         blank=False,
@@ -133,7 +136,7 @@ class Product(models.Model):
         blank=True,
         null=True
     )
-    in_stock = models.SmallIntegerField(default=0)
+
 
     def __str__(self):
         return self.name

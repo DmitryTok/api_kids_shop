@@ -44,19 +44,20 @@ class DiscountSerializer(ModelSerializer):
         read_only_fields = fields
 
 
-class ColorSerializer(ModelSerializer):
-
-    class Meta:
-        model = Color
-        fields = ('id', 'name')
-        read_only_fields = fields
-
-
 class SizeSerializer(ModelSerializer):
 
     class Meta:
         model = Size
         fields = '__all__'
+
+
+class ColorSerializer(ModelSerializer):
+    product_size = SizeSerializer(read_only=True)
+
+    class Meta:
+        model = Color
+        fields = ('id', 'name', 'product_size')
+        read_only_fields = fields
 
 
 class ProductSerializer(ModelSerializer):
@@ -66,7 +67,6 @@ class ProductSerializer(ModelSerializer):
     brand = BrandSerializer(read_only=True)
     discount = DiscountSerializer(read_only=True)
     color = ColorSerializer(many=True, read_only=True)
-    product_size = SizeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
