@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'djoser',
     'corsheaders',
     'drf_spectacular',
-    'debug_toolbar',
+    'drf_api_logger',
     # local apps
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
@@ -39,13 +39,11 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware',
 ]
 
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
-}
+DRF_API_LOGGER_DATABASE = True
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
@@ -149,24 +147,6 @@ DJOSER = {
     },
     'HIDE_USERS': False,
 }
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-        }
-    },
-    'loggers': {
-        'django.db.backends': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-        },
-    }
-}
-
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

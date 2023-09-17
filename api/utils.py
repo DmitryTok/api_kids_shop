@@ -13,3 +13,13 @@ def time_checker(func):
         logger.info(f'Function: {func.__name__} | Time: {total_time}')
         return result
     return wrapper
+
+
+def split_value(value):
+    parts = value.split('-')
+    if len(parts) == 2:
+        start_value, end_value = map(int, parts)
+        return start_value, end_value
+    else:
+        single_value = int(parts[0])
+        return single_value
