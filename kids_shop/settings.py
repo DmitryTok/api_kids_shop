@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'djoser',
     'corsheaders',
     'drf_spectacular',
+    'debug_toolbar',
     # local apps
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
@@ -38,8 +39,13 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+}
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
@@ -142,6 +148,23 @@ DJOSER = {
         'user_list': ('rest_framework.permissions.AllowAny',),
     },
     'HIDE_USERS': False,
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    }
 }
 
 

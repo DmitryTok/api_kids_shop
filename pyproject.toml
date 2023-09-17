@@ -21,6 +21,7 @@ pre-commit = "^3.4.0"
 psycopg2-binary = "^2.9.7"
 python-dotenv = "^1.0.0"
 wheel = "^0.41.2"
+django-debug-toolbar = "^4.2.0"
 
 [build-system]
 requires = ["poetry-core"]
