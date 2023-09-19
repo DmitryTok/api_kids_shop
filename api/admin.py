@@ -10,6 +10,11 @@ class DiscountAdmin(admin.ModelAdmin):
     list_filter = ('id', 'name',)
 
 
+@admin.register(models.ColorName)
+class ColorNameAdmin(admin.ModelAdmin):
+    pass
+
+
 @admin.register(models.Color)
 class ColorAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
@@ -47,9 +52,9 @@ class ProductImageAdmin(admin.ModelAdmin):
 
 @admin.register(models.Size)
 class SizeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'brand_size', 'letter_size')
-    search_fields = ('id', 'brand_size', 'letter_size')
-    list_filter = ('id', 'brand_size', 'letter_size')
+    list_display = ('id', 'brand_size', 'letter_size', 'in_stock')
+    search_fields = ('id', 'brand_size', 'letter_size', 'in_stock')
+    list_filter = ('id', 'brand_size', 'letter_size', 'in_stock')
 
 
 @admin.register(models.Product)

@@ -5,8 +5,8 @@ import random
 from django.core.files import File
 from django.core.management.base import BaseCommand
 
-from api.models import (Brand, Category, Color, Discount, Picture, Product,
-                        Section, Size)
+from api.models import (Brand, Category, Color, ColorName, Discount, Picture,
+                        Product, Section, Size)
 from kids_shop.logger import logger
 
 
@@ -141,24 +141,31 @@ class Command(BaseCommand):
         logger.info(f'Objects created: {discount_counter}')
 
         logger.info('Starting to upload --- SIZE --- in to --- DATABASE ---')
-        size_counter = 0
-        for _ in range(0, 21):
-            size_counter += 1
-            brand = Brand.objects.all()
-            size_instance, _ = Size.objects.get_or_create(
+        # size_counter = 0
+        # for _ in range(0, 21):
+        #     size_counter += 1
+        #     brand = Brand.objects.all()
+        #     size_instance, _ = Size.objects.get_or_create(
+        #         brand_size=random.randint(15, 38),
+        #         letter_size=random.choice([choice.value for choice in Size.LetterSizeChoices]),
+        #         in_stock=random.randint(0, 40)
+        #     )
+        # logger.info(f'Objects created: {size_counter}')
+
+        def create_random_size():
+            size = Size.objects.create(
                 brand_size=random.randint(15, 38),
                 letter_size=random.choice([choice.value for choice in Size.LetterSizeChoices]),
-                in_stock=random.randint(15, 40)
+                in_stock=random.randint(0, 40)
             )
-        logger.info(f'Objects created: {size_counter}')
+            return size
 
         logger.info('Starting to upload --- COLOR --- to the database')
         color_counter = 0
         for color in color_lst:
             color_counter += 1
-            size = Size.objects.all()
-            Color.objects.get_or_create(name=color, product_size=random.choice(size))
-        logger.info(f'Objects created: {color_counter}')
+            color_name = ColorName.objects.create(name=color)
+
 
         """
         Here, we begin the process of uploading sections all at once
@@ -218,8 +225,8 @@ class Command(BaseCommand):
             categories = Category.objects.all()
             sections = Section.objects.all()
             discount = Discount.objects.all()
-            color = Color.objects.all()
-            size = Size.objects.all()
+            color_names = ColorName.objects.all()
+            # size = Size.objects.all()
             for item in reader:
                 counter += 1
                 male_value = item['male'].strip().lower()
@@ -236,7 +243,16 @@ class Command(BaseCommand):
                     rating=random.randint(0, 10),  # random rating from 0 to 10
                     is_sale=random.choice(is_sale),  # random on sale flag
                 )
-                product.color.add(*random.sample(list(color), random.randint(1, 8)))
+                color_list = []
+                for _ in range(3):
+                    color = Color.objects.create(name=random.choice(color_names))
+                    size_list = []
+                    for _ in range(1, random.randint(4, 8)):
+                        size_list.append(create_random_size())
+                    color.product_size.set(size_list)
+                    color_list.append(color)
+
+                product.color.set(color_list)
                 # product.product_size.add(*random.sample(list(size), random.randint(1, 12)))
         logger.info(f'Objects created: {counter}')
 

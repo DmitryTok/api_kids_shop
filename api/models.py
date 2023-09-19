@@ -78,17 +78,28 @@ class Size(models.Model):
         return f'{self.letter_size}({str(self.brand_size)})'
 
 
-class Color(models.Model):
+class ColorName(models.Model):
     name = models.CharField(max_length=120, unique=True)
-    product_size = models.ForeignKey(
-        Size,
-        blank=True,
-        related_name='product_sizes',
-        on_delete=models.CASCADE
-    )
 
     def __str__(self):
         return self.name
+
+
+class Color(models.Model):
+    name = models.ForeignKey(
+        ColorName,
+        blank=True,
+        related_name='colors',
+        on_delete=models.CASCADE
+    )
+    product_size = models.ManyToManyField(
+        Size,
+        blank=True,
+        related_name='product_sizes'
+    )
+
+    def __str__(self):
+        return self.name.name
 
 
 class Product(models.Model):
@@ -136,7 +147,6 @@ class Product(models.Model):
         blank=True,
         null=True
     )
-
 
     def __str__(self):
         return self.name
