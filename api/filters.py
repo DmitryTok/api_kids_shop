@@ -15,7 +15,6 @@ class ProductFilter(filters.FilterSet):
             'brand__name',
             'rating',
             'male',
-            'color__name__name',
         ]
 
     def filter_diapason(self, queryset, name, value):

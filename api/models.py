@@ -72,34 +72,16 @@ class Size(models.Model):
         blank=True,
         null=True
     )
-    in_stock = models.SmallIntegerField(blank=True, null=True)
 
     def __str__(self):
         return f'{self.letter_size}({str(self.brand_size)})'
 
 
-class ColorName(models.Model):
+class Color(models.Model):
     name = models.CharField(max_length=120, unique=True)
 
     def __str__(self):
         return self.name
-
-
-class Color(models.Model):
-    name = models.ForeignKey(
-        ColorName,
-        blank=True,
-        related_name='colors',
-        on_delete=models.CASCADE
-    )
-    product_size = models.ManyToManyField(
-        Size,
-        blank=True,
-        related_name='product_sizes'
-    )
-
-    def __str__(self):
-        return self.name.name
 
 
 class Product(models.Model):
@@ -129,10 +111,6 @@ class Product(models.Model):
     item_number = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
-    color = models.ManyToManyField(
-        Color,
-        blank=False,
-    )
 
     age = models.PositiveSmallIntegerField(
         null=False,
@@ -150,6 +128,32 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class InStock(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False,
+        related_name='in_stock'
+    )
+    color = models.ForeignKey(
+        Color,
+        blank=False,
+        on_delete=models.CASCADE
+    )
+    product_size = models.ForeignKey(
+        Size,
+        blank=True,
+        related_name='product_sizes',
+        on_delete=models.CASCADE
+    )
+    in_stock = models.SmallIntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.color.name
+
 
 
 class Picture(models.Model):

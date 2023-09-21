@@ -3,16 +3,17 @@ from django.contrib import admin
 from api import models
 
 
+class ProductInStockInline(admin.TabularInline):
+    model = models.InStock
+    readonly_fields = ['id']
+    extra = 1
+
+
 @admin.register(models.Discount)
 class DiscountAdmin(admin.ModelAdmin):
     list_display = ('id', 'name',)
     search_fields = ('id', 'name',)
     list_filter = ('id', 'name',)
-
-
-@admin.register(models.ColorName)
-class ColorNameAdmin(admin.ModelAdmin):
-    pass
 
 
 @admin.register(models.Color)
@@ -52,13 +53,14 @@ class ProductImageAdmin(admin.ModelAdmin):
 
 @admin.register(models.Size)
 class SizeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'brand_size', 'letter_size', 'in_stock')
-    search_fields = ('id', 'brand_size', 'letter_size', 'in_stock')
-    list_filter = ('id', 'brand_size', 'letter_size', 'in_stock')
+    list_display = ('id', 'brand_size', 'letter_size')
+    search_fields = ('id', 'brand_size', 'letter_size')
+    list_filter = ('id', 'brand_size', 'letter_size')
 
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
+    inlines = [ProductInStockInline]
     list_display = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount')
     search_fields = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount')
     list_filter = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount')

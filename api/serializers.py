@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from api.models import (Brand, Category, Color, ColorName, Discount, Favorite,
+from api.models import (Brand, Category, Color, Discount, Favorite, InStock,
                         Picture, Product, Section, ShoppingCart, Size)
 
 
@@ -51,19 +51,21 @@ class SizeSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class ColorNameSerializer(ModelSerializer):
-    class Meta:
-        model = ColorName
-        fields = '__all__'
-
-
 class ColorSerializer(ModelSerializer):
-    product_size = SizeSerializer(many=True, read_only=True)
-    name = ColorNameSerializer(read_only=True)
 
     class Meta:
         model = Color
-        fields = ('id', 'name', 'product_size')
+        fields = ('id', 'name')
+        read_only_fields = fields
+
+
+class InStockSerializer(ModelSerializer):
+    color = ColorSerializer(read_only=True)
+    product_size = SizeSerializer(read_only=True)
+
+    class Meta:
+        model = InStock
+        fields = ('id', 'color', 'product_size')
         read_only_fields = fields
 
 
@@ -73,7 +75,7 @@ class ProductSerializer(ModelSerializer):
     section = SectionSerializer(read_only=True)
     brand = BrandSerializer(read_only=True)
     discount = DiscountSerializer(read_only=True)
-    color = ColorSerializer(many=True, read_only=True)
+    in_stock = InStockSerializer(read_only=True, many=True)
 
     class Meta:
         model = Product
