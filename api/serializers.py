@@ -66,7 +66,6 @@ class InStockSerializer(ModelSerializer):
     class Meta:
         model = InStock
         fields = ('id', 'color', 'product_size', 'in_stock')
-        read_only_fields = fields
 
 
 class ProductSerializer(ModelSerializer):
@@ -80,7 +79,6 @@ class ProductSerializer(ModelSerializer):
     class Meta:
         model = Product
         fields = '__all__'
-        read_only_fields = (fields,)
 
 
 class FavoriteSerializer(ModelSerializer):
