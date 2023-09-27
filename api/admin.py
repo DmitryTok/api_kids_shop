@@ -61,9 +61,15 @@ class SizeAdmin(admin.ModelAdmin):
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     inlines = [ProductInStockInline]
-    list_display = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount')
+    list_display = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount', 'in_stock_display')
     search_fields = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount')
     list_filter = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount')
+
+    def in_stock_display(self, obj):
+        in_stock_info = obj.in_stock.all()
+        return ', '.join([f"{item.color.name} {item.product_size}: {item.in_stock}" for item in in_stock_info])
+
+    in_stock_display.short_description = 'In Stock'
 
 
 @admin.register(models.Favorite)
@@ -78,3 +84,10 @@ class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'product')
     search_fields = ('id', 'user', 'product')
     list_filter = ('id', 'user', 'product')
+
+
+@admin.register(models.InStock)
+class InStockAdmin(admin.ModelAdmin):
+    list_display = ('id', 'product', 'color', 'product_size', 'in_stock')
+    search_fields = ('id', 'product', 'color', 'product_size', 'in_stock')
+    list_filter = ('id', 'product', 'color', 'product_size', 'in_stock')
