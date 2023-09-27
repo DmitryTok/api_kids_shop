@@ -227,7 +227,7 @@ class Command(BaseCommand):
                 product.product_size.add(*random.sample(list(size), random.randint(1, 12)))
         logger.info(f'Objects created: {counter}')
 
-        logger.info('Put --- DISCOUNT --- to all IS_SALE --- PRODUCTS ---')
+        logger.info('Put --- DISCOUNT --- to all --- IS_SALE --- --- PRODUCTS ---')
         sale_products = Product.objects.filter(is_sale=True)
         discount_sale_counter = 0
         for product in sale_products:

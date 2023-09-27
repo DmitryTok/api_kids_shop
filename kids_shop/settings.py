@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'djoser',
     'corsheaders',
     'drf_spectacular',
+    'drf_api_logger',
     # local apps
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
@@ -39,7 +40,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware',
 ]
+
+DRF_API_LOGGER_DATABASE = True
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
@@ -143,7 +147,6 @@ DJOSER = {
     },
     'HIDE_USERS': False,
 }
-
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
