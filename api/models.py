@@ -141,7 +141,8 @@ class InStock(models.Model):
     color = models.ForeignKey(
         Color,
         blank=False,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='in_stock'
     )
     product_size = models.ForeignKey(
         Size,
@@ -149,11 +150,14 @@ class InStock(models.Model):
         related_name='product_sizes',
         on_delete=models.CASCADE
     )
-    in_stock = models.SmallIntegerField(blank=True, null=True)
+    in_stock = models.SmallIntegerField(
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0)]
+    )
 
     def __str__(self):
         return self.color.name
-
 
 
 class Picture(models.Model):
