@@ -7,13 +7,6 @@ from django.db import models
 from users.models import CustomUser
 
 
-class Color(models.Model):
-    name = models.CharField(max_length=120, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Discount(models.Model):
     name = models.PositiveIntegerField(validators=[MinValueValidator(0)])
 
@@ -84,6 +77,13 @@ class Size(models.Model):
         return f'{self.letter_size}({str(self.brand_size)})'
 
 
+class Color(models.Model):
+    name = models.CharField(max_length=120, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     name = models.CharField(max_length=150)
     category = models.ForeignKey(
@@ -111,15 +111,7 @@ class Product(models.Model):
     item_number = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
-    color = models.ManyToManyField(
-        Color,
-        blank=False,
-    )
-    product_size = models.ManyToManyField(
-        Size,
-        blank=True,
-        related_name='product_sizes'
-    )
+
     age = models.PositiveSmallIntegerField(
         null=False,
         blank=False,
@@ -136,6 +128,36 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class InStock(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        null=False,
+        blank=False,
+        related_name='in_stock'
+    )
+    color = models.ForeignKey(
+        Color,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='in_stock'
+    )
+    product_size = models.ForeignKey(
+        Size,
+        blank=True,
+        related_name='product_sizes',
+        on_delete=models.CASCADE
+    )
+    in_stock = models.SmallIntegerField(
+        blank=True,
+        null=True,
+        validators=[MinValueValidator(0)]
+    )
+
+    def __str__(self):
+        return self.color.name
 
 
 class Picture(models.Model):

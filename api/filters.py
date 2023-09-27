@@ -16,8 +16,6 @@ class ProductFilter(filters.FilterSet):
             'brand__name',
             'rating',
             'male',
-            'color__name',
-            'product_size__brand_size',
         ]
 
     @staticmethod
