@@ -65,7 +65,7 @@ class InStockSerializer(ModelSerializer):
 
     class Meta:
         model = InStock
-        fields = ('id', 'color', 'product_size')
+        fields = ('id', 'color', 'product_size', 'in_stock')
         read_only_fields = fields
 
 
