@@ -99,9 +99,9 @@ class FavoriteAdmin(admin.ModelAdmin):
 
 @admin.register(models.ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'product')
-    search_fields = ('id', 'user', 'product')
-    list_filter = ('id', 'user', 'product')
+    list_display = ('id', 'phone', 'product')
+    search_fields = ('id', 'phone', 'product')
+    list_filter = ('id', 'phone', 'product')
 
 
 @admin.register(models.InStock)

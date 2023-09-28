@@ -93,4 +93,4 @@ class ShoppingCartSerializer(ModelSerializer):
 
     class Meta:
         model = ShoppingCart
-        fields = ('user', 'product')
+        fields = ('id', 'phone', 'product')

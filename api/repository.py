@@ -55,6 +55,3 @@ class ShoppingCartRepository(BaseRepository):
     @property
     def model(self) -> type[models.ShoppingCart]:
         return models.ShoppingCart
-
-    def get_all_users_products(self, user_id):
-        return self.model.objects.filter(user=user_id).count()

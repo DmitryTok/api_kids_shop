@@ -197,11 +197,7 @@ class Favorite(models.Model):
 
 
 class ShoppingCart(models.Model):
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='shopping_carts'
-    )
+    phone = models.IntegerField()
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
@@ -212,9 +208,9 @@ class ShoppingCart(models.Model):
         ordering = ('id',)
         constraints = [
             models.UniqueConstraint(
-                fields=('user', 'product'), name='unique_shopping_cart'
+                fields=('phone', 'product'), name='unique_shopping_cart'
             )
         ]
 
     def __str__(self):
-        return f'{self.user}: {self.product}'
+        return f'{self.phone}: {self.product}'
