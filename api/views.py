@@ -37,7 +37,7 @@ class SectionListView(BaseRetrieveViewSet):
     section_repository = SectionRepository()
     queryset = section_repository.get_all_objects_order_by_id()
     serializer_class = SectionSerializer
-    filterset_fields = ['name', 'category__name']
+    filterset_fields = ['name']
 
 
 class BranListView(BaseRetrieveViewSet):

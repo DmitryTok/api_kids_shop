@@ -7,7 +7,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda _request: DEBUG
+}
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 INSTALLED_APPS = [
     # django apps
@@ -24,7 +28,7 @@ INSTALLED_APPS = [
     'djoser',
     'corsheaders',
     'drf_spectacular',
-    'drf_api_logger',
+    'debug_toolbar',
     # local apps
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
@@ -39,10 +43,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-DRF_API_LOGGER_DATABASE = True
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',

@@ -111,7 +111,6 @@ class Product(models.Model):
     item_number = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
-
     age = models.PositiveSmallIntegerField(
         null=False,
         blank=False,
