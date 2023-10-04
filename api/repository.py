@@ -72,7 +72,7 @@ class ProductRepository(BaseRepository):
                 'product_images',
                 queryset=Picture.objects.select_related('product')
             )
-        ).order_by('-rating')
+        )
 
 
 class SectionRepository(BaseRepository):
