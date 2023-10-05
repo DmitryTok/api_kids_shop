@@ -1,3 +1,5 @@
+from enum import Enum
+
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import validate_email
 from django.db import models
@@ -43,5 +45,95 @@ class CustomUser(AbstractUser):
 
     objects = CustomUserManager()
 
-    class Meta:
-        ordering = ('id',)
+
+class Kid(models.Model):
+    class MaleChoices(Enum):
+        Male = 'Boy'
+        Female = 'Girl'
+    male = models.CharField(
+        choices=[(choice.name, choice.value) for choice in MaleChoices],
+        blank=False,
+        null=False
+    )
+    birth_date = models.DateTimeField(
+        blank=False,
+        null=False
+    )
+
+
+class Address(models.Model):
+    first_delivery_address = models.CharField(
+        blank=False,
+        null=False
+    )
+    second_delivery_address = models.CharField(
+        blank=True,
+        null=True
+    )
+    city = models.CharField(
+        blank=False,
+        null=False
+    )
+    street = models.CharField(
+        blank=False,
+        null=False
+    )
+    building = models.CharField(
+        blank=False,
+        null=False
+    )
+    apartment = models.IntegerField(
+        blank=False,
+        null=False
+    )
+
+
+class Profile(models.Model):
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='users_profile',
+        blank=False,
+        null=False
+    )
+    address = models.ForeignKey(
+        Address,
+        on_delete=models.CASCADE,
+        related_name='users_address',
+        blank=False,
+        null=False
+    )
+    kid = models.ForeignKey( # TODO Check relation with kids
+        Kid,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='users_kids'
+    )
+    first_name = models.CharField(
+        max_length=125,
+        blank=True,
+        null=True
+    )
+    middle_name = models.CharField(
+        max_length=125,
+        blank=True,
+        null=True
+    )
+    last_name = models.CharField(
+        max_length=125,
+        blank=True,
+        null=True
+    )
+    birth_date = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+    first_phone = models.IntegerField(
+        blank=False,
+        null=False
+    )
+    second_phone = models.IntegerField(
+        blank=True,
+        null=True
+    )
