@@ -9,9 +9,9 @@ from kids_shop.permissions import IsAdminOrReadOnly
 
 
 class BaseRetrieveViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [IsAdminOrReadOnly]
     pagination_class = LimitOffsetPagination
     filter_backends = [DjangoFilterBackend]
+    permission_classes = [IsAdminOrReadOnly]
 
     def retrieve(self, request, *args, **kwargs):
         try:

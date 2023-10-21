@@ -1,7 +1,6 @@
 from django.db.models import Prefetch
 
 from api import models
-from api.models import InStock, Picture
 from kids_shop.base.base_repository import BaseRepository
 
 
@@ -20,15 +19,14 @@ class ProductRepository(BaseRepository):
         ).prefetch_related(
             Prefetch(
                 'in_stock',
-                queryset=InStock.objects.select_related(
-                    'product',
+                queryset=models.InStock.objects.select_related(
                     'color',
                     'product_size'
                 )
             ),
             Prefetch(
                 'product_images',
-                queryset=Picture.objects.select_related('product')
+                queryset=models.Picture.objects.select_related('product')
             )
         )
 
@@ -41,15 +39,14 @@ class ProductRepository(BaseRepository):
         ).prefetch_related(
             Prefetch(
                 'in_stock',
-                queryset=InStock.objects.select_related(
-                    'product',
+                queryset=models.InStock.objects.select_related(
                     'color',
                     'product_size'
                 )
             ),
             Prefetch(
                 'product_images',
-                queryset=Picture.objects.select_related('product')
+                queryset=models.Picture.objects.select_related('product')
             )
         ).order_by('-rating')
 
@@ -62,15 +59,14 @@ class ProductRepository(BaseRepository):
         ).prefetch_related(
             Prefetch(
                 'in_stock',
-                queryset=InStock.objects.select_related(
-                    'product',
+                queryset=models.InStock.objects.select_related(
                     'color',
                     'product_size'
                 )
             ),
             Prefetch(
                 'product_images',
-                queryset=Picture.objects.select_related('product')
+                queryset=models.Picture.objects.select_related('product')
             )
         )
 
@@ -115,9 +111,15 @@ class FavoriteRepository(BaseRepository):
     def model(self) -> type[models.Favorite]:
         return models.Favorite
 
+    def get_all_objects_order_by_id(self):
+        return self.model.objects.select_related('user', 'product')
+
 
 class ShoppingCartRepository(BaseRepository):
 
     @property
     def model(self) -> type[models.ShoppingCart]:
         return models.ShoppingCart
+
+    def get_all_objects_order_by_id(self):
+        return self.model.objects.select_related('product')
