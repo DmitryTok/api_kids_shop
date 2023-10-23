@@ -36,6 +36,7 @@ exclude = [
     "management",
     "migrations",
     "media",
+    "users"
 ]
 
 line-length = 120
