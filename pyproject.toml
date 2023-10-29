@@ -36,7 +36,7 @@ exclude = [
     "management",
     "migrations",
     "media",
-    "users/signals.py"
+    "*apps.py*"
 ]
 
 line-length = 120
