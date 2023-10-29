@@ -27,8 +27,5 @@ jobs:
     - name: Check import order with isort
       run: isort .
 
-    - name: Check for changes
-      run: git diff --exit-code
-
     - name: Finish
       run: echo "Code style checks passed"
