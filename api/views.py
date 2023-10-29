@@ -1,15 +1,26 @@
 from rest_framework import mixins, viewsets
 
 from api.filters import ProductFilter
-from api.repository import (BrandRepository, CategoryRepository,
-                            FavoriteRepository, PictureRepository,
-                            ProductRepository, SectionRepository,
-                            ShoppingCartRepository)
-from api.serializers import (BrandSerializer, CategorySerializer,
-                             FavoriteSerializer, PictureSerializer,
-                             ProductSerializer, SectionSerializer,
-                             ShoppingCartSerializer)
+from api.repository import (
+    BrandRepository,
+    CategoryRepository,
+    FavoriteRepository,
+    PictureRepository,
+    ProductRepository,
+    SectionRepository,
+    ShoppingCartRepository
+)
+from api.serializers import (
+    BrandSerializer,
+    CategorySerializer,
+    FavoriteSerializer,
+    PictureSerializer,
+    ProductSerializer,
+    SectionSerializer,
+    ShoppingCartSerializer
+)
 from kids_shop.base.base_retrieve_hendler import BaseRetrieveViewSet
+from kids_shop.permissions import IsOwner
 
 
 class ListCreateDeleteViewSet(mixins.CreateModelMixin,
@@ -57,6 +68,7 @@ class FavoriteViewSet(ListCreateDeleteViewSet):
     favorite_repository = FavoriteRepository()
     queryset = favorite_repository.get_all_objects_order_by_id()
     serializer_class = FavoriteSerializer
+    permission_classes = [IsOwner]
 
 
 class TOPProductView(BaseRetrieveViewSet):
@@ -77,3 +89,4 @@ class ShoppingCartViewSet(ListCreateDeleteViewSet):
     shopping_cart_repository = ShoppingCartRepository()
     queryset = shopping_cart_repository.get_all_objects_order_by_id()
     serializer_class = ShoppingCartSerializer
+    permission_classes = [IsOwner]
