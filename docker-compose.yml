@@ -14,11 +14,6 @@ services:
 
   web:
     build: .
-    command: >
-      sh -c 'python3 manage.py makemigrations &&
-             python3 manage.py migrate &&
-             python manage.py load_products data/goods.csv &&
-             python3 manage.py runserver 0.0.0.0:8000'
     volumes:
       - .:/app
     env_file:

@@ -148,7 +148,6 @@ api_kids_shop-web-1  | July 04, 2023 - 11:43:26
 api_kids_shop-web-1  | Django version 4.2.2, using settings 'kids_shop.settings'
 api_kids_shop-web-1  | Starting development server at http://0.0.0.0:8000/
 api_kids_shop-web-1  | Quit the server with CONTROL-C.
-
 ```
 ### After all application wil be available
 
