@@ -47,6 +47,7 @@ class CustomUser(AbstractUser):
 
 
 class Kid(models.Model):
+
     class MaleChoices(Enum):
         Male = 'Boy'
         Female = 'Girl'
