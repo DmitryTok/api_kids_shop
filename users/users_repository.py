@@ -13,3 +13,9 @@ class ProfileRepository(BaseRepository):
             'user',
             'address',
         ).prefetch_related('kids')
+
+
+class UserRepository(BaseRepository):
+    @property
+    def model(self) -> type[models.CustomUser]:
+        return models.CustomUser
