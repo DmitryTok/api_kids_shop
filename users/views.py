@@ -11,18 +11,6 @@ class CustomUserView(ModelViewSet):
     serializer_class = CustomUserSerializer
     permission_classes = [IsOwner]
     http_method_names = ['delete']
-    # def destroy(self, request, pk=None):
-    #     try:
-    #         user = CustomUser.objects.get(pk=pk)
-    #     except CustomUser.DoesNotExist:
-    #         return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-    #
-    #     if user.id == request.user.id:
-    #         user.delete()
-    #     else:
-    #         return Response({'detail': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
-    #
-    #     return Response({'detail': 'User deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class ProfileViewSet(ModelViewSet):
