@@ -1,4 +1,8 @@
-from djoser.serializers import UserCreateSerializer, UserSerializer
+from djoser.serializers import (
+    UserCreateSerializer,
+    UserDeleteSerializer,
+    UserSerializer
+)
 from rest_framework.serializers import EmailField, ModelSerializer
 from rest_framework.validators import UniqueValidator
 
@@ -30,6 +34,11 @@ class CustomUserSerializer(UserSerializer):
     class Meta:
         model = CustomUser
         fields = ('id', 'email')
+
+
+class CustomUserDeleteSerializer(UserDeleteSerializer):
+    def validate(self, data):
+        return data
 
 
 class KidSerializer(ModelSerializer):

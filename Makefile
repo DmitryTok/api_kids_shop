@@ -22,6 +22,9 @@ load_products: migrate
 superuser: load_products
 	docker-compose run web python manage.py createsuperuser
 
+nginx: superuser
+	docker-compose run nginx
+
 .PHONY: run
 run:
 	docker-compose up

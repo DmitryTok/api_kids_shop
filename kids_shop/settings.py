@@ -11,7 +11,7 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda _request: DEBUG
 }
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0']
 
 INSTALLED_APPS = [
     # django apps
@@ -53,12 +53,12 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_METHODS = (
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
+    os.environ.get('FIFTH_METHOD'),
+    os.environ.get('FIRST_METHOD'),
+    os.environ.get('THIRD_METHOD'),
+    os.environ.get('FOURTH_METHOD'),
+    os.environ.get('SIXTH_METHOD'),
+    os.environ.get('SEVENTH_METHOD'),
 )
 
 ROOT_URLCONF = 'kids_shop.urls'
@@ -125,7 +125,10 @@ AUTHENTICATION_BACKENDS = [
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
-    'AUTH_HEADER_TYPES': ('Bearer',)
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
 }
 
 DJOSER = {
@@ -137,6 +140,7 @@ DJOSER = {
     'ACTIVATION_URL': '/activate/{uid}/{token}',
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'TOKEN_MODEL': None,
     'SERIALIZERS': {
         'activation': 'djoser.serializers.ActivationSerializer',
         'user_create': 'users.serializers.CustomUserCreateSerializer',
@@ -144,8 +148,9 @@ DJOSER = {
         'current_user': 'users.serializers.CustomUserSerializer',
     },
     'PERMISSIONS': {
-        'user': ('rest_framework.permissions.AllowAny',),
-        'user_list': ('rest_framework.permissions.AllowAny',),
+        'user': ('rest_framework.permissions.IsAuthenticated',),
+        'user_list': ('rest_framework.permissions.IsAuthenticated',),
+        'user_delete': ('rest_framework.permissions.IsAdminUser',),
     },
     'HIDE_USERS': False,
 }
