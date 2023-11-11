@@ -33,6 +33,7 @@ class CustomUserSerializer(UserSerializer):
 
 
 class KidSerializer(ModelSerializer):
+
     class Meta:
         model = Kid
         fields = ('id', 'male', 'birth_date')

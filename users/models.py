@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import validate_email
 from django.db import models
 
+from users.validators import validate_date_format
+
 
 class CustomUserManager(BaseUserManager):
     def _create_user(self, email, password=None, **extra_fields):
@@ -52,13 +54,14 @@ class Kid(models.Model):
         Male = 'Boy'
         Female = 'Girl'
     male = models.CharField(
-        choices=[(choice.name, choice.value) for choice in MaleChoices],
-        blank=False,
-        null=False
-    )
-    birth_date = models.DateTimeField(
+        choices=[(choice.value, choice.name) for choice in MaleChoices],
         blank=True,
         null=True
+    )
+    birth_date = models.CharField(
+        blank=True,
+        null=True,
+        validators=[validate_date_format]
     )
 
     def __str__(self):
@@ -130,9 +133,10 @@ class Profile(models.Model):
         blank=True,
         null=True
     )
-    birth_date = models.DateTimeField(
+    birth_date = models.CharField(
         blank=True,
-        null=True
+        null=True,
+        validators=[validate_date_format]
     )
     first_phone = models.IntegerField(
         blank=True,
