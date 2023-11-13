@@ -36,7 +36,7 @@ class KidSerializer(ModelSerializer):
 
     class Meta:
         model = Kid
-        fields = ('id', 'male', 'birth_date')
+        fields = '__all__'
 
 
 class AddressSerializer(ModelSerializer):
@@ -83,7 +83,15 @@ class ProfileSerializer(ModelSerializer):
         if kids_data:
             instance.kids.clear()
             for kid_data in kids_data:
-                kid, created = Kid.objects.get_or_create(id=kid_data.get('id'))
+                kid_id = kid_data.get('id')
+                if kid_id:
+                    kid, created = Kid.objects.get_or_create(id=kid_id, defaults=kid_data)
+                    if not created:
+                        for key, value in kid_data.items():
+                            setattr(kid, key, value)
+                        kid.save()
+                else:
+                    kid = Kid.objects.create(**kid_data)
                 instance.kids.add(kid)
 
         for attr, value in validated_data.items():

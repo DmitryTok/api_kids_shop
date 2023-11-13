@@ -53,8 +53,9 @@ class Kid(models.Model):
     class MaleChoices(Enum):
         Male = 'Boy'
         Female = 'Girl'
+
     male = models.CharField(
-        choices=[(choice.value, choice.name) for choice in MaleChoices],
+        choices=[(male.value, male.name) for male in MaleChoices],
         blank=True,
         null=True
     )
@@ -65,7 +66,7 @@ class Kid(models.Model):
     )
 
     def __str__(self):
-        return self.male
+        return str(self.male)
 
 
 class Address(models.Model):
@@ -99,6 +100,10 @@ class Address(models.Model):
 
 
 class Profile(models.Model):
+    class GenderChoices(Enum):
+        Man = 'Man'
+        Woman = 'Woman'
+
     user = models.OneToOneField(
         CustomUser,
         on_delete=models.CASCADE,
@@ -117,6 +122,11 @@ class Profile(models.Model):
         Kid,
         blank=True,
         related_name='profile_kids'
+    )
+    gender = models.CharField(
+        choices=[(gender.value, gender.name) for gender in GenderChoices],
+        blank=True,
+        null=True
     )
     first_name = models.CharField(
         max_length=125,
@@ -148,4 +158,4 @@ class Profile(models.Model):
     )
 
     def __str__(self):
-        return self.user.email
+        return self.last_name
