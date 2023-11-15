@@ -70,6 +70,9 @@ class FavoriteViewSet(ListCreateDeleteViewSet):
     serializer_class = FavoriteSerializer
     permission_classes = [IsOwner]
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class TOPProductView(BaseRetrieveViewSet):
     product_repository = ProductRepository()

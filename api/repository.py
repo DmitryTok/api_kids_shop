@@ -101,7 +101,7 @@ class CategoryRepository(BaseRepository):
 class BrandRepository(BaseRepository):
 
     @property
-    def model(self) -> type[models.Product]:
+    def model(self) -> type[models.Brand]:
         return models.Brand
 
 

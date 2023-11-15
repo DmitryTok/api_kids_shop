@@ -151,11 +151,11 @@ api_kids_shop-web-1  | Quit the server with CONTROL-C.
 ```
 ### After all application wil be available
 
-* [http://localhost:8001/api/schema/swagger-ui/
+* [http://localhost:8000/api/schema/swagger-ui/
 
 ### For check a documentation u can follow
 
-* http://localhost:8001/api/schema/redoc/
+* http://localhost:8000/api/schema/redoc/
 
 ***
 ### To stop container

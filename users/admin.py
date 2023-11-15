@@ -4,6 +4,10 @@ from django.contrib.auth.models import Group
 from users.models import Address, CustomUser, Kid, Profile
 
 
+class ProfileInline(admin.StackedInline):
+    model = Profile
+
+
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('id', 'email')
@@ -16,6 +20,7 @@ class CustomUserAdmin(admin.ModelAdmin):
         'last_login',
         'groups',
     ]
+    inlines = [ProfileInline]
 
 
 @admin.register(Kid)
