@@ -83,9 +83,10 @@ class ProfileSerializer(ModelSerializer):
         if kids_data:
             instance.kids.clear()
             for kid_data in kids_data:
-                kid_id = kid_data.get('id')
-                if kid_id:
-                    kid, created = Kid.objects.get_or_create(id=kid_id, defaults=kid_data)
+                b_date = kid_data.get('birth_date')
+                kid_male = kid_data.get('male')
+                if b_date and kid_male:
+                    kid, created = Kid.objects.get_or_create(male=kid_male, birth_date=b_date)
                     if not created:
                         for key, value in kid_data.items():
                             setattr(kid, key, value)
