@@ -111,8 +111,11 @@ class FavoriteRepository(BaseRepository):
     def model(self) -> type[models.Favorite]:
         return models.Favorite
 
-    def get_all_objects_order_by_id(self):
-        return self.model.objects.select_related('user', 'product')
+    def get_filter_obj(self, user_id, prod_id):
+        return self.model.objects.filter(user=user_id, product=prod_id)
+    
+    def create_obj(self, user_id, prod_id):
+        return self.model.objects.create(user=user_id, product=prod_id)
 
 
 class ShoppingCartRepository(BaseRepository):

@@ -1,4 +1,7 @@
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from api.filters import ProductFilter
 from api.repository import (
@@ -21,6 +24,7 @@ from api.serializers import (
 )
 from kids_shop.base.base_retrieve_hendler import BaseRetrieveViewSet
 from kids_shop.permissions import IsOwner
+from users.users_repository import UserRepository
 
 
 class ListCreateDeleteViewSet(mixins.CreateModelMixin,
@@ -32,9 +36,27 @@ class ListCreateDeleteViewSet(mixins.CreateModelMixin,
 
 class ProductListView(BaseRetrieveViewSet):
     product_repository = ProductRepository()
+    favorite_repository = FavoriteRepository()
+    user_repository = UserRepository()
     queryset = product_repository.get_all_objects_order_by_id()
     serializer_class = ProductSerializer
     filterset_class = ProductFilter
+    
+    @action(
+        detail=True,
+        methods=['POST'],
+        permission_classes=[IsAuthenticated]
+    )
+    def favorite(self, request, pk=None) -> Response:
+        product = self.product_repository.get_all_objects_order_by_id().get(pk=pk)
+        user = self.user_repository.get_user_obj(request.user.id)
+
+        if self.favorite_repository.get_filter_obj(user, product):
+            return Response({'Error': 'Product already in favorite'}, status=status.HTTP_400_BAD_REQUEST)
+
+        favorite = self.favorite_repository.create_obj(user, product)
+        serializer = FavoriteSerializer(favorite)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class CategoryListView(BaseRetrieveViewSet):
@@ -62,16 +84,6 @@ class PictureListView(BaseRetrieveViewSet):
     picture_repository = PictureRepository()
     queryset = picture_repository.get_all_objects_order_by_id()
     serializer_class = PictureSerializer
-
-
-class FavoriteViewSet(ListCreateDeleteViewSet):
-    favorite_repository = FavoriteRepository()
-    queryset = favorite_repository.get_all_objects_order_by_id()
-    serializer_class = FavoriteSerializer
-    permission_classes = [IsOwner]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 
 
 class TOPProductView(BaseRetrieveViewSet):
