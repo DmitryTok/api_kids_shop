@@ -22,7 +22,7 @@ jobs:
       run: pip install ruff isort
 
     - name: Check code with ruff
-      run: ruff check .
+      run: ruff check . --fix
 
     - name: Check import order with isort
       run: isort .

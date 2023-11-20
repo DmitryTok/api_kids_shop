@@ -10,7 +10,7 @@ class ProductRepository(BaseRepository):
     def model(self) -> type[models.Product]:
         return models.Product
 
-    def get_all_objects_order_by_id(self):
+    def get_all_objects_order_by_id(self) -> models.Product:
         return self.model.objects.select_related(
             'category',
             'section',
@@ -111,10 +111,10 @@ class FavoriteRepository(BaseRepository):
     def model(self) -> type[models.Favorite]:
         return models.Favorite
 
-    def get_filter_obj(self, user_id, prod_id):
+    def get_filter_obj(self, user_id: int, prod_id: int) -> models.Favorite:
         return self.model.objects.filter(user=user_id, product=prod_id)
     
-    def create_obj(self, user_id, prod_id):
+    def create_obj(self, user_id: int, prod_id: int) -> models.Favorite:
         return self.model.objects.create(user=user_id, product=prod_id)
 
 

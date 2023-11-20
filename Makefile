@@ -20,10 +20,7 @@ load_products: migrate
 	docker-compose run web python manage.py load_products data/goods.csv
 
 superuser: load_products
-	docker-compose run web python manage.py createsuperuser
-
-nginx: superuser
-	docker-compose run nginx
+	docker-compose run web python manage.py create_superuser
 
 .PHONY: run
 run:
