@@ -36,6 +36,6 @@ class ProductFilter(filters.FilterSet):
     @staticmethod
     def filter_name(queryset, name, value):
         try:
-            return queryset.filter(name__istartswith=value)
+            return queryset.filter(name__icontains=value)
         except ValueError:
             return queryset.none()
