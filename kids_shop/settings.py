@@ -46,19 +46,18 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
     'http://localhost:3000',
 ]
 
 CORS_ALLOW_METHODS = (
-    os.environ.get('FIFTH_METHOD'),
     os.environ.get('FIRST_METHOD'),
+    os.environ.get('SECOND_METHOD'),
     os.environ.get('THIRD_METHOD'),
     os.environ.get('FOURTH_METHOD'),
+    os.environ.get('FIFTH_METHOD'),
     os.environ.get('SIXTH_METHOD'),
-    os.environ.get('SEVENTH_METHOD'),
 )
 
 ROOT_URLCONF = 'kids_shop.urls'
