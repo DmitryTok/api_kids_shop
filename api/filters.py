@@ -7,7 +7,8 @@ from api.utils import split_value
 class ProductFilter(filters.FilterSet):
     age_range = filters.CharFilter(method='filter_age')
     price_range = filters.CharFilter(method='filter_price')
-
+    name = filters.CharFilter(method='filter_name')
+    
     class Meta:
         model = Product
         fields = [
@@ -17,17 +18,24 @@ class ProductFilter(filters.FilterSet):
             'rating',
             'male',
         ]
-
+    
     @staticmethod
     def filter_age(queryset, name, value):
         try:
             return queryset.filter(age__range=(split_value(value)))
         except ValueError:
             return queryset.none()
-
+    
     @staticmethod
     def filter_price(queryset, name, value):
         try:
             return queryset.filter(price__range=(split_value(value)))
+        except ValueError:
+            return queryset.none()
+    
+    @staticmethod
+    def filter_name(queryset, name, value):
+        try:
+            return queryset.filter(name__icontains=value)
         except ValueError:
             return queryset.none()

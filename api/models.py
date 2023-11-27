@@ -10,7 +10,7 @@ from users.models import CustomUser
 class Discount(models.Model):
     name = models.PositiveIntegerField(validators=[MinValueValidator(0)])
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.name)
 
 
@@ -73,7 +73,7 @@ class Size(models.Model):
         null=True
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.letter_size}({str(self.brand_size)})'
 
 
@@ -111,7 +111,6 @@ class Product(models.Model):
     item_number = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
-
     age = models.PositiveSmallIntegerField(
         null=False,
         blank=False,
@@ -127,7 +126,7 @@ class Product(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return f'{self.name}'
 
 
 class InStock(models.Model):
@@ -168,7 +167,7 @@ class Picture(models.Model):
     )
     product_image = models.ImageField(upload_to='product_images')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.product}: {self.product_image}'
 
 
@@ -193,7 +192,7 @@ class Favorite(models.Model):
         ]
 
     def __str__(self):
-        return self.product
+        return f'{self.user}: {self.product}'
 
 
 class ShoppingCart(models.Model):

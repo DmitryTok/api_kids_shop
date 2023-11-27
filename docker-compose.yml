@@ -8,14 +8,21 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data/
     ports:
-      - "5432:5432"
-    networks:
-      - mynetwork
+      - "5433:5433"
 
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      bash -c "
+      python manage.py makemigrations && 
+      python manage.py migrate &&
+      python manage.py load_products data/goods.csv &&
+      python manage.py create_superuser && 
+      python manage.py runserver 0.0.0.0:8000
+      "
     volumes:
+      - static_value:/static/
+      - media_value:/media/
       - .:/app
     env_file:
       - ./.env
@@ -23,14 +30,8 @@ services:
       - "8000:8000"
     depends_on:
       - db
-    networks:
-      mynetwork:
-        aliases:
-          - application
 
 volumes:
   db_data:
-
-networks:
-  mynetwork:
-    driver: bridge
+  static_value:
+  media_value:

@@ -1,7 +1,19 @@
 from rest_framework.serializers import ModelSerializer
 
-from api.models import (Brand, Category, Color, Discount, Favorite, InStock,
-                        Picture, Product, Section, ShoppingCart, Size)
+from api.models import (
+    Brand,
+    Category,
+    Color,
+    Discount,
+    Favorite,
+    InStock,
+    Picture,
+    Product,
+    Section,
+    ShoppingCart,
+    Size
+)
+from users.serializers import CustomUserSerializer
 
 
 class PictureSerializer(ModelSerializer):
@@ -82,11 +94,11 @@ class ProductSerializer(ModelSerializer):
 
 
 class FavoriteSerializer(ModelSerializer):
-    product = ProductSerializer()
+    user = CustomUserSerializer(read_only=True)
 
     class Meta:
         model = Favorite
-        fields = ('id', 'product')
+        fields = ('id', 'user', 'product')
 
 
 class ShoppingCartSerializer(ModelSerializer):

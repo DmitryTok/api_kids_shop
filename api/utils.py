@@ -15,7 +15,7 @@ def time_checker(func):
     return wrapper
 
 
-def split_value(value):
+def split_value(value) -> tuple | int:
     parts = value.split('-')
     if len(parts) == 2:
         start_value, end_value = map(int, parts)

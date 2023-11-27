@@ -7,7 +7,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda _request: DEBUG
+}
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '0.0.0.0']
 
 INSTALLED_APPS = [
     # django apps
@@ -24,7 +28,7 @@ INSTALLED_APPS = [
     'djoser',
     'corsheaders',
     'drf_spectacular',
-    'drf_api_logger',
+    'debug_toolbar',
     # local apps
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
@@ -39,10 +43,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'drf_api_logger.middleware.api_logger_middleware.APILoggerMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
-
-DRF_API_LOGGER_DATABASE = True
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
@@ -50,12 +52,12 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_METHODS = (
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
+    os.environ.get('FIRST_METHOD'),
+    os.environ.get('SECOND_METHOD'),
+    os.environ.get('THIRD_METHOD'),
+    os.environ.get('FOURTH_METHOD'),
+    os.environ.get('FIFTH_METHOD'),
+    os.environ.get('SIXTH_METHOD'),
 )
 
 ROOT_URLCONF = 'kids_shop.urls'
@@ -107,6 +109,8 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'users.CustomUser'
 
 REST_FRAMEWORK = {
+    'DATE_FORMAT': 'd/m/Y',
+    'DATE_INPUT_FORMATS': ['%d/%m/%Y'],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -122,7 +126,10 @@ AUTHENTICATION_BACKENDS = [
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
-    'AUTH_HEADER_TYPES': ('Bearer',)
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': False,
 }
 
 DJOSER = {
@@ -134,6 +141,7 @@ DJOSER = {
     'ACTIVATION_URL': '/activate/{uid}/{token}',
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
+    'TOKEN_MODEL': None,
     'SERIALIZERS': {
         'activation': 'djoser.serializers.ActivationSerializer',
         'user_create': 'users.serializers.CustomUserCreateSerializer',
@@ -141,8 +149,9 @@ DJOSER = {
         'current_user': 'users.serializers.CustomUserSerializer',
     },
     'PERMISSIONS': {
-        'user': ('rest_framework.permissions.AllowAny',),
-        'user_list': ('rest_framework.permissions.AllowAny',),
+        'user': ('rest_framework.permissions.IsAuthenticated',),
+        'user_list': ('rest_framework.permissions.IsAuthenticated',),
+        'user_delete': ('rest_framework.permissions.IsAdminUser',),
     },
     'HIDE_USERS': False,
 }
