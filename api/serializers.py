@@ -13,7 +13,6 @@ from api.models import (
     ShoppingCart,
     Size
 )
-from users.serializers import CustomUserSerializer
 
 
 class PictureSerializer(ModelSerializer):
@@ -94,15 +93,14 @@ class ProductSerializer(ModelSerializer):
 
 
 class FavoriteSerializer(ModelSerializer):
-    user = CustomUserSerializer(read_only=True)
 
     class Meta:
         model = Favorite
-        fields = ('id', 'user', 'product')
+        fields = ('id', 'profile', 'product')
 
 
 class ShoppingCartSerializer(ModelSerializer):
 
     class Meta:
         model = ShoppingCart
-        fields = ('id', 'phone', 'product')
+        fields = ('id', 'profile', 'product', 'quantity')

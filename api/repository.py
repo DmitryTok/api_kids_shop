@@ -9,6 +9,9 @@ class ProductRepository(BaseRepository):
     @property
     def model(self) -> type[models.Product]:
         return models.Product
+    
+    def get_obj(self, product_id: int):
+        return self.model.objects.filter(id=product_id).first()
 
     def get_all_objects_order_by_id(self) -> models.Product:
         return self.model.objects.select_related(
@@ -111,11 +114,17 @@ class FavoriteRepository(BaseRepository):
     def model(self) -> type[models.Favorite]:
         return models.Favorite
 
-    def get_filter_obj(self, user_id: int, prod_id: int) -> models.Favorite:
-        return self.model.objects.filter(user=user_id, product=prod_id)
-    
-    def create_obj(self, user_id: int, prod_id: int) -> models.Favorite:
-        return self.model.objects.create(user=user_id, product=prod_id)
+    def get_obj(self, profile_id: int, product_id: int) -> models.Favorite:
+        return (self.model.objects
+                .prefetch_related('profile', 'product')
+                .filter(profile=profile_id, product=product_id)
+                )
+
+    def get_all_products(self, profile_id) -> models.Favorite:
+        return self.model.objects.filter(profile=profile_id)
+
+    def create_obj(self, profile_id: int, product_id: int) -> models.Favorite:
+        return self.model.objects.create(profile=profile_id, product=product_id)
 
 
 class ShoppingCartRepository(BaseRepository):
@@ -123,6 +132,15 @@ class ShoppingCartRepository(BaseRepository):
     @property
     def model(self) -> type[models.ShoppingCart]:
         return models.ShoppingCart
+    
+    def get_obj(self, profile_id: int, product_id: int) -> models.ShoppingCart:
+        return (self.model.objects
+                .prefetch_related('profile', 'product')
+                .filter(profile=profile_id, product=product_id)
+                )
 
-    def get_all_objects_order_by_id(self):
-        return self.model.objects.select_related('product')
+    def get_all_products(self, profile_id) -> models.ShoppingCart:
+        return self.model.objects.filter(profile=profile_id)
+
+    def create_obj(self, profile_id: int, product_id: int, quantity: int) -> models.ShoppingCart:
+        return self.model.objects.create(profile=profile_id, product=product_id, quantity=quantity)

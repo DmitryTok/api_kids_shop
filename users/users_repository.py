@@ -13,6 +13,9 @@ class ProfileRepository(BaseRepository):
             'user',
             'address',
         ).prefetch_related('kids')
+    
+    def get_obj(self, profile_id):
+        return self.model.objects.get(id=profile_id)
 
 
 class UserRepository(BaseRepository):

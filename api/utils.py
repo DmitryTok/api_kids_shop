@@ -1,5 +1,8 @@
 import datetime
 
+from rest_framework import status
+from rest_framework.response import Response
+
 from kids_shop.logger import logger
 
 
@@ -23,3 +26,35 @@ def split_value(value) -> tuple | int:
     else:
         single_value = int(parts[0])
         return single_value
+
+
+def favorite_or_cart(
+        request,
+        product_id: int,
+        profile_id: int,
+        profile_repository,
+        product_repository,
+        favorite_repository,
+        obj_serializer
+) -> Response:
+    profile = profile_repository.get_obj(profile_id)
+    product = product_repository.get_obj(product_id)
+    
+    if request.method == 'POST':
+        if favorite_repository.get_obj(
+                profile_id,
+                product_id).exists():
+            return Response(
+                {'error': 'This product already in favorite'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        obj = favorite_repository.create_obj(profile, product)
+        serializer = obj_serializer(obj)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    if request.method == 'DELETE':
+        obj = favorite_repository.get_obj(profile_id, product_id)
+        if obj.exists():
+            obj.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
