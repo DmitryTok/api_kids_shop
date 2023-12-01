@@ -10,7 +10,7 @@ class ProductRepository(BaseRepository):
     def model(self) -> type[models.Product]:
         return models.Product
     
-    def get_obj(self, product_id: int):
+    def get_obj(self, product_id: int) -> models.Product:
         return self.model.objects.filter(id=product_id).first()
 
     def get_all_objects_order_by_id(self) -> models.Product:
@@ -33,7 +33,7 @@ class ProductRepository(BaseRepository):
             )
         )
 
-    def get_sorted_product_by_rate(self):
+    def get_sorted_product_by_rate(self) -> models.Product:
         return self.model.objects.select_related(
             'category',
             'section',
@@ -53,7 +53,7 @@ class ProductRepository(BaseRepository):
             )
         ).order_by('-rating')
 
-    def get_sorted_products_by_sale(self):
+    def get_sorted_products_by_sale(self) -> models.Product:
         return self.model.objects.filter(is_sale=True).select_related(
             'category',
             'section',
@@ -80,7 +80,7 @@ class SectionRepository(BaseRepository):
     def model(self) -> type[models.Section]:
         return models.Section
 
-    def get_all_objects_order_by_id(self):
+    def get_all_objects_order_by_id(self) -> models.Section:
         return self.model.objects.values('id', 'name')
 
 
@@ -90,7 +90,7 @@ class PictureRepository(BaseRepository):
     def model(self) -> type[models.Picture]:
         return models.Picture
 
-    def get_all_objects_order_by_id(self):
+    def get_all_objects_order_by_id(self) -> models.Picture:
         return self.model.objects.select_related('product')
 
 
@@ -120,7 +120,7 @@ class FavoriteRepository(BaseRepository):
                 .filter(profile=profile_id, product=product_id)
                 )
 
-    def get_all_products(self, profile_id) -> models.Favorite:
+    def get_all_products(self, profile_id: int) -> models.Favorite:
         return self.model.objects.filter(profile=profile_id)
 
     def create_obj(self, profile_id: int, product_id: int) -> models.Favorite:
@@ -139,7 +139,7 @@ class ShoppingCartRepository(BaseRepository):
                 .filter(profile=profile_id, product=product_id)
                 )
 
-    def get_all_products(self, profile_id) -> models.ShoppingCart:
+    def get_all_products(self, profile_id: int) -> models.ShoppingCart:
         return self.model.objects.filter(profile=profile_id)
 
     def create_obj(self, profile_id: int, product_id: int, quantity: int) -> models.ShoppingCart:

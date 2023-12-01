@@ -1,3 +1,4 @@
+from django.http import HttpRequest
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -49,15 +50,15 @@ class ProductListView(BaseRetrieveViewSet):
         permission_classes=[IsOwnerFavoriteOrCart],
         url_path=r'(?P<product_id>\d+)/favorite/(?P<profile_id>\d+)'
     )
-    def favorite(self, request, product_id: int, profile_id: int) -> Response:
+    def favorite(self, request: HttpRequest, product_id: int, profile_id: int) -> Response:
         return favorite_or_cart(
-            request,
-            product_id,
-            profile_id,
-            self.profile_repository,
-            self.product_repository,
-            self.favorite_repository,
-            FavoriteSerializer,
+            request=request,
+            product_id=product_id,
+            profile_id=profile_id,
+            profile_repository=self.profile_repository,
+            product_repository=self.product_repository,
+            repository=self.favorite_repository,
+            obj_serializer=FavoriteSerializer,
             is_shop=False
         )
 
@@ -69,20 +70,20 @@ class ProductListView(BaseRetrieveViewSet):
     )
     def shopping_card(
             self,
-            request,
+            request: HttpRequest,
             profile_id: int,
             product_id: int,
             quantity: int
     ) -> Response:
         return favorite_or_cart(
-            request,
-            product_id,
-            profile_id,
-            self.profile_repository,
-            self.product_repository,
-            self.shopping_cart_repository,
-            ShoppingCartSerializer,
-            quantity,
+            request=request,
+            product_id=product_id,
+            profile_id=profile_id,
+            profile_repository=self.profile_repository,
+            product_repository=self.product_repository,
+            repository=self.shopping_cart_repository,
+            obj_serializer=ShoppingCartSerializer,
+            quantity=quantity,
             is_shop=True
         )
 
@@ -92,12 +93,12 @@ class ProductListView(BaseRetrieveViewSet):
         permission_classes=[IsOwnerFavoriteOrCart],
         url_path=r'favorite/(?P<profile_id>\d+)'
     )
-    def get_favorite(self, request, profile_id: int) -> Response:
+    def get_favorite(self, request: HttpRequest, profile_id: int) -> Response:
         return get_products(
-            request,
-            profile_id,
-            self.favorite_repository,
-            FavoriteSerializer
+            request=request,
+            profile_id=profile_id,
+            repository=self.favorite_repository,
+            obj_serializer=FavoriteSerializer
         )
     
     @action(
@@ -106,12 +107,12 @@ class ProductListView(BaseRetrieveViewSet):
         permission_classes=[IsOwnerFavoriteOrCart],
         url_path=r'shopping_cart/(?P<profile_id>\d+)'
     )
-    def get_shopping_cart(self, request, profile_id: int) -> Response:
+    def get_shopping_cart(self, request: HttpRequest, profile_id: int) -> Response:
         return get_products(
-            request,
-            profile_id,
-            self.shopping_cart_repository,
-            ShoppingCartSerializer
+            request=request,
+            profile_id=profile_id,
+            repository=self.shopping_cart_repository,
+            obj_serializer=ShoppingCartSerializer
         )
 
 
