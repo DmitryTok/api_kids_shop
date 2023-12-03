@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from api.models import (
     Brand,
@@ -100,7 +100,14 @@ class FavoriteSerializer(ModelSerializer):
 
 
 class ShoppingCartSerializer(ModelSerializer):
+    total_price = SerializerMethodField()
 
     class Meta:
         model = ShoppingCart
-        fields = ('id', 'profile', 'product', 'quantity')
+        fields = ('id', 'profile', 'product', 'quantity', 'total_price')
+ 
+    @staticmethod
+    def get_total_price(obj) -> int:
+        price = 0
+        price += int(obj.product.price * obj.quantity)
+        return price

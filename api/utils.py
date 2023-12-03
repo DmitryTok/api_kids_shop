@@ -23,7 +23,7 @@ def favorite_or_cart(
         product_repository: object | Any,
         repository: object | Any,
         obj_serializer: object | Any,
-        quantity: int | None = None,
+        quantity: int = None,
         is_shop=True
 ) -> Response:
     profile = profile_repository.get_obj(profile_id)
@@ -47,7 +47,10 @@ def favorite_or_cart(
             return Response(serializer.data, status=status.HTTP_201_CREATED)
     
     if request.method == 'DELETE':
-        obj = repository.get_obj(profile_id, product_id)
+        if is_shop is True:
+            obj = repository.get_obj(profile_id, product_id, quantity)
+        else:
+            obj = repository.get_obj(profile_id, product_id)
         if obj.exists():
             obj.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)

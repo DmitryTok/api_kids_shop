@@ -66,7 +66,7 @@ class ProductListView(BaseRetrieveViewSet):
         detail=False,
         methods=['POST', 'DELETE'],
         permission_classes=[IsOwnerFavoriteOrCart],
-        url_path=r'(?P<product_id>\d+)/shopping_cart/(?P<profile_id>\d+)/(?P<quantity>\d+)'
+        url_path=r'(?P<product_id>\d+)/(?P<quantity>\d+)/shopping_cart/(?P<profile_id>\d+)'
     )
     def shopping_card(
             self,
