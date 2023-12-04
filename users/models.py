@@ -65,7 +65,7 @@ class Kid(models.Model):
         validators=[validate_date_format]
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.male)
 
 
@@ -95,8 +95,8 @@ class Address(models.Model):
         null=True
     )
 
-    def __str__(self):
-        return self.first_delivery_address
+    def __str__(self) -> str:
+        return f'{self.first_delivery_address}'
 
 
 class Profile(models.Model):
@@ -157,5 +157,5 @@ class Profile(models.Model):
         null=True
     )
 
-    def __str__(self):
-        return self.last_name
+    def __str__(self) -> str:
+        return f'{self.last_name}'

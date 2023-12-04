@@ -1,6 +1,6 @@
-from rest_framework import mixins, status, viewsets
+from django.http import HttpRequest
+from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from api.filters import ProductFilter
@@ -22,9 +22,10 @@ from api.serializers import (
     SectionSerializer,
     ShoppingCartSerializer
 )
+from api.utils import favorite_or_cart, get_products
 from kids_shop.base.base_retrieve_hendler import BaseRetrieveViewSet
-from kids_shop.permissions import IsOwner
-from users.users_repository import UserRepository
+from kids_shop.permissions import IsOwner, IsOwnerFavoriteOrCart
+from users.users_repository import ProfileRepository
 
 
 class ListCreateDeleteViewSet(mixins.CreateModelMixin,
@@ -37,26 +38,82 @@ class ListCreateDeleteViewSet(mixins.CreateModelMixin,
 class ProductListView(BaseRetrieveViewSet):
     product_repository = ProductRepository()
     favorite_repository = FavoriteRepository()
-    user_repository = UserRepository()
+    shopping_cart_repository = ShoppingCartRepository()
+    profile_repository = ProfileRepository()
     queryset = product_repository.get_all_objects_order_by_id()
     serializer_class = ProductSerializer
     filterset_class = ProductFilter
+
+    @action(
+        detail=False,
+        methods=['POST', 'DELETE'],
+        permission_classes=[IsOwnerFavoriteOrCart],
+        url_path=r'(?P<product_id>\d+)/favorite/(?P<profile_id>\d+)'
+    )
+    def favorite(self, request: HttpRequest, product_id: int, profile_id: int) -> Response:
+        return favorite_or_cart(
+            request=request,
+            product_id=product_id,
+            profile_id=profile_id,
+            profile_repository=self.profile_repository,
+            product_repository=self.product_repository,
+            repository=self.favorite_repository,
+            obj_serializer=FavoriteSerializer,
+            is_shop=False
+        )
+
+    @action(
+        detail=False,
+        methods=['POST', 'DELETE'],
+        permission_classes=[IsOwnerFavoriteOrCart],
+        url_path=r'(?P<product_id>\d+)/(?P<quantity>\d+)/shopping_cart/(?P<profile_id>\d+)'
+    )
+    def shopping_card(
+            self,
+            request: HttpRequest,
+            profile_id: int,
+            product_id: int,
+            quantity: int
+    ) -> Response:
+        return favorite_or_cart(
+            request=request,
+            product_id=product_id,
+            profile_id=profile_id,
+            profile_repository=self.profile_repository,
+            product_repository=self.product_repository,
+            repository=self.shopping_cart_repository,
+            obj_serializer=ShoppingCartSerializer,
+            quantity=quantity,
+            is_shop=True
+        )
+
+    @action(
+        detail=False,
+        methods=['GET'],
+        permission_classes=[IsOwnerFavoriteOrCart],
+        url_path=r'favorite/(?P<profile_id>\d+)'
+    )
+    def get_favorite(self, request: HttpRequest, profile_id: int) -> Response:
+        return get_products(
+            request=request,
+            profile_id=profile_id,
+            repository=self.favorite_repository,
+            obj_serializer=FavoriteSerializer
+        )
     
     @action(
-        detail=True,
-        methods=['POST'],
-        permission_classes=[IsAuthenticated]
+        detail=False,
+        methods=['GET'],
+        permission_classes=[IsOwnerFavoriteOrCart],
+        url_path=r'shopping_cart/(?P<profile_id>\d+)'
     )
-    def favorite(self, request, pk=None) -> Response:
-        product = self.product_repository.get_all_objects_order_by_id().get(pk=pk)
-        user = self.user_repository.get_user_obj(request.user.id)
-
-        if self.favorite_repository.get_filter_obj(user, product):
-            return Response({'Error': 'Product already in favorite'}, status=status.HTTP_400_BAD_REQUEST)
-
-        favorite = self.favorite_repository.create_obj(user, product)
-        serializer = FavoriteSerializer(favorite)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def get_shopping_cart(self, request: HttpRequest, profile_id: int) -> Response:
+        return get_products(
+            request=request,
+            profile_id=profile_id,
+            repository=self.shopping_cart_repository,
+            obj_serializer=ShoppingCartSerializer
+        )
 
 
 class CategoryListView(BaseRetrieveViewSet):

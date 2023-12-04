@@ -4,7 +4,7 @@ from enum import Enum
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from users.models import CustomUser
+from users.models import Profile
 
 
 class Discount(models.Model):
@@ -21,8 +21,8 @@ class Brand(models.Model):
         self.name = self.name.lower()
         return super().save(*args, **kwargs)
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return f'{self.name}'
 
 
 class Category(models.Model):
@@ -32,8 +32,8 @@ class Category(models.Model):
         self.name = self.name.lower()
         return super().save(*args, **kwargs)
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return f'{self.name}'
 
 
 class Section(models.Model):
@@ -50,8 +50,8 @@ class Section(models.Model):
         self.name = self.name.lower()
         return super().save(*args, **kwargs)
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return f'{self.name}'
 
 
 class Size(models.Model):
@@ -80,8 +80,8 @@ class Size(models.Model):
 class Color(models.Model):
     name = models.CharField(max_length=120, unique=True)
 
-    def __str__(self):
-        return self.name
+    def __str__(self) -> str:
+        return f'{self.name}'
 
 
 class Product(models.Model):
@@ -125,7 +125,7 @@ class Product(models.Model):
         null=True
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.name}'
 
 
@@ -155,8 +155,8 @@ class InStock(models.Model):
         validators=[MinValueValidator(0)]
     )
 
-    def __str__(self):
-        return self.color.name
+    def __str__(self) -> str:
+        return f'{self.color.name}'
 
 
 class Picture(models.Model):
@@ -172,8 +172,8 @@ class Picture(models.Model):
 
 
 class Favorite(models.Model):
-    user = models.ForeignKey(
-        CustomUser,
+    profile = models.ForeignKey(
+        Profile,
         on_delete=models.CASCADE,
         related_name='favorites'
     )
@@ -187,29 +187,31 @@ class Favorite(models.Model):
         ordering = ('id',)
         constraints = [
             models.UniqueConstraint(
-                fields=('user', 'product'), name='unique_favorite_product'
+                fields=('profile', 'product'), name='unique_favorite_product'
             )
         ]
 
-    def __str__(self):
-        return f'{self.user}: {self.product}'
-
 
 class ShoppingCart(models.Model):
-    phone = models.IntegerField()
+    profile = models.ForeignKey(
+        Profile,
+        on_delete=models.CASCADE,
+        related_name='shopping_carts'
+    )
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
         related_name='shopping_carts'
     )
+    quantity = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
 
     class Meta:
         ordering = ('id',)
         constraints = [
             models.UniqueConstraint(
-                fields=('phone', 'product'), name='unique_shopping_cart'
+                fields=('profile', 'product', 'quantity'), name='unique_shopping_cart'
             )
         ]
 
-    def __str__(self):
-        return f'{self.phone}: {self.product}'
+    def __str__(self) -> str:
+        return f'{self.profile.user}: {self.product}'

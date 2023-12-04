@@ -22,9 +22,9 @@ services:
       python manage.py runserver 0.0.0.0:8000
       "
     volumes:
+      - .:/app
       - static_value:/static/
       - media_value:/media/
-      - .:/app
     ports:
       - "8000:8000"
     env_file:
@@ -32,16 +32,16 @@ services:
     depends_on:
       - db
 
-  nginx:
-    image: nginx:1.21.3-alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - static_value:/var/html/static/
-      - media_value:/var/html/media/
-    depends_on:
-      - web
+#  nginx:
+#    image: nginx:1.21.3-alpine
+#    ports:
+#      - "80:80"
+#    volumes:
+#      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+#      - static_value:/var/html/static/
+#      - media_value:/var/html/media/
+#    depends_on:
+#      - web
 
 volumes:
   db_data:
