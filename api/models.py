@@ -214,4 +214,4 @@ class ShoppingCart(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f'{self.profile}: {self.product}'
+        return f'{self.profile.user}: {self.product}'
