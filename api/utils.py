@@ -5,6 +5,10 @@ from rest_framework import status
 from rest_framework.response import Response
 
 
+def base_filter_set():
+    pass
+
+
 def split_value(value) -> tuple | int:
     parts = value.split('-')
     if len(parts) == 2:
