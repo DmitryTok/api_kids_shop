@@ -122,7 +122,6 @@ class CategoryListView(BaseRetrieveViewSet):
     serializer_class = CategorySerializer
     filterset_fields = ['name']
 
-
 class SectionListView(BaseRetrieveViewSet):
     section_repository = SectionRepository()
     queryset = section_repository.get_all_objects_order_by_id()
