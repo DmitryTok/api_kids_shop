@@ -1,6 +1,6 @@
 import os
-from datetime import timedelta
 from pathlib import Path
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -87,8 +87,13 @@ DATABASES = {
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+        'POSTGRES_DB': os.environ.get('POSTGRES_DB'),
     }
 }
+
+SU_USER = os.environ.get('SUPER_USER')
+SU_PASSWORD = os.environ.get('SUPER_USER_PASSWORD')
 
 AUTH_PASSWORD_VALIDATORS = [
     {
