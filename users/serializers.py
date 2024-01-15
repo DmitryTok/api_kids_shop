@@ -26,14 +26,12 @@ class CustomUserCreateSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
-
     class Meta:
         model = CustomUser
         fields = ('id', 'email')
 
 
 class KidSerializer(ModelSerializer):
-
     class Meta:
         model = Kid
         fields = '__all__'
@@ -49,7 +47,7 @@ class AddressSerializer(ModelSerializer):
             'city',
             'street',
             'building',
-            'apartment'
+            'apartment',
         )
 
 
@@ -70,14 +68,26 @@ class ProfileSerializer(ModelSerializer):
             instance.address = Address.objects.create()
 
         if address_data:
-            instance.address.first_delivery_address = address_data.get('first_delivery_address',
-                                                                       instance.address.first_delivery_address)
-            instance.address.second_delivery_address = address_data.get('second_delivery_address',
-                                                                        instance.address.second_delivery_address)
-            instance.address.city = address_data.get('city', instance.address.city)
-            instance.address.street = address_data.get('street', instance.address.street)
-            instance.address.building = address_data.get('building', instance.address.building)
-            instance.address.apartment = address_data.get('apartment', instance.address.apartment)
+            instance.address.first_delivery_address = address_data.get(
+                'first_delivery_address',
+                instance.address.first_delivery_address,
+            )
+            instance.address.second_delivery_address = address_data.get(
+                'second_delivery_address',
+                instance.address.second_delivery_address,
+            )
+            instance.address.city = address_data.get(
+                'city', instance.address.city
+            )
+            instance.address.street = address_data.get(
+                'street', instance.address.street
+            )
+            instance.address.building = address_data.get(
+                'building', instance.address.building
+            )
+            instance.address.apartment = address_data.get(
+                'apartment', instance.address.apartment
+            )
             instance.address.save()
 
         if kids_data:
@@ -86,7 +96,9 @@ class ProfileSerializer(ModelSerializer):
                 b_date = kid_data.get('birth_date')
                 kid_male = kid_data.get('male')
                 if b_date and kid_male:
-                    kid, created = Kid.objects.get_or_create(male=kid_male, birth_date=b_date)
+                    kid, created = Kid.objects.get_or_create(
+                        male=kid_male, birth_date=b_date
+                    )
                     if not created:
                         for key, value in kid_data.items():
                             setattr(kid, key, value)
