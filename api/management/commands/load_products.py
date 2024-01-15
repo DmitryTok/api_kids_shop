@@ -11,12 +11,18 @@ from kids_shop.logger import logger
 
 
 class Command(BaseCommand):
-    """ Class for input test data in to database """
+    """Class for input test data in to database"""
+
     help = 'Loads data from a CSV file into the database'
 
     def add_arguments(self, parser):
-        """ Set a path to file """
-        parser.add_argument('path', type=str, default='data/goods.csv', help='Path to the CSV file')
+        """Set a path to file"""
+        parser.add_argument(
+            'path',
+            type=str,
+            default='data/goods.csv',
+            help='Path to the CSV file',
+        )
 
     def handle(self, *args, **options):
         category_lst = ['Одяг', 'Взуття', 'Аксесуары']
@@ -30,7 +36,7 @@ class Command(BaseCommand):
             'Сумочки',
             'Шарфи Та Платки',
             'Шапки',
-            'Барсетки та Бананки'
+            'Барсетки та Бананки',
         ]
 
         section_chose_lst = [
@@ -88,7 +94,7 @@ class Command(BaseCommand):
             "Chanel",
             "Calvin Klein",
             "Ralph Lauren",
-            "Forever 21"
+            "Forever 21",
         ]
 
         discount_lst = [5, 10, 15, 20, 25, 30, 35]
@@ -104,11 +110,11 @@ class Command(BaseCommand):
             '#27AE60',
             '#D35400',
             '#000000',
-            '#43464B'
+            '#43464B',
         ]
 
         """
-        First part of script that uploads categories from category_lst into the database.
+        First part of script that uploads categories into the database.
         At the end, the logger will show how many objects are created
         """
         logger.info('Starting to upload --- CATEGORY --- to the database')
@@ -147,7 +153,9 @@ class Command(BaseCommand):
             brand = Brand.objects.all()
             size_instance, _ = Size.objects.get_or_create(
                 brand_size=random.randint(15, 38),
-                letter_size=random.choice([choice.value for choice in Size.LetterSizeChoices])
+                letter_size=random.choice(
+                    [choice.value for choice in Size.LetterSizeChoices]
+                ),
             )
         logger.info(f'Objects created: {size_counter}')
 
@@ -161,33 +169,45 @@ class Command(BaseCommand):
         Here, we begin the process of uploading sections all at once
         While associating each section with its corresponding category
         """
-        logger.info('Starting to upload --- SECTION --- to the --- ACCESSORIES CATEGORY ---')
+        logger.info(
+            'Starting to upload --- SECTION --- to the --- ACCESSORIES CATEGORY ---'
+        )
         section_counter = 0
         accessories_category = Category.objects.get(name='аксесуары')
         for section_name in section_accessories_lst:
-            _, created = Section.objects.get_or_create(name=section_name, category=accessories_category)
+            _, created = Section.objects.get_or_create(
+                name=section_name, category=accessories_category
+            )
             section_counter += 1
         logger.info(f'Objects created: {section_counter}')
 
         """
         Same process
         """
-        logger.info('Starting to upload --- SECTION --- to the --- CHOSE CATEGORY ---')
+        logger.info(
+            'Starting to upload --- SECTION --- to the --- CHOSE CATEGORY ---'
+        )
         section_counter = 0
         chose_category = Category.objects.get(name='взуття')
         for section_name in section_chose_lst:
-            section, _ = Section.objects.get_or_create(name=section_name, category=chose_category)
+            section, _ = Section.objects.get_or_create(
+                name=section_name, category=chose_category
+            )
             section_counter += 1
         logger.info(f'Objects created: {section_counter}')
 
         """
         Same process
         """
-        logger.info('Starting to upload --- SECTION --- to the --- CLOTHES CATEGORY ---')
+        logger.info(
+            'Starting to upload --- SECTION --- to the --- CLOTHES CATEGORY ---'
+        )
         section_counter = 0
         clothes_category = Category.objects.get(name='одяг')
         for section_name in section_clothes_lst:
-            _, created = Section.objects.get_or_create(name=section_name, category=clothes_category)
+            _, created = Section.objects.get_or_create(
+                name=section_name, category=clothes_category
+            )
             section_counter += 1
         logger.info(f'Objects created: {section_counter}')
 
@@ -196,16 +216,21 @@ class Command(BaseCommand):
             brand = Brand.objects.all()
             size_instance, _ = Size.objects.get_or_create(
                 brand_size=random.randint(15, 38),
-                letter_size=random.choice([choice.value for choice in Size.LetterSizeChoices])
+                letter_size=random.choice(
+                    [choice.value for choice in Size.LetterSizeChoices]
+                ),
             )
         logger.info(f'Objects created: {section_counter}')
 
         path = options['path']  # Get path to file with data
-        logger.info(f'Starting to upload --- PRODUCTS --- from {path} to the --- DATABASE ---')
+        logger.info(
+            f'Starting to upload --- PRODUCTS --- from {path} to the --- DATABASE ---'
+        )
 
         """
         This function opens a file containing data and inserts it into the database
-        Additionally, it retrieves all previously generated objects and populates the corresponding fields
+        Additionally, it retrieves all previously generated objects
+        And populates the corresponding fields
         The objects will be assigned randomly
         """
         with open(path, encoding='utf-8') as file:
@@ -235,22 +260,23 @@ class Command(BaseCommand):
                 )
 
                 for _ in range(random.randint(3, 5)):
-                    in_stock = InStock.objects.create(
+                    InStock.objects.create(
                         product=product,
                         color=random.choice(colors),
                         product_size=random.choice(sizes),
-                        in_stock=random.randint(0, 50)
+                        in_stock=random.randint(0, 50),
                     )
         logger.info(f'Objects created: {counter}')
 
-        logger.info('Put --- DISCOUNT --- to all --- IS_SALE --- --- PRODUCTS ---')
+        logger.info(
+            'Put --- DISCOUNT --- to all --- IS_SALE --- --- PRODUCTS ---'
+        )
         sale_products = Product.objects.filter(is_sale=True)
         discount_sale_counter = 0
         for product in sale_products:
             discount_sale_counter += 1
             Product.objects.update_or_create(
-                id=product.id,
-                defaults={'discount': random.choice(discount)}
+                id=product.id, defaults={'discount': random.choice(discount)}
             )
         logger.info(f'Objects created: {discount_sale_counter}')
 
@@ -261,7 +287,9 @@ class Command(BaseCommand):
         for product in Product.objects.all():
             count_images += 1
             image_filenames = [
-                f for f in os.listdir(image_folder) if f.startswith(f'{product.id}_')
+                f
+                for f in os.listdir(image_folder)
+                if f.startswith(f'{product.id}_')
             ]
 
             for image_filename in image_filenames:
@@ -269,7 +297,9 @@ class Command(BaseCommand):
 
                 with open(image_path, 'rb') as image_file:
                     picture = Picture(product=product)
-                    picture.product_image.save(image_filename, File(image_file))
+                    picture.product_image.save(
+                        image_filename, File(image_file)
+                    )
 
                     picture.save()
         logger.info(f'Insert images {count_images}')
