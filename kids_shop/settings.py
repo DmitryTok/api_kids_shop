@@ -5,6 +5,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
+SUPER_LOGIN = os.environ.get('SUPER_LOGIN')
+SUPER_PASSWORD = os.environ.get('SUPER_PASSWORD')
+
 
 def show_toolbar(request):
     return True
