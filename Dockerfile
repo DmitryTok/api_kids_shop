@@ -1,14 +1,19 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends build-essential gcc && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-RUN pip install --upgrade pip && pip install poetry
+COPY requirements.txt .
 
-COPY pyproject.toml poetry.lock ./
-
-RUN poetry config virtualenvs.create false && poetry install
+RUN pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir
 
 COPY . .

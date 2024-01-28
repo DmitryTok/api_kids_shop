@@ -12,9 +12,18 @@ class ProductInStockInline(admin.TabularInline):
 
 @admin.register(models.Discount)
 class DiscountAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
-    search_fields = ('id', 'name',)
-    list_filter = ('id', 'name',)
+    list_display = (
+        'id',
+        'name',
+    )
+    search_fields = (
+        'id',
+        'name',
+    )
+    list_filter = (
+        'id',
+        'name',
+    )
 
 
 @admin.register(models.Color)
@@ -26,9 +35,18 @@ class ColorAdmin(admin.ModelAdmin):
 
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name',)
-    search_fields = ('id', 'name',)
-    list_filter = ('id', 'name',)
+    list_display = (
+        'id',
+        'name',
+    )
+    search_fields = (
+        'id',
+        'name',
+    )
+    list_filter = (
+        'id',
+        'name',
+    )
 
 
 @admin.register(models.Section)
@@ -71,17 +89,42 @@ class ProductAdmin(admin.ModelAdmin):
         'is_sale',
         'discount',
         'in_stock_display',
-        'total_in_stock'
+        'total_in_stock',
     )
-    search_fields = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount')
-    list_filter = ('id', 'name', 'price', 'rating', 'male', 'is_sale', 'discount')
+    search_fields = (
+        'id',
+        'name',
+        'price',
+        'rating',
+        'male',
+        'is_sale',
+        'discount',
+    )
+    list_filter = (
+        'id',
+        'name',
+        'price',
+        'rating',
+        'male',
+        'is_sale',
+        'discount',
+    )
 
     def in_stock_display(self, obj):
         in_stock_info = obj.in_stock.all()
-        return ', '.join([f"{item.color.name} {item.product_size}: {item.in_stock}" for item in in_stock_info])
+        return ', '.join(
+            [
+                f"{item.color.name} {item.product_size}: {item.in_stock}"
+                for item in in_stock_info
+            ]
+        )
 
     def get_queryset(self, request):
-        queryset = super().get_queryset(request).annotate(total_in_stock=Sum('in_stock__in_stock'))
+        queryset = (
+            super()
+            .get_queryset(request)
+            .annotate(total_in_stock=Sum('in_stock__in_stock'))
+        )
         return queryset
 
     def total_in_stock(self, obj):

@@ -43,7 +43,7 @@ class Section(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name='sections'
+        related_name='sections',
     )
 
     def save(self, *args, **kwargs):
@@ -55,7 +55,6 @@ class Section(models.Model):
 
 
 class Size(models.Model):
-
     class LetterSizeChoices(Enum):
         DOUBLE_EXTRA_SMALL = 'XXS'
         EXTRA_SMALL = 'XS'
@@ -70,7 +69,7 @@ class Size(models.Model):
         choices=[(choice.name, choice.value) for choice in LetterSizeChoices],
         default=None,
         blank=True,
-        null=True
+        null=True,
     )
 
     def __str__(self) -> str:
@@ -91,14 +90,14 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         null=False,
         blank=False,
-        related_name='product_categories'
+        related_name='product_categories',
     )
     section = models.ForeignKey(
         Section,
         on_delete=models.CASCADE,
         null=False,
         blank=False,
-        related_name='product_sections'
+        related_name='product_sections',
     )
     description = models.CharField(max_length=2000)
     brand = models.ForeignKey(
@@ -106,23 +105,20 @@ class Product(models.Model):
         on_delete=models.CASCADE,
         null=False,
         blank=False,
-        related_name='product_brands'
+        related_name='product_brands',
     )
-    item_number = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
+    item_number = models.UUIDField(
+        primary_key=False, default=uuid.uuid4, editable=False
+    )
     price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
     age = models.PositiveSmallIntegerField(
-        null=False,
-        blank=False,
-        validators=[MinValueValidator(0)]
+        null=False, blank=False, validators=[MinValueValidator(0)]
     )
     male = models.BooleanField(default=True)
     is_sale = models.BooleanField(default=False)
     discount = models.ForeignKey(
-        Discount,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True
+        Discount, on_delete=models.CASCADE, blank=True, null=True
     )
 
     def __str__(self) -> str:
@@ -135,24 +131,19 @@ class InStock(models.Model):
         on_delete=models.CASCADE,
         null=False,
         blank=False,
-        related_name='in_stock'
+        related_name='in_stock',
     )
     color = models.ForeignKey(
-        Color,
-        blank=False,
-        on_delete=models.CASCADE,
-        related_name='in_stock'
+        Color, blank=False, on_delete=models.CASCADE, related_name='in_stock'
     )
     product_size = models.ForeignKey(
         Size,
         blank=True,
         related_name='product_sizes',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     in_stock = models.SmallIntegerField(
-        blank=True,
-        null=True,
-        validators=[MinValueValidator(0)]
+        blank=True, null=True, validators=[MinValueValidator(0)]
     )
 
     def __str__(self) -> str:
@@ -173,14 +164,10 @@ class Picture(models.Model):
 
 class Favorite(models.Model):
     profile = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE,
-        related_name='favorites'
+        Profile, on_delete=models.CASCADE, related_name='favorites'
     )
     product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        related_name='favorites'
+        Product, on_delete=models.CASCADE, related_name='favorites'
     )
 
     class Meta:
@@ -194,22 +181,21 @@ class Favorite(models.Model):
 
 class ShoppingCart(models.Model):
     profile = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE,
-        related_name='shopping_carts'
+        Profile, on_delete=models.CASCADE, related_name='shopping_carts'
     )
     product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        related_name='shopping_carts'
+        Product, on_delete=models.CASCADE, related_name='shopping_carts'
     )
-    quantity = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
+    quantity = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1)]
+    )
 
     class Meta:
         ordering = ('id',)
         constraints = [
             models.UniqueConstraint(
-                fields=('profile', 'product', 'quantity'), name='unique_shopping_cart'
+                fields=('profile', 'product', 'quantity'),
+                name='unique_shopping_cart',
             )
         ]
 

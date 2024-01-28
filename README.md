@@ -8,11 +8,11 @@
 [![pre-commit](https://img.shields.io/badge/-pre--commit-yellow?style=for-the-badge&logo=pre-commit&logoColor=white&labelColor=0a0a0a)](https://pre-commit.com/)
 [![Ruff](https://img.shields.io/badge/-Ruff-%23E10098?style=for-the-badge&logo=ruff&logoColor=white&labelColor=0a0a0a)](https://docs.astral.sh/ruff/)
 [![isort](https://img.shields.io/badge/isort-enabled-brightgreen?style=for-the-badge&logo=isort&logoColor=white&labelColor=0a0a0a)](https://pycqa.github.io/isort/)
-<a href="https://github.com/google/yapf/actions/workflows/pre-commit.yml"><img alt="Actions Status" src="https://github.com/google/yapf/actions/workflows/pre-commit.yml/badge.svg"></a>
+
 
 # Kids online shop
 
-## Run the project 
+## Run the project
 ***
 
 ### Create .env file and fill with required data
@@ -60,8 +60,8 @@ Output example
 ```
 Aborting on container exit...
 [+] Stopping 2/2
- ✔ Container api_kids_shop-web-1  Stopped                                                                                                                         0.2s 
- ✔ Container api_kids_shop-db-1   Stopped                                                                                                                         0.2s 
+ ✔ Container api_kids_shop-web-1  Stopped                                                                                                                         0.2s
+ ✔ Container api_kids_shop-db-1   Stopped                                                                                                                         0.2s
 canceled
 make: *** [up] Error 130
 ```
@@ -72,8 +72,8 @@ docker-compose stop
 Output example
 ```
 [+] Stopping 2/0
- ✔ Container api_kids_shop-web-1  Stopped                                                                                                                         0.0s 
- ✔ Container api_kids_shop-db-1   Stopped 
+ ✔ Container api_kids_shop-web-1  Stopped                                                                                                                         0.0s
+ ✔ Container api_kids_shop-db-1   Stopped
 ```
 ### To delete container
 ```
@@ -81,15 +81,15 @@ docker-compose down -v
 ```
 ```
 [+] Running 4/0
- ✔ Container api_kids_shop-web-1    Removed                                                                                                                       0.0s 
- ✔ Container api_kids_shop-db-1     Removed                                                                                                                       0.0s 
- ✔ Volume api_kids_shop_db_data     Removed                                                                                                                       0.1s 
+ ✔ Container api_kids_shop-web-1    Removed                                                                                                                       0.0s
+ ✔ Container api_kids_shop-db-1     Removed                                                                                                                       0.0s
+ ✔ Volume api_kids_shop_db_data     Removed                                                                                                                       0.1s
  ✔ Network api_kids_shop_mynetwork  Removed
 ```
 ***
 ### Project author:
-https://www.linkedin.com/in/dmitry-tokariev/
-Email: moon0939110824@gmail.com
+- LinkedIn: https://www.linkedin.com/in/dmitry-tokariev/
+- Email: moon0939110824@gmail.com
 ***
 ### Technology
 

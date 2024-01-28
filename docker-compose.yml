@@ -1,8 +1,6 @@
-version: '3.9'
-
 services:
   db:
-    image: postgres:13
+    image: postgres:latest
     env_file:
       - .env
     volumes:
@@ -13,14 +11,7 @@ services:
   web:
     build: .
     command: >
-      bash -c "
-      python manage.py makemigrations &&
-      python manage.py migrate &&
-      python manage.py load_products data/goods.csv &&
-      python manage.py create_superuser &&
-      python manage.py collectstatic --no-input &&
-      python manage.py runserver 0.0.0.0:8000
-      "
+      bash -c " python manage.py makemigrations && python manage.py migrate && python manage.py loaddata data.json && python manage.py create_default_superuser && python manage.py runserver 0.0.0.0:8000 "
     volumes:
       - .:/app
       - static_value:/static/
@@ -31,17 +22,6 @@ services:
       - ./.env
     depends_on:
       - db
-
-#  nginx:
-#    image: nginx:1.21.3-alpine
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-#      - static_value:/var/html/static/
-#      - media_value:/var/html/media/
-#    depends_on:
-#      - web
 
 volumes:
   db_data:
