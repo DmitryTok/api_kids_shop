@@ -1,10 +1,15 @@
-import uuid
 from enum import Enum
 
 from django.core.validators import MinValueValidator
 from django.db import models
 
 from users.models import Profile
+
+
+class GenderChoices(models.IntegerChoices):
+    male = 0
+    female = 1
+    unisex = 2
 
 
 class Discount(models.Model):
@@ -16,10 +21,7 @@ class Discount(models.Model):
 
 class Brand(models.Model):
     name = models.CharField(max_length=200, unique=True)
-
-    def save(self, *args, **kwargs):
-        self.name = self.name.lower()
-        return super().save(*args, **kwargs)
+    country = models.CharField(max_length=30)
 
     def __str__(self) -> str:
         return f'{self.name}'
@@ -107,22 +109,72 @@ class Product(models.Model):
         blank=False,
         related_name='product_brands',
     )
-    item_number = models.UUIDField(
-        primary_key=False, default=uuid.uuid4, editable=False
+    article = models.CharField(
+        max_length=50,
+        unique=True,
+
     )
-    price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,  # Number of decimal places.
+        default=0.00,  # Default value for the field.
+        null=False,  # Whether the field can be NULL in the database.
+        blank=True,  # Whether the field is allowed to be blank in forms.
+        verbose_name='Price',  # Human-readable name for the field.
+    )
     rating = models.FloatField(null=True, blank=True)
-    age = models.PositiveSmallIntegerField(
-        null=False, blank=False, validators=[MinValueValidator(0)]
+    # age = models.PositiveSmallIntegerField(
+    #     null=False, blank=False, validators=[MinValueValidator(0)]
+    # )
+    male = models.IntegerField(
+        choices=GenderChoices.choices,
+        default=GenderChoices.male
     )
-    male = models.BooleanField(default=True)
-    is_sale = models.BooleanField(default=False)
-    discount = models.ForeignKey(
-        Discount, on_delete=models.CASCADE, blank=True, null=True
+    # is_sale = models.BooleanField(default=False)
+    # discount = models.ForeignKey(
+    #     Discount, on_delete=models.CASCADE, blank=True, null=True
+    # )
+    quantity = models.SmallIntegerField(
+        blank=True, null=True, validators=[MinValueValidator(0)]
     )
 
     def __str__(self) -> str:
         return f'{self.name}'
+
+
+class Attribute(models.Model):
+    name = models.CharField(
+        max_length=120,
+        unique=True,
+        db_index=True,
+    )
+    is_global = models.BooleanField(default=False)
+    widget = models.CharField(max_length=120)
+    extra = models.JSONField(blank=True, null=True)
+
+
+class AttributeProduct(models.Model):
+    attribute = models.ForeignKey(
+        Attribute,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='attributes',
+    )
+    _attribute_name = models.CharField(
+        max_length=120,
+        unique=True,
+        db_index=True,
+    )
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='products'
+    )
+    value = models.CharField(max_length=120)
 
 
 class InStock(models.Model):

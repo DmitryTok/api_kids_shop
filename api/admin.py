@@ -6,8 +6,24 @@ from api import models
 
 class ProductInStockInline(admin.TabularInline):
     model = models.InStock
-    readonly_fields = ['id']
+    readonly_fields = ('id', )
     extra = 1
+
+
+class ProductAttributeInline(admin.TabularInline):
+    model = models.AttributeProduct
+    readonly_fields = ('id',)
+    extra = 1
+
+
+@admin.register(models.AttributeProduct)
+class AttributeProductAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.Attribute)
+class AttributeAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(models.Discount)
@@ -79,17 +95,18 @@ class SizeAdmin(admin.ModelAdmin):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductInStockInline]
+    inlines = [ProductAttributeInline]
     list_display = (
         'id',
         'name',
         'price',
         'rating',
         'male',
-        'is_sale',
-        'discount',
-        'in_stock_display',
-        'total_in_stock',
+        'in_stock',
+        # 'is_sale',
+        # 'discount',
+        # 'in_stock_display',
+        # 'total_in_stock',
     )
     search_fields = (
         'id',
@@ -97,8 +114,8 @@ class ProductAdmin(admin.ModelAdmin):
         'price',
         'rating',
         'male',
-        'is_sale',
-        'discount',
+        # 'is_sale',
+        # 'discount',
     )
     list_filter = (
         'id',
@@ -106,8 +123,8 @@ class ProductAdmin(admin.ModelAdmin):
         'price',
         'rating',
         'male',
-        'is_sale',
-        'discount',
+        # 'is_sale',
+        # 'discount',
     )
 
     def in_stock_display(self, obj):

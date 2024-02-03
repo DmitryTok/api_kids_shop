@@ -1,71 +1,68 @@
-from django.db.models import Prefetch
-
 from api import models
 from kids_shop.base.base_repository import BaseRepository
 
-
-class ProductRepository(BaseRepository):
-    @property
-    def model(self) -> type[models.Product]:
-        return models.Product
-
-    def get_obj(self, product_id: int) -> models.Product:
-        return self.model.objects.filter(id=product_id).first()
-
-    def get_all_objects_order_by_id(self) -> models.Product:
-        return self.model.objects.select_related(
-            'category', 'section', 'brand', 'discount'
-        ).prefetch_related(
-            Prefetch(
-                'in_stock',
-                queryset=models.InStock.objects.select_related(
-                    'color', 'product_size'
-                ),
-            ),
-            Prefetch(
-                'product_images',
-                queryset=models.Picture.objects.select_related('product'),
-            ),
-        )
-
-    def get_sorted_product_by_rate(self) -> models.Product:
-        return (
-            self.model.objects.select_related(
-                'category', 'section', 'brand', 'discount'
-            )
-            .prefetch_related(
-                Prefetch(
-                    'in_stock',
-                    queryset=models.InStock.objects.select_related(
-                        'color', 'product_size'
-                    ),
-                ),
-                Prefetch(
-                    'product_images',
-                    queryset=models.Picture.objects.select_related('product'),
-                ),
-            )
-            .order_by('-rating')
-        )
-
-    def get_sorted_products_by_sale(self) -> models.Product:
-        return (
-            self.model.objects.filter(is_sale=True)
-            .select_related('category', 'section', 'brand', 'discount')
-            .prefetch_related(
-                Prefetch(
-                    'in_stock',
-                    queryset=models.InStock.objects.select_related(
-                        'color', 'product_size'
-                    ),
-                ),
-                Prefetch(
-                    'product_images',
-                    queryset=models.Picture.objects.select_related('product'),
-                ),
-            )
-        )
-
+# class ProductRepository(BaseRepository):
+#     @property
+#     def model(self) -> type[models.Product]:
+#         return models.Product
+#
+#     def get_obj(self, product_id: int) -> models.Product:
+#         return self.model.objects.filter(id=product_id).first()
+#
+#     def get_all_objects_order_by_id(self) -> models.Product:
+#         return self.model.objects.select_related(
+#             'category', 'section', 'brand', 'discount'
+#         ).prefetch_related(
+#             Prefetch(
+#                 'in_stock',
+#                 queryset=models.InStock.objects.select_related(
+#                     'color', 'product_size'
+#                 ),
+#             ),
+#             Prefetch(
+#                 'product_images',
+#                 queryset=models.Picture.objects.select_related('product'),
+#             ),
+#         )
+#
+#     def get_sorted_product_by_rate(self) -> models.Product:
+#         return (
+#             self.model.objects.select_related(
+#                 'category', 'section', 'brand', 'discount'
+#             )
+#             .prefetch_related(
+#                 Prefetch(
+#                     'in_stock',
+#                     queryset=models.InStock.objects.select_related(
+#                         'color', 'product_size'
+#                     ),
+#                 ),
+#                 Prefetch(
+#                     'product_images',
+#                     queryset=models.Picture.objects.select_related('product'),
+#                 ),
+#             )
+#             .order_by('-rating')
+#         )
+#
+#     def get_sorted_products_by_sale(self) -> models.Product:
+#         return (
+#             self.model.objects.filter(is_sale=True)
+#             .select_related('category', 'section', 'brand', 'discount')
+#             .prefetch_related(
+#                 Prefetch(
+#                     'in_stock',
+#                     queryset=models.InStock.objects.select_related(
+#                         'color', 'product_size'
+#                     ),
+#                 ),
+#                 Prefetch(
+#                     'product_images',
+#                     queryset=models.Picture.objects.select_related('product'),
+#                 ),
+#             )
+#         )
+#
 
 class SectionRepository(BaseRepository):
     @property
