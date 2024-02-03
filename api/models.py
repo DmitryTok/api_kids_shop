@@ -152,6 +152,9 @@ class Attribute(models.Model):
     widget = models.CharField(max_length=120)
     extra = models.JSONField(blank=True, null=True)
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class AttributeProduct(models.Model):
     attribute = models.ForeignKey(
@@ -175,6 +178,9 @@ class AttributeProduct(models.Model):
         related_name='products'
     )
     value = models.CharField(max_length=120)
+
+    def __str__(self):
+        return f"{self._attribute_name} {self.value}"
 
 
 class InStock(models.Model):
