@@ -1,12 +1,8 @@
-import csv
-import os
 import random
 
-from django.core.files import File
 from django.core.management.base import BaseCommand
 
-from api.models import (Brand, Category, Color, Discount, InStock, Picture,
-                        Product, Section, Size)
+from api.models import Brand, Category, Color, Discount, Section, Size
 from kids_shop.logger import logger
 
 
@@ -233,75 +229,72 @@ class Command(BaseCommand):
         And populates the corresponding fields
         The objects will be assigned randomly
         """
-        with open(path, encoding='utf-8') as file:
-            reader = csv.DictReader(file)
-            counter = 0
-            is_sale = (True, False)
-            categories = Category.objects.all()
-            sections = Section.objects.all()
-            discount = Discount.objects.all()
-            colors = Color.objects.all()
-            sizes = Size.objects.all()
-            for item in reader:
-                counter += 1
-                male_value = item['male'].strip().lower()
-                male = True if male_value == 'true' else False
-                product, _ = Product.objects.get_or_create(
-                    name=item['name'],
-                    category=random.choice(categories),  # random category
-                    section=random.choice(sections),  # random section
-                    brand=random.choice(brand),  # random brand
-                    description=item['description'],
-                    price=item['price'],
-                    male=male,
-                    age=random.randint(0, 15),  # random age from 0 to 15
-                    rating=random.randint(0, 10),  # random rating from 0 to 10
-                    is_sale=random.choice(is_sale),  # random on sale flag
-                )
-
-                for _ in range(random.randint(3, 5)):
-                    InStock.objects.create(
-                        product=product,
-                        color=random.choice(colors),
-                        product_size=random.choice(sizes),
-                        in_stock=random.randint(0, 50),
-                    )
-        logger.info(f'Objects created: {counter}')
-
-        logger.info(
-            'Put --- DISCOUNT --- to all --- IS_SALE --- --- PRODUCTS ---'
-        )
-        sale_products = Product.objects.filter(is_sale=True)
-        discount_sale_counter = 0
-        for product in sale_products:
-            discount_sale_counter += 1
-            Product.objects.update_or_create(
-                id=product.id, defaults={'discount': random.choice(discount)}
-            )
-        logger.info(f'Objects created: {discount_sale_counter}')
-
-        image_folder = 'data/kids'
-
-        logger.info('Start to insert --- IMAGES --- in to --- DATABASE ---')
-        count_images = 0
-        for product in Product.objects.all():
-            count_images += 1
-            image_filenames = [
-                f
-                for f in os.listdir(image_folder)
-                if f.startswith(f'{product.id}_')
-            ]
-
-            for image_filename in image_filenames:
-                image_path = os.path.join(image_folder, image_filename)
-
-                with open(image_path, 'rb') as image_file:
-                    picture = Picture(product=product)
-                    picture.product_image.save(
-                        image_filename, File(image_file)
-                    )
-
-                    picture.save()
-        logger.info(f'Insert images {count_images}')
+        # with (open(path, encoding='utf-8') as file):
+        #     reader = csv.DictReader(file)
+        #     counter = 0
+        #     categories = Category.objects.all()
+        #     sections = Section.objects.all()
+        #     discount = Discount.objects.all()
+        #     colors = Color.objects.all()
+        #     sizes = Size.objects.all()
+        #     for item in reader:
+        #         counter += 1
+        #         male_value = item['male'].strip().lower()
+        #         male = True if male_value == 'true' else False
+        #         product, _ = Product.objects.get_or_create(
+        #             name=item['name'],
+        #             category=random.choice(categories),  # random category
+        #             section=random.choice(sections),  # random section
+        #             brand=random.choice(brand),  # random brand
+        #             description=item['description'],
+        #             price=item['price'],
+        #             male=male,
+        #             rating=random.randint(0, 10),  # random rating from 0 to 10
+        #         )
+        #
+        #         for _ in range(random.randint(3, 5)):
+        #             InStock.objects.create(
+        #                 product=product,
+        #                 color=random.choice(colors),
+        #                 product_size=random.choice(sizes),
+        #                 in_stock=random.randint(0, 50),
+        #             )
+        # logger.info(f'Objects created: {counter}')
+        #
+        # logger.info(
+        #     'Put --- DISCOUNT --- to all --- IS_SALE --- --- PRODUCTS ---'
+        # )
+        # sale_products = Product.objects.filter(is_sale=True)
+        # discount_sale_counter = 0
+        # for product in sale_products:
+        #     discount_sale_counter += 1
+        #     Product.objects.update_or_create(
+        #         id=product.id, defaults={'discount': random.choice(discount)}
+        #     )
+        # logger.info(f'Objects created: {discount_sale_counter}')
+        #
+        # image_folder = 'data/kids'
+        #
+        # logger.info('Start to insert --- IMAGES --- in to --- DATABASE ---')
+        # count_images = 0
+        # for product in Product.objects.all():
+        #     count_images += 1
+        #     image_filenames = [
+        #         f
+        #         for f in os.listdir(image_folder)
+        #         if f.startswith(f'{product.id}_')
+        #     ]
+        #
+        #     for image_filename in image_filenames:
+        #         image_path = os.path.join(image_folder, image_filename)
+        #
+        #         with open(image_path, 'rb') as image_file:
+        #             picture = Picture(product=product)
+        #             picture.product_image.save(
+        #                 image_filename, File(image_file)
+        #             )
+        #
+        #             picture.save()
+        # logger.info(f'Insert images {count_images}')
 
         logger.info('Data has been uploaded successfully')

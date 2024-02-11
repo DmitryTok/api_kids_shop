@@ -179,7 +179,7 @@ class AttributeProduct(models.Model):
     )
     value = models.CharField(max_length=120)
 
-    def __str__(self):
+    def __str__(self)-> str:
         return f"{self._attribute_name} {self.value}"
 
 

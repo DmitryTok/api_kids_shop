@@ -8,6 +8,10 @@ class ProfileInline(admin.StackedInline):
     model = Profile
 
 
+class KidInline(admin.StackedInline):
+    model = Kid
+
+
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('id', 'email')
@@ -63,39 +67,7 @@ class AddressAdmin(admin.ModelAdmin):
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'user',
-        'address',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'birth_date',
-        'first_phone',
-        'second_phone'
-    )
-    search_fields = (
-        'id',
-        'user',
-        'address',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'birth_date',
-        'first_phone',
-        'second_phone'
-    )
-    list_filter = (
-        'id',
-        'user',
-        'address',
-        'first_name',
-        'middle_name',
-        'last_name',
-        'birth_date',
-        'first_phone',
-        'second_phone'
-    )
+    pass
 
 
 admin.site.unregister(Group)
