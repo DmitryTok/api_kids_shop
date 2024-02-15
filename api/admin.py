@@ -4,6 +4,9 @@ from django.db.models import Sum
 from api import models
 
 
+class ProductInline(admin.TabularInline):
+    model = models.Product
+
 class ProductInStockInline(admin.TabularInline):
     model = models.InStock
     readonly_fields = ('id', )
@@ -28,18 +31,19 @@ class AttributeAdmin(admin.ModelAdmin):
 
 @admin.register(models.Discount)
 class DiscountAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'name',
-    )
-    search_fields = (
-        'id',
-        'name',
-    )
-    list_filter = (
-        'id',
-        'name',
-    )
+    pass
+    # list_display = (
+    #     'id',
+    #     'name',
+    # )
+    # search_fields = (
+    #     'id',
+    #     'name',
+    # )
+    # list_filter = (
+    #     'id',
+    #     'name',
+    # )
 
 
 @admin.register(models.Color)

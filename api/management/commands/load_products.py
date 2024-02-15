@@ -2,7 +2,7 @@ import random
 
 from django.core.management.base import BaseCommand
 
-from api.models import Brand, Category, Color, Discount, Section, Size
+from api.models import Brand, Category, Color, Section, Size
 from kids_shop.logger import logger
 
 
@@ -93,7 +93,6 @@ class Command(BaseCommand):
             "Forever 21",
         ]
 
-        discount_lst = [5, 10, 15, 20, 25, 30, 35]
 
         color_lst = [
             '#FF5733',
@@ -135,12 +134,12 @@ class Command(BaseCommand):
         Third part of script that uploads discount from discount_lst into the database.
         At the end, the logger will show how many objects are created
         """
-        logger.info('Starting to upload --- DISCOUNT --- to the database')
-        discount_counter = 0
-        for discount in discount_lst:
-            discount_counter += 1
-            Discount.objects.get_or_create(name=discount)
-        logger.info(f'Objects created: {discount_counter}')
+        # logger.info('Starting to upload --- DISCOUNT --- to the database')
+        # discount_counter = 0
+        # for discount in discount_lst:
+        #     discount_counter += 1
+        #     Discount.objects.get_or_create(name=discount)
+        # logger.info(f'Objects created: {discount_counter}')
 
         logger.info('Starting to upload --- SIZE --- in to --- DATABASE ---')
         size_counter = 0

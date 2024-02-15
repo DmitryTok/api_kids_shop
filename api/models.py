@@ -13,10 +13,14 @@ class GenderChoices(models.IntegerChoices):
 
 
 class Discount(models.Model):
-    name = models.PositiveIntegerField(validators=[MinValueValidator(0)])
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    amount = models.PositiveIntegerField(validators=[MinValueValidator(0)])
+    info = models.CharField(max_length=120)
+    date_start = models.DateTimeField()
+    date_end = models.DateTimeField()
 
     def __str__(self) -> str:
-        return str(self.name)
+        return f"{self.amount} {self.info}"
 
 
 class Brand(models.Model):
