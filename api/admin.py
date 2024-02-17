@@ -1,11 +1,11 @@
 from django.contrib import admin
-from django.db.models import Sum
 
 from api import models
 
 
 class ProductInline(admin.TabularInline):
     model = models.Product
+
 
 class ProductInStockInline(admin.TabularInline):
     model = models.InStock
@@ -106,7 +106,8 @@ class ProductAdmin(admin.ModelAdmin):
         'price',
         'rating',
         'male',
-        'in_stock',
+        # 'attributes'
+        # 'in_stock',
         # 'is_sale',
         # 'discount',
         # 'in_stock_display',
@@ -118,6 +119,7 @@ class ProductAdmin(admin.ModelAdmin):
         'price',
         'rating',
         'male',
+        'attributes',
         # 'is_sale',
         # 'discount',
     )
@@ -131,27 +133,27 @@ class ProductAdmin(admin.ModelAdmin):
         # 'discount',
     )
 
-    def in_stock_display(self, obj):
-        in_stock_info = obj.in_stock.all()
-        return ', '.join(
-            [
-                f"{item.color.name} {item.product_size}: {item.in_stock}"
-                for item in in_stock_info
-            ]
-        )
-
-    def get_queryset(self, request):
-        queryset = (
-            super()
-            .get_queryset(request)
-            .annotate(total_in_stock=Sum('in_stock__in_stock'))
-        )
-        return queryset
-
-    def total_in_stock(self, obj):
-        return obj.total_in_stock
-
-    in_stock_display.short_description = 'In Stock'
+    # def in_stock_display(self, obj):
+    #     in_stock_info = obj.in_stock.all()
+    #     return ', '.join(
+    #         [
+    #             f"{item.color.name} {item.product_size}: {item.in_stock}"
+    #             for item in in_stock_info
+    #         ]
+    #     )
+    #
+    # def get_queryset(self, request):
+    #     queryset = (
+    #         super()
+    #         .get_queryset(request)
+    #         .annotate(total_in_stock=Sum('in_stock__in_stock'))
+    #     )
+    #     return queryset
+    #
+    # def total_in_stock(self, obj):
+    #     return obj.total_in_stock
+    #
+    # in_stock_display.short_description = 'In Stock'
 
 
 @admin.register(models.Favorite)

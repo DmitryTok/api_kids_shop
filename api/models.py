@@ -13,7 +13,9 @@ class GenderChoices(models.IntegerChoices):
 
 
 class Discount(models.Model):
-    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    product = models.ForeignKey('Product',
+                                related_name='discount',
+                                on_delete=models.CASCADE)
     amount = models.PositiveIntegerField(validators=[MinValueValidator(0)])
     info = models.CharField(max_length=120)
     date_start = models.DateTimeField()
@@ -138,9 +140,7 @@ class Product(models.Model):
     # discount = models.ForeignKey(
     #     Discount, on_delete=models.CASCADE, blank=True, null=True
     # )
-    quantity = models.SmallIntegerField(
-        blank=True, null=True, validators=[MinValueValidator(0)]
-    )
+
 
     def __str__(self) -> str:
         return f'{self.name}'
@@ -179,7 +179,7 @@ class AttributeProduct(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name='products'
+        related_name='attributes'
     )
     value = models.CharField(max_length=120)
 
@@ -207,6 +207,7 @@ class InStock(models.Model):
     in_stock = models.SmallIntegerField(
         blank=True, null=True, validators=[MinValueValidator(0)]
     )
+
 
     def __str__(self) -> str:
         return f'{self.color.name}'

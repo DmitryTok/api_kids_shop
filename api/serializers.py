@@ -1,7 +1,22 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from api.models import (Brand, Category, Color, Discount, Favorite, InStock,
-                        Picture, Product, Section, ShoppingCart, Size)
+from api.models import (Attribute, AttributeProduct, Brand, Category, Color,
+                        Discount, Favorite, InStock, Picture, Product, Section,
+                        ShoppingCart, Size)
+
+
+class AttributeSerializer(ModelSerializer):
+    class Meta:
+        model = Attribute
+        fields = '__all__'
+        # read_only_fields = fields
+
+
+class AttributeProductSerializer(ModelSerializer):
+    class Meta:
+        model = AttributeProduct
+        fields = '__all__'
+        # read_only_fields = fields
 
 
 class PictureSerializer(ModelSerializer):
@@ -35,7 +50,7 @@ class CategorySerializer(ModelSerializer):
 class DiscountSerializer(ModelSerializer):
     class Meta:
         model = Discount
-        fields = ('id', 'name')
+        fields = ('id', 'amount', 'info', 'date_start', 'date_end')
         read_only_fields = fields
 
 
@@ -68,6 +83,7 @@ class ProductSerializer(ModelSerializer):
     brand = BrandSerializer(read_only=True)
     discount = DiscountSerializer(read_only=True)
     in_stock = InStockSerializer(read_only=True, many=True)
+    attributes = AttributeProductSerializer(read_only=True, many=True)
 
     class Meta:
         model = Product
