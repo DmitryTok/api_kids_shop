@@ -195,10 +195,7 @@ JAZZMIN_SETTINGS = {
     # 'site_icon': 'Logo.png',
     'welcome_sign': 'Welcome',
     'search_model': [],
-    'topmenu_links': [
-        {'model': 'api.product'},
-        {'model': 'api.instock'}
-    ],
+    'topmenu_links': [{'model': 'api.product'}, {'model': 'api.instock'}],
     'show_sidebar': True,
     'navigation_expanded': True,
     'hide_models': [
@@ -206,19 +203,34 @@ JAZZMIN_SETTINGS = {
         'api.picture',
         'api.size',
         'api.color',
-        'api.favorite'
+        'api.favorite',
     ],
     'order_with_respect_to': [
         'users',
         'api',
         'users.profile',
-        'users.customuser'
+        'users.customuser',
+        'api.product',
+        'api.instock',
+        'api.brand',
+        'api.category',
+        'api.section',
+        'api.discount',
     ],
     'icons': {
         'users.customuser': 'fas fa-users',
         'users.profile': 'fas fa-id-card',
         'users.address': 'fas fa-map-marked-alt',
-        'users.kid': 'fas fa-baby'
+        'users.kid': 'fas fa-baby',
+        'api.product': 'fas fa-tshirt',
+        'api.brand': 'fas fa-donate',
+        'api.instock': 'fas fa-truck-loading',
+        'api.category': 'fas fa-table',
+        'api.section': 'fas fa-list-ul',
+        'api.discount': 'fas fa-percent',
+        'api.attributeproduct': 'fas fa-project-diagram',
+        'api.attribute': 'fas fa-tools',
+        'api.shoppingcart': 'fas fa-shopping-cart',
     },
     'show_ui_builder': True,
     'changeform_format': 'horizontal_tabs',

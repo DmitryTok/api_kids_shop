@@ -9,7 +9,7 @@ class ProductInline(admin.TabularInline):
 
 class ProductInStockInline(admin.TabularInline):
     model = models.InStock
-    readonly_fields = ('id', )
+    readonly_fields = ('id',)
     extra = 1
 
 
@@ -17,6 +17,11 @@ class ProductAttributeInline(admin.TabularInline):
     model = models.AttributeProduct
     readonly_fields = ('id',)
     extra = 1
+
+
+class DiscountInline(admin.TabularInline):
+    model = models.Discount
+    extra = 0
 
 
 @admin.register(models.AttributeProduct)
@@ -32,18 +37,6 @@ class AttributeAdmin(admin.ModelAdmin):
 @admin.register(models.Discount)
 class DiscountAdmin(admin.ModelAdmin):
     pass
-    # list_display = (
-    #     'id',
-    #     'name',
-    # )
-    # search_fields = (
-    #     'id',
-    #     'name',
-    # )
-    # list_filter = (
-    #     'id',
-    #     'name',
-    # )
 
 
 @admin.register(models.Color)
@@ -99,39 +92,7 @@ class SizeAdmin(admin.ModelAdmin):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductAttributeInline]
-    list_display = (
-        'id',
-        'name',
-        'price',
-        'rating',
-        'male',
-        # 'attributes'
-        # 'in_stock',
-        # 'is_sale',
-        # 'discount',
-        # 'in_stock_display',
-        # 'total_in_stock',
-    )
-    search_fields = (
-        'id',
-        'name',
-        'price',
-        'rating',
-        'male',
-        'attributes',
-        # 'is_sale',
-        # 'discount',
-    )
-    list_filter = (
-        'id',
-        'name',
-        'price',
-        'rating',
-        'male',
-        # 'is_sale',
-        # 'discount',
-    )
+    inlines = [ProductAttributeInline, DiscountInline]
 
     # def in_stock_display(self, obj):
     #     in_stock_info = obj.in_stock.all()

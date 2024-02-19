@@ -13,16 +13,16 @@ class GenderChoices(models.IntegerChoices):
 
 
 class Discount(models.Model):
-    product = models.ForeignKey('Product',
-                                related_name='discount',
-                                on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        'Product', related_name='discount', on_delete=models.CASCADE
+    )
     amount = models.PositiveIntegerField(validators=[MinValueValidator(0)])
     info = models.CharField(max_length=120)
     date_start = models.DateTimeField()
     date_end = models.DateTimeField()
 
     def __str__(self) -> str:
-        return f"{self.amount} {self.info}"
+        return f'{self.amount} {self.info}'
 
 
 class Brand(models.Model):
@@ -118,7 +118,6 @@ class Product(models.Model):
     article = models.CharField(
         max_length=50,
         unique=True,
-
     )
     price = models.DecimalField(
         max_digits=10,
@@ -133,14 +132,12 @@ class Product(models.Model):
     #     null=False, blank=False, validators=[MinValueValidator(0)]
     # )
     male = models.IntegerField(
-        choices=GenderChoices.choices,
-        default=GenderChoices.male
+        choices=GenderChoices.choices, default=GenderChoices.male
     )
     # is_sale = models.BooleanField(default=False)
     # discount = models.ForeignKey(
     #     Discount, on_delete=models.CASCADE, blank=True, null=True
     # )
-
 
     def __str__(self) -> str:
         return f'{self.name}'
@@ -179,11 +176,11 @@ class AttributeProduct(models.Model):
         on_delete=models.CASCADE,
         blank=True,
         null=True,
-        related_name='attributes'
+        related_name='attributes',
     )
     value = models.CharField(max_length=120)
 
-    def __str__(self)-> str:
+    def __str__(self) -> str:
         return f"{self._attribute_name} {self.value}"
 
 
@@ -207,7 +204,6 @@ class InStock(models.Model):
     in_stock = models.SmallIntegerField(
         blank=True, null=True, validators=[MinValueValidator(0)]
     )
-
 
     def __str__(self) -> str:
         return f'{self.color.name}'
