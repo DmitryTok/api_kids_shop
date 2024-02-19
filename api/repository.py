@@ -10,7 +10,24 @@ class ProductRepository(BaseRepository):
         return models.Product
 
     def get_obj(self, product_id: int) -> models.Product:
-        return self.model.objects.filter(id=product_id).first()
+        return (self.model.objects.
+                filter(id=product_id).
+                select_related('category', 'section', 'brand').
+                prefetch_related(
+                    Prefetch(
+                        'product_images',
+                        queryset=models.Picture.objects.select_related('product'),
+                            ),
+                    Prefetch(
+                        'attributes',
+                        queryset=models.AttributeProduct.objects.all()
+                            ),
+                    Prefetch(
+                        'discount',
+                        queryset=models.Discount.objects.all()
+                            )
+                                ).
+                first())
 
     def get_all_objects_order_by_id(self) -> models.Product:
         return self.model.objects.select_related(
@@ -63,7 +80,7 @@ class ProductRepository(BaseRepository):
     def get_sorted_products_by_sale(self) -> models.Product:
         return (
             self.model.objects.filter(discount__isnull=False)
-            .select_related('category', 'section', 'brand', 'discount')
+            .select_related('category', 'section', 'brand')
             .prefetch_related(
                 # Prefetch(
                 #     'in_stock',
@@ -78,6 +95,10 @@ class ProductRepository(BaseRepository):
                 Prefetch(
                     'attributes',
                     queryset=models.AttributeProduct.objects
+                ),
+                Prefetch(
+                    'discount',
+                    queryset=models.Discount.objects.all()
                 ),
             )
         )

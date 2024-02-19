@@ -158,3 +158,4 @@ class ShoppingCartViewSet(ListCreateDeleteViewSet):
     queryset = shopping_cart_repository.get_all_objects_order_by_id()
     serializer_class = ShoppingCartSerializer
     permission_classes = [IsOwner]
+
