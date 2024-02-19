@@ -13,9 +13,6 @@ class GenderChoices(models.IntegerChoices):
 
 
 class Discount(models.Model):
-    product = models.ForeignKey(
-        'Product', related_name='discount', on_delete=models.CASCADE
-    )
     amount = models.PositiveIntegerField(validators=[MinValueValidator(0)])
     info = models.CharField(max_length=120)
     date_start = models.DateTimeField()
@@ -133,6 +130,11 @@ class Product(models.Model):
     # )
     male = models.IntegerField(
         choices=GenderChoices.choices, default=GenderChoices.male
+    )
+    discount = models.ForeignKey(
+        Discount,
+        related_name='discount',
+        on_delete=models.SET_NULL
     )
     # is_sale = models.BooleanField(default=False)
     # discount = models.ForeignKey(
