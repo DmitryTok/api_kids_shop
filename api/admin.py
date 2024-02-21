@@ -19,9 +19,9 @@ class ProductAttributeInline(admin.TabularInline):
     extra = 1
 
 
-class DiscountInline(admin.TabularInline):
-    model = models.Discount
-    extra = 0
+# class DiscountInline(admin.TabularInline):
+#     model = models.Discount
+#     extra = 0
 
 
 @admin.register(models.AttributeProduct)
@@ -92,7 +92,7 @@ class SizeAdmin(admin.ModelAdmin):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductAttributeInline, DiscountInline]
+    inlines = [ProductAttributeInline,]
 
     # def in_stock_display(self, obj):
     #     in_stock_info = obj.in_stock.all()
@@ -133,6 +133,6 @@ class ShoppingCartAdmin(admin.ModelAdmin):
 
 @admin.register(models.InStock)
 class InStockAdmin(admin.ModelAdmin):
-    list_display = ('id', 'product', 'color', 'product_size', 'in_stock')
-    search_fields = ('id', 'product', 'color', 'product_size', 'in_stock')
-    list_filter = ('id', 'product', 'color', 'product_size', 'in_stock')
+    list_display = ('id', 'product', 'article', 'in_stock')
+    search_fields = ('id', 'product', 'article',  'in_stock')
+    list_filter = ('id', 'product', 'article',  'in_stock')

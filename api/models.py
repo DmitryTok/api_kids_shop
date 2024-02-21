@@ -112,10 +112,7 @@ class Product(models.Model):
         blank=False,
         related_name='product_brands',
     )
-    article = models.CharField(
-        max_length=50,
-        unique=True,
-    )
+
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,  # Number of decimal places.
@@ -134,7 +131,8 @@ class Product(models.Model):
     discount = models.ForeignKey(
         Discount,
         related_name='discount',
-        on_delete=models.SET_NULL
+        on_delete=models.SET_NULL,
+        null=True
     )
     # is_sale = models.BooleanField(default=False)
     # discount = models.ForeignKey(
@@ -194,21 +192,16 @@ class InStock(models.Model):
         blank=False,
         related_name='in_stock',
     )
-    color = models.ForeignKey(
-        Color, blank=False, on_delete=models.CASCADE, related_name='in_stock'
-    )
-    product_size = models.ForeignKey(
-        Size,
-        blank=True,
-        related_name='product_sizes',
-        on_delete=models.CASCADE,
+    article = models.CharField(
+        max_length=50,
+        unique=True,
     )
     in_stock = models.SmallIntegerField(
         blank=True, null=True, validators=[MinValueValidator(0)]
     )
 
     def __str__(self) -> str:
-        return f'{self.color.name}'
+        return f'{self.product.name} {self.article}'
 
 
 class Picture(models.Model):
