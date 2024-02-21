@@ -3,8 +3,10 @@ import logging
 import os
 import random
 import typing as t
+import uuid
 from argparse import ArgumentParser
 from collections import defaultdict
+from datetime import datetime, timedelta
 
 from django.core.files import File
 from django.core.management.base import BaseCommand
@@ -85,7 +87,17 @@ BRANDS_LST = [
     "Forever 21",
 ]
 
+COUNTRIES_LST = [
+    'Україна',
+    'Китай',
+    'США',
+    'Італія',
+    'Туреччина'
+]
+
 DISCOUNT_LST = [5, 10, 15, 20, 25, 30, 35]
+
+NOW = datetime.now()
 
 COLOR_LST = [
     '#FF5733',
@@ -108,6 +120,7 @@ SECTION_CATEGORY = {
 }
 
 SIZE_COUNTER = 21
+
 
 IDENTIFICATOR_MALE = 'True'
 IMAGE_FOLDER = 'data/kids'
@@ -155,12 +168,10 @@ class Command(BaseCommand):
         self._write('DISCOUNT items count %s' % len(discounts))
 
         self._write('Starting to upload --- SIZE ---')
-        sizes = self.create_sizes()
-        self._write('Size items count: %s' % len(sizes))
+        size = self.create_size_attr()
 
         self._write('Starting to upload --- COLOR ---')
-        colors = self.create_colors()
-        self._write('COLOR items count %s' % len(colors))
+        color = self.create_color_attr()
 
         self._write('Starting to upload --- PRODUCTS --- from %s' % path)
         products = self.create_products(
@@ -172,12 +183,14 @@ class Command(BaseCommand):
         self._write('Product created items: %s' % len(products))
 
         self._write('Starting to upload --- STOCK ---')
-        stocks = self.create_stock(
-            sizes=sizes,
-            colors=colors,
+        stocks, colors, sizes = self.create_stock(
+            size=size,
+            color=color,
             products=products,
         )
         self._write('STOCK items count %s' % len(stocks))
+        self._write('Size items count: %s' % len(sizes))
+        self._write('COLOR items count %s' % len(colors))
 
         self._write('INSERT --- IMAGES ---')
         pictures = self.insert_images(products)
@@ -204,6 +217,16 @@ class Command(BaseCommand):
         products = Product.objects.all().count()
         self._write(str(reader))
         return reader, len(reader) == products
+
+    def create_unique_article(self):
+        # Generate a unique identifier using UUID
+        unique_id = str(uuid.uuid4().hex)[:8]  # Extract the first 8 characters
+
+        # Combine with a product prefix or any other information as needed
+        product_prefix = "PRD"
+        article = f"{product_prefix}_{unique_id}"
+
+        return article
 
     def make_dict_from_lists(self, list1, list2):
         return {key.strip(): value.strip() for key, value in zip(list1, list2)}
@@ -252,72 +275,102 @@ class Command(BaseCommand):
                 description=item['description'],
                 price=item['price'],
                 male=male,
-                age=random.randint(0, 55),
+                # age=random.randint(0, 55),
                 rating=random.randint(0, 10),
-                is_sale=is_sale,
+                # is_sale=is_sale,
                 discount=random.choice(discounts) if is_sale else None,
             )
             products.append(product)
         Product.objects.bulk_create(products, ignore_conflicts=False)
         return products
 
-    def create_stock(self, sizes, colors, products) -> list[InStock]:
+    def create_stock(self, size, color, products) -> list[InStock]:
         instoks = []
+        colors = []
+        sizes = []
         for product in products:
             for _ in range(random.randint(3, 5)):
+
                 instok = InStock(
                     product=product,
-                    color=random.choice(colors),
-                    product_size=random.choice(sizes),
+                    article=self.create_unique_article(),
+                    # color=random.choice(colors),
+                    # product_size=random.choice(sizes),
                     in_stock=random.randint(0, 50),
                 )
                 instoks.append(instok)
 
+                size_product = AttributeProduct(
+                    product=product,
+                    attribute=size,
+                    _attribute_name='Size',
+                    value=random.randint(15, 38)
+                )
+                sizes.append(size_product)
+
+                color_product = AttributeProduct(
+                    product=product,
+                    attribute=color,
+                    _attribute_name='Color',
+                    value=random.choice(COLOR_LST)
+                )
+
+                colors.append(color_product)
+
         InStock.objects.bulk_create(instoks)
-        return instoks
+        AttributeProduct.objects.bulk_create(colors)
+        AttributeProduct.objects.bulk_create(sizes)
 
-        # self._write('--- DISCOUNT IS_SALE PRODUCTS ---')
-        # sale_product_ids = Product.objects.filter(is_sale=True).values_list(
-        #     'pk', flat=True
-        # )
-        # Product.objects.filter(pk__in=sale_product_ids).update(
-        #     discount=random.choice(discounts)
-        # )
-        # self._write('Products For Sale updated: %s' % sale_product_ids)
+        return instoks, colors, sizes
 
-    def create_colors(self) -> list[Color]:
-        colors = [Color(name=color) for color in COLOR_LST]
-        Color.objects.bulk_create(colors, ignore_conflicts=False)
-        assert len(colors) == len(COLOR_LST)
-        return colors
+    def create_color_attr(self) -> list[Color]:
+        attribute_color = Attribute.objects.create(
+            name='Color',
+            widget='Default'
+        )
+        # colors = [Color(name=color) for color in COLOR_LST]
+        # Color.objects.bulk_create(colors, ignore_conflicts=False)
+        # assert len(colors) == len(COLOR_LST)
+        return attribute_color
 
-    def create_sizes(self) -> list[Size]:
-        attribute=Attribute.objects.create(
+    def create_size_attr(self) -> list[Size]:
+        attribute_size = Attribute.objects.create(
             name='Size',
             widget='Default'
         )
-        sizes = [AttributeProduct
-            (
-                attribute=attribute,
-                _attribute_name='Size',
-                value=random.randint(15, 38),
-
-            )
-            for _ in range(SIZE_COUNTER)
-        ]
-
-        Attribute.objects.bulk_create(sizes, ignore_conflicts=False)
-        assert len(sizes) == SIZE_COUNTER
-        return sizes
+        # sizes = [AttributeProduct
+        #     (
+        #         attribute=attribute,
+        #         _attribute_name='Size',
+        #         value=random.randint(15, 38),
+        #
+        #     )
+        #     for _ in range(SIZE_COUNTER)
+        # ]
+        #
+        # AttributeProduct.objects.bulk_create(sizes, ignore_conflicts=False)
+        # assert len(sizes) == SIZE_COUNTER
+        return attribute_size
 
     def create_dicsounts(self) -> list[Discount]:
-        discounts = [Discount(name=discount) for discount in DISCOUNT_LST]
+        discounts = [Discount(
+            amount=discount,
+            info='Discounted products',
+            date_start=NOW,
+            date_end=NOW + timedelta(weeks=1),
+
+        )
+            for discount in DISCOUNT_LST]
         Discount.objects.bulk_create(discounts, ignore_conflicts=False)
         assert len(discounts) == len(DISCOUNT_LST)
         return discounts
 
     def create_brands(self) -> list[Brand]:
-        brands = [Brand(name=brand) for brand in BRANDS_LST]
+        brands = [Brand(
+            name=brand,
+            country=random.choice(COUNTRIES_LST)
+        )
+            for brand in BRANDS_LST]
         Brand.objects.bulk_create(brands, ignore_conflicts=False)
         assert len(brands) == len(BRANDS_LST)
         return brands

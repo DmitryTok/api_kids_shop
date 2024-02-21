@@ -167,7 +167,6 @@ class AttributeProduct(models.Model):
     )
     _attribute_name = models.CharField(
         max_length=120,
-        unique=True,
         db_index=True,
     )
 
