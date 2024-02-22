@@ -33,12 +33,7 @@ class ProductRepository(BaseRepository):
         return self.model.objects.select_related(
             'category', 'section', 'brand'
         ).prefetch_related(
-            # Prefetch(
-            #     'in_stock',
-            #     queryset=models.InStock.objects.select_related(
-            #         'color', 'product_size'
-            #     ),
-            # ),
+
             Prefetch(
                 'product_images',
                 queryset=models.Picture.objects.select_related('product'),
@@ -59,12 +54,6 @@ class ProductRepository(BaseRepository):
                 'category', 'section', 'brand', 'discount'
             )
             .prefetch_related(
-                # Prefetch(
-                #     'in_stock',
-                #     queryset=models.InStock.objects.select_related(
-                #         'color', 'product_size'
-                #     ),
-                # ),
                 Prefetch(
                     'product_images',
                     queryset=models.Picture.objects.select_related('product'),
@@ -82,19 +71,14 @@ class ProductRepository(BaseRepository):
             self.model.objects.filter(discount__isnull=False)
             .select_related('category', 'section', 'brand')
             .prefetch_related(
-                # Prefetch(
-                #     'in_stock',
-                #     queryset=models.InStock.objects.select_related(
-                #         'color', 'product_size'
-                #     ),
-                # ),
+
                 Prefetch(
                     'product_images',
                     queryset=models.Picture.objects.select_related('product'),
                 ),
                 Prefetch(
                     'attributes',
-                    queryset=models.AttributeProduct.objects
+                    queryset=models.AttributeProduct.objects.all()
                 ),
                 Prefetch(
                     'discount',

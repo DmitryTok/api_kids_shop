@@ -165,7 +165,7 @@ class AttributeProduct(models.Model):
         null=True,
         related_name='attributes',
     )
-    _attribute_name = models.CharField(
+    attribute_name = models.CharField(
         max_length=120,
         db_index=True,
     )
