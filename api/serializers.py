@@ -9,14 +9,12 @@ class AttributeSerializer(ModelSerializer):
     class Meta:
         model = Attribute
         fields = '__all__'
-        # read_only_fields = fields
 
 
 class AttributeProductSerializer(ModelSerializer):
     class Meta:
         model = AttributeProduct
         fields = '__all__'
-        # read_only_fields = fields
 
 
 class PictureSerializer(ModelSerializer):
@@ -37,14 +35,14 @@ class SectionSerializer(ModelSerializer):
     class Meta:
         model = Section
         fields = ('id', 'name')
-        read_only_fields = fields
 
 
 class CategorySerializer(ModelSerializer):
+    sections = SectionSerializer(many=True)
+
     class Meta:
         model = Category
-        fields = ('id', 'name')
-        read_only_fields = fields
+        fields = ('id', 'name', 'sections')
 
 
 class DiscountSerializer(ModelSerializer):

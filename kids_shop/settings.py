@@ -180,6 +180,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATICFILES_DIRS = ['media/']
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = 'media/'
@@ -190,10 +191,10 @@ JAZZMIN_SETTINGS = {
     'site_title': 'Lama shop',
     'site_header': 'Lama shop',
     'site_brand': 'Lama shop',
-    # 'site_logo': 'Logo.png',
-    # 'login_logo': 'Logo.png',
-    # 'site_icon': 'Logo.png',
-    'welcome_sign': 'Welcome',
+    'site_logo': 'Lama.png',
+    'login_logo': 'Logo.png',
+    'site_icon': 'Logo.png',
+    'welcome_sign': 'Lama Shop',
     'search_model': [],
     'topmenu_links': [{'model': 'api.product'}, {'model': 'api.instock'}],
     'show_sidebar': True,

@@ -33,10 +33,6 @@ class Brand(models.Model):
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
 
-    def save(self, *args, **kwargs):
-        self.name = self.name.lower()
-        return super().save(*args, **kwargs)
-
     def __str__(self) -> str:
         return f'{self.name}'
 
@@ -50,10 +46,6 @@ class Section(models.Model):
         null=True,
         related_name='sections',
     )
-
-    def save(self, *args, **kwargs):
-        self.name = self.name.lower()
-        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f'{self.name}'
@@ -129,10 +121,7 @@ class Product(models.Model):
         choices=GenderChoices.choices, default=GenderChoices.male
     )
     discount = models.ForeignKey(
-        Discount,
-        related_name='discount',
-        on_delete=models.SET_NULL,
-        null=True
+        Discount, related_name='discount', on_delete=models.SET_NULL, null=True
     )
     # is_sale = models.BooleanField(default=False)
     # discount = models.ForeignKey(

@@ -29,40 +29,12 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 @admin.register(Kid)
 class KidAdmin(admin.ModelAdmin):
-    list_display = ('id', 'male', 'birth_date')
-    search_fields = ('id', 'male', 'birth_date')
-    list_filter = ('id', 'male', 'birth_date')
+    pass
 
 
 @admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'first_delivery_address',
-        'second_delivery_address',
-        'city',
-        'street',
-        'building',
-        'apartment'
-    )
-    search_fields = (
-        'id',
-        'first_delivery_address',
-        'second_delivery_address',
-        'city',
-        'street',
-        'building',
-        'apartment'
-    )
-    list_filter = (
-        'id',
-        'first_delivery_address',
-        'second_delivery_address',
-        'city',
-        'street',
-        'building',
-        'apartment'
-    )
+    inlines = [ProfileInline]
 
 
 @admin.register(Profile)

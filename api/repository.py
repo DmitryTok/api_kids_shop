@@ -1,4 +1,4 @@
-from django.db.models import Prefetch
+from django.db.models import F, Prefetch
 
 from api import models
 from kids_shop.base.base_repository import BaseRepository
@@ -10,24 +10,22 @@ class ProductRepository(BaseRepository):
         return models.Product
 
     def get_obj(self, product_id: int) -> models.Product:
-        return (self.model.objects.
-                filter(id=product_id).
-                select_related('category', 'section', 'brand').
-                prefetch_related(
-                    Prefetch(
-                        'product_images',
-                        queryset=models.Picture.objects.select_related('product'),
-                            ),
-                    Prefetch(
-                        'attributes',
-                        queryset=models.AttributeProduct.objects.all()
-                            ),
-                    Prefetch(
-                        'discount',
-                        queryset=models.Discount.objects.all()
-                            )
-                                ).
-                first())
+        return (
+            self.model.objects.filter(id=product_id)
+            .select_related('category', 'section', 'brand')
+            .prefetch_related(
+                Prefetch(
+                    'product_images',
+                    queryset=models.Picture.objects.select_related('product'),
+                ),
+                Prefetch(
+                    'attributes',
+                    queryset=models.AttributeProduct.objects.all(),
+                ),
+                Prefetch('discount', queryset=models.Discount.objects.all()),
+            )
+            .first()
+        )
 
     def get_all_objects_order_by_id(self) -> models.Product:
         return self.model.objects.select_related(
@@ -44,13 +42,9 @@ class ProductRepository(BaseRepository):
                 queryset=models.Picture.objects.select_related('product'),
             ),
             Prefetch(
-                'attributes',
-                queryset=models.AttributeProduct.objects.all()
+                'attributes', queryset=models.AttributeProduct.objects.all()
             ),
-            Prefetch(
-                'discount',
-                queryset=models.Discount.objects.all()
-            )
+            Prefetch('discount', queryset=models.Discount.objects.all()),
         )
 
     def get_sorted_product_by_rate(self) -> models.Product:
@@ -70,8 +64,7 @@ class ProductRepository(BaseRepository):
                     queryset=models.Picture.objects.select_related('product'),
                 ),
                 Prefetch(
-                    'attributes',
-                    queryset=models.AttributeProduct.objects
+                    'attributes', queryset=models.AttributeProduct.objects
                 ),
             )
             .order_by('-rating')
@@ -93,24 +86,11 @@ class ProductRepository(BaseRepository):
                     queryset=models.Picture.objects.select_related('product'),
                 ),
                 Prefetch(
-                    'attributes',
-                    queryset=models.AttributeProduct.objects
+                    'attributes', queryset=models.AttributeProduct.objects
                 ),
-                Prefetch(
-                    'discount',
-                    queryset=models.Discount.objects.all()
-                ),
+                Prefetch('discount', queryset=models.Discount.objects.all()),
             )
         )
-
-
-class SectionRepository(BaseRepository):
-    @property
-    def model(self) -> type[models.Section]:
-        return models.Section
-
-    def get_all_objects_order_by_id(self) -> models.Section:
-        return self.model.objects.values('id', 'name')
 
 
 class PictureRepository(BaseRepository):
@@ -126,6 +106,16 @@ class CategoryRepository(BaseRepository):
     @property
     def model(self) -> type[models.Category]:
         return models.Category
+
+    def get_all_objects_order_by_id(self):
+        return self.model.objects.prefetch_related(
+            Prefetch(
+                'sections',
+                queryset=models.Section.objects.annotate(
+                    section_name=F('name')
+                ),
+            )
+        )
 
 
 class BrandRepository(BaseRepository):

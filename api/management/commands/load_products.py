@@ -87,13 +87,7 @@ BRANDS_LST = [
     "Forever 21",
 ]
 
-COUNTRIES_LST = [
-    'Україна',
-    'Китай',
-    'США',
-    'Італія',
-    'Туреччина'
-]
+COUNTRIES_LST = ['Україна', 'Китай', 'США', 'Італія', 'Туреччина']
 
 DISCOUNT_LST = [5, 10, 15, 20, 25, 30, 35]
 
@@ -218,7 +212,7 @@ class Command(BaseCommand):
         self._write(str(reader))
         return reader, len(reader) == products
 
-    def create_unique_article(self):
+    def create_unique_article(self) -> str:
         # Generate a unique identifier using UUID
         unique_id = str(uuid.uuid4().hex)[:8]  # Extract the first 8 characters
 
@@ -228,7 +222,7 @@ class Command(BaseCommand):
 
         return article
 
-    def make_dict_from_lists(self, list1, list2):
+    def make_dict_from_lists(self, list1, list2) -> dict[str, str]:
         return {key.strip(): value.strip() for key, value in zip(list1, list2)}
 
     def insert_images(self, products: list[Product]) -> list[Picture]:
@@ -304,7 +298,7 @@ class Command(BaseCommand):
                     product=product,
                     attribute=size,
                     _attribute_name='Size',
-                    value=random.randint(15, 38)
+                    value=random.randint(15, 38),
                 )
                 sizes.append(size_product)
 
@@ -312,7 +306,7 @@ class Command(BaseCommand):
                     product=product,
                     attribute=color,
                     _attribute_name='Color',
-                    value=random.choice(COLOR_LST)
+                    value=random.choice(COLOR_LST),
                 )
 
                 colors.append(color_product)
@@ -325,8 +319,7 @@ class Command(BaseCommand):
 
     def create_color_attr(self) -> list[Color]:
         attribute_color = Attribute.objects.create(
-            name='Color',
-            widget='Default'
+            name='Color', widget='Default'
         )
         # colors = [Color(name=color) for color in COLOR_LST]
         # Color.objects.bulk_create(colors, ignore_conflicts=False)
@@ -335,8 +328,7 @@ class Command(BaseCommand):
 
     def create_size_attr(self) -> list[Size]:
         attribute_size = Attribute.objects.create(
-            name='Size',
-            widget='Default'
+            name='Size', widget='Default'
         )
         # sizes = [AttributeProduct
         #     (
@@ -353,24 +345,24 @@ class Command(BaseCommand):
         return attribute_size
 
     def create_dicsounts(self) -> list[Discount]:
-        discounts = [Discount(
-            amount=discount,
-            info='Discounted products',
-            date_start=NOW,
-            date_end=NOW + timedelta(weeks=1),
-
-        )
-            for discount in DISCOUNT_LST]
+        discounts = [
+            Discount(
+                amount=discount,
+                info='Discounted products',
+                date_start=NOW,
+                date_end=NOW + timedelta(weeks=1),
+            )
+            for discount in DISCOUNT_LST
+        ]
         Discount.objects.bulk_create(discounts, ignore_conflicts=False)
         assert len(discounts) == len(DISCOUNT_LST)
         return discounts
 
     def create_brands(self) -> list[Brand]:
-        brands = [Brand(
-            name=brand,
-            country=random.choice(COUNTRIES_LST)
-        )
-            for brand in BRANDS_LST]
+        brands = [
+            Brand(name=brand, country=random.choice(COUNTRIES_LST))
+            for brand in BRANDS_LST
+        ]
         Brand.objects.bulk_create(brands, ignore_conflicts=False)
         assert len(brands) == len(BRANDS_LST)
         return brands
@@ -387,14 +379,10 @@ class Command(BaseCommand):
             ]
 
             all_sections.extend(sections)
-            self._write(
-                f'Category {category} sections count: {len(sections)}'
-            )
+            self._write(f'Category {category} sections count: {len(sections)}')
         Category.objects.bulk_create(categories, ignore_conflicts=False)
         Section.objects.bulk_create(all_sections, ignore_conflicts=False)
         return categories, all_sections
-
-
 
 
 # with open(path, encoding='utf-8') as file:

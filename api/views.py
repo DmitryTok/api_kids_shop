@@ -6,12 +6,10 @@ from rest_framework.response import Response
 # from api.filters import ProductFilter
 from api.repository import (BrandRepository, CategoryRepository,
                             FavoriteRepository, PictureRepository,
-                            ProductRepository, SectionRepository,
-                            ShoppingCartRepository)
+                            ProductRepository, ShoppingCartRepository)
 from api.serializers import (BrandSerializer, CategorySerializer,
                              FavoriteSerializer, PictureSerializer,
-                             ProductSerializer, SectionSerializer,
-                             ShoppingCartSerializer)
+                             ProductSerializer, ShoppingCartSerializer)
 from api.utils import favorite_or_cart, get_products
 from kids_shop.base.base_retrieve_hendler import BaseRetrieveViewSet
 from kids_shop.permissions import IsOwner, IsOwnerFavoriteOrCart
@@ -119,13 +117,6 @@ class CategoryListView(BaseRetrieveViewSet):
     filterset_fields = ['name']
 
 
-class SectionListView(BaseRetrieveViewSet):
-    section_repository = SectionRepository()
-    queryset = section_repository.get_all_objects_order_by_id()
-    serializer_class = SectionSerializer
-    filterset_fields = ['name']
-
-
 class BranListView(BaseRetrieveViewSet):
     brand_repository = BrandRepository()
     queryset = brand_repository.get_all_objects_order_by_id()
@@ -158,4 +149,3 @@ class ShoppingCartViewSet(ListCreateDeleteViewSet):
     queryset = shopping_cart_repository.get_all_objects_order_by_id()
     serializer_class = ShoppingCartSerializer
     permission_classes = [IsOwner]
-
