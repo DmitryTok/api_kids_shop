@@ -85,6 +85,32 @@ class ProductAdmin(admin.ModelAdmin):
     inlines = [
         ProductAttributeInline,
     ]
+    list_display = (
+        'id',
+        'name',
+        'price',
+        'rating',
+        'male',
+        'discount',
+        'in_stock_display',
+        'total_in_stock',
+    )
+    search_fields = (
+        'id',
+        'name',
+        'price',
+        'rating',
+        'male',
+        'discount',
+    )
+    list_filter = (
+        'id',
+        'name',
+        'price',
+        'rating',
+        'male',
+        'discount',
+    )
 
     def in_stock_display(self, obj):
         in_stock_info = obj.in_stock.all()
