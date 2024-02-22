@@ -25,6 +25,11 @@ class SectionInLine(admin.TabularInline):
     extra = 1
 
 
+class InStockInline(admin.TabularInline):
+    model = models.InStock
+    extra = 1
+
+
 @admin.register(models.AttributeProduct)
 class AttributeProductAdmin(admin.ModelAdmin):
     pass
@@ -84,6 +89,7 @@ class SizeAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     inlines = [
         ProductAttributeInline,
+        InStockInline,
     ]
     list_display = (
         'id',
