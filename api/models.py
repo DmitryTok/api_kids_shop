@@ -1,4 +1,3 @@
-import uuid
 from enum import Enum
 
 from django.core.validators import MinValueValidator
@@ -7,19 +6,25 @@ from django.db import models
 from users.models import Profile
 
 
+class GenderChoices(models.IntegerChoices):
+    male = 0
+    female = 1
+    unisex = 2
+
+
 class Discount(models.Model):
-    name = models.PositiveIntegerField(validators=[MinValueValidator(0)])
+    amount = models.PositiveIntegerField(validators=[MinValueValidator(0)])
+    info = models.CharField(max_length=120)
+    date_start = models.DateTimeField()
+    date_end = models.DateTimeField()
 
     def __str__(self) -> str:
-        return str(self.name)
+        return f'{self.amount} {self.info}'
 
 
 class Brand(models.Model):
     name = models.CharField(max_length=200, unique=True)
-
-    def save(self, *args, **kwargs):
-        self.name = self.name.lower()
-        return super().save(*args, **kwargs)
+    country = models.CharField(max_length=30)
 
     def __str__(self) -> str:
         return f'{self.name}'
@@ -27,10 +32,6 @@ class Brand(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
-
-    def save(self, *args, **kwargs):
-        self.name = self.name.lower()
-        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f'{self.name}'
@@ -45,10 +46,6 @@ class Section(models.Model):
         null=True,
         related_name='sections',
     )
-
-    def save(self, *args, **kwargs):
-        self.name = self.name.lower()
-        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f'{self.name}'
@@ -76,13 +73,6 @@ class Size(models.Model):
         return f'{self.letter_size}({str(self.brand_size)})'
 
 
-class Color(models.Model):
-    name = models.CharField(max_length=120, unique=True)
-
-    def __str__(self) -> str:
-        return f'{self.name}'
-
-
 class Product(models.Model):
     name = models.CharField(max_length=150)
     category = models.ForeignKey(
@@ -107,22 +97,65 @@ class Product(models.Model):
         blank=False,
         related_name='product_brands',
     )
-    item_number = models.UUIDField(
-        primary_key=False, default=uuid.uuid4, editable=False
+
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,  # Number of decimal places.
+        default=0.00,  # Default value for the field.
+        null=False,  # Whether the field can be NULL in the database.
+        blank=True,  # Whether the field is allowed to be blank in forms.
+        verbose_name='Price',  # Human-readable name for the field.
     )
-    price = models.PositiveSmallIntegerField(validators=[MinValueValidator(1)])
     rating = models.FloatField(null=True, blank=True)
-    age = models.PositiveSmallIntegerField(
-        null=False, blank=False, validators=[MinValueValidator(0)]
+    male = models.IntegerField(
+        choices=GenderChoices.choices, default=GenderChoices.male
     )
-    male = models.BooleanField(default=True)
-    is_sale = models.BooleanField(default=False)
     discount = models.ForeignKey(
-        Discount, on_delete=models.CASCADE, blank=True, null=True
+        Discount, related_name='discount', on_delete=models.SET_NULL, null=True
     )
 
     def __str__(self) -> str:
         return f'{self.name}'
+
+
+class Attribute(models.Model):
+    name = models.CharField(
+        max_length=120,
+        unique=True,
+        db_index=True,
+    )
+    is_global = models.BooleanField(default=False)
+    widget = models.CharField(max_length=120)
+    extra = models.JSONField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class AttributeProduct(models.Model):
+    attribute = models.ForeignKey(
+        Attribute,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='attributes',
+    )
+    attribute_name = models.CharField(
+        max_length=120,
+        db_index=True,
+    )
+
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name='attributes',
+    )
+    value = models.CharField(max_length=120)
+
+    def __str__(self) -> str:
+        return f'{self.attribute_name} {self.value}'
 
 
 class InStock(models.Model):
@@ -133,21 +166,16 @@ class InStock(models.Model):
         blank=False,
         related_name='in_stock',
     )
-    color = models.ForeignKey(
-        Color, blank=False, on_delete=models.CASCADE, related_name='in_stock'
-    )
-    product_size = models.ForeignKey(
-        Size,
-        blank=True,
-        related_name='product_sizes',
-        on_delete=models.CASCADE,
+    article = models.CharField(
+        max_length=50,
+        unique=True,
     )
     in_stock = models.SmallIntegerField(
         blank=True, null=True, validators=[MinValueValidator(0)]
     )
 
     def __str__(self) -> str:
-        return f'{self.color.name}'
+        return f'{self.product.name} {self.article}'
 
 
 class Picture(models.Model):

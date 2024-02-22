@@ -3,15 +3,13 @@ from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from api.filters import ProductFilter
+# from api.filters import ProductFilter
 from api.repository import (BrandRepository, CategoryRepository,
                             FavoriteRepository, PictureRepository,
-                            ProductRepository, SectionRepository,
-                            ShoppingCartRepository)
+                            ProductRepository, ShoppingCartRepository)
 from api.serializers import (BrandSerializer, CategorySerializer,
                              FavoriteSerializer, PictureSerializer,
-                             ProductSerializer, SectionSerializer,
-                             ShoppingCartSerializer)
+                             ProductSerializer, ShoppingCartSerializer)
 from api.utils import favorite_or_cart, get_products
 from kids_shop.base.base_retrieve_hendler import BaseRetrieveViewSet
 from kids_shop.permissions import IsOwner, IsOwnerFavoriteOrCart
@@ -34,7 +32,7 @@ class ProductListView(BaseRetrieveViewSet):
     profile_repository = ProfileRepository()
     queryset = product_repository.get_all_objects_order_by_id()
     serializer_class = ProductSerializer
-    filterset_class = ProductFilter
+    # filterset_class = ProductFilter
 
     @action(
         detail=False,
@@ -116,13 +114,6 @@ class CategoryListView(BaseRetrieveViewSet):
     category_repository = CategoryRepository()
     queryset = category_repository.get_all_objects_order_by_id()
     serializer_class = CategorySerializer
-    filterset_fields = ['name']
-
-
-class SectionListView(BaseRetrieveViewSet):
-    section_repository = SectionRepository()
-    queryset = section_repository.get_all_objects_order_by_id()
-    serializer_class = SectionSerializer
     filterset_fields = ['name']
 
 

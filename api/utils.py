@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 
-def split_value(value) -> tuple | int:
+def split_value(value: str) -> tuple | int:
     parts = value.split('-')
     if len(parts) == 2:
         start_value, end_value = map(int, parts)

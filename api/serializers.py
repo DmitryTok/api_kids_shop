@@ -1,7 +1,20 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from api.models import (Brand, Category, Color, Discount, Favorite, InStock,
-                        Picture, Product, Section, ShoppingCart, Size)
+from api.models import (Attribute, AttributeProduct, Brand, Category, Discount,
+                        Favorite, InStock, Picture, Product, Section,
+                        ShoppingCart, Size)
+
+
+class AttributeSerializer(ModelSerializer):
+    class Meta:
+        model = Attribute
+        fields = '__all__'
+
+
+class AttributeProductSerializer(ModelSerializer):
+    class Meta:
+        model = AttributeProduct
+        fields = '__all__'
 
 
 class PictureSerializer(ModelSerializer):
@@ -22,20 +35,20 @@ class SectionSerializer(ModelSerializer):
     class Meta:
         model = Section
         fields = ('id', 'name')
-        read_only_fields = fields
 
 
 class CategorySerializer(ModelSerializer):
+    sections = SectionSerializer(many=True)
+
     class Meta:
         model = Category
-        fields = ('id', 'name')
-        read_only_fields = fields
+        fields = ('id', 'name', 'sections')
 
 
 class DiscountSerializer(ModelSerializer):
     class Meta:
         model = Discount
-        fields = ('id', 'name')
+        fields = ('id', 'amount', 'info', 'date_start', 'date_end')
         read_only_fields = fields
 
 
@@ -45,20 +58,12 @@ class SizeSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class ColorSerializer(ModelSerializer):
-    class Meta:
-        model = Color
-        fields = ('id', 'name')
-        read_only_fields = fields
-
-
 class InStockSerializer(ModelSerializer):
-    color = ColorSerializer(read_only=True)
     product_size = SizeSerializer(read_only=True)
 
     class Meta:
         model = InStock
-        fields = ('id', 'color', 'product_size', 'in_stock')
+        fields = ('id', 'product_size', 'in_stock')
 
 
 class ProductSerializer(ModelSerializer):
@@ -68,6 +73,7 @@ class ProductSerializer(ModelSerializer):
     brand = BrandSerializer(read_only=True)
     discount = DiscountSerializer(read_only=True)
     in_stock = InStockSerializer(read_only=True, many=True)
+    attributes = AttributeProductSerializer(read_only=True, many=True)
 
     class Meta:
         model = Product
