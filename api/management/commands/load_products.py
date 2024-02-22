@@ -87,13 +87,7 @@ BRANDS_LST = [
     "Forever 21",
 ]
 
-COUNTRIES_LST = [
-    'Україна',
-    'Китай',
-    'США',
-    'Італія',
-    'Туреччина'
-]
+COUNTRIES_LST = ['Україна', 'Китай', 'США', 'Італія', 'Туреччина']
 
 DISCOUNT_LST = [5, 10, 15, 20, 25, 30, 35]
 
@@ -114,9 +108,9 @@ COLOR_LST = [
 ]
 
 SECTION_CATEGORY = {
-    'аксесуари': SECTION_ACCESSORIES_LST,
-    'взуття': SECTION_CHOSE_LST,
-    'одяг': SECTION_CLOTHES_LST,
+    'Аксесуари': SECTION_ACCESSORIES_LST,
+    'Взуття': SECTION_CHOSE_LST,
+    'Одяг': SECTION_CLOTHES_LST,
 }
 
 SIZE_COUNTER = 21
@@ -164,7 +158,7 @@ class Command(BaseCommand):
         self._write('BRAND items count %s' % len(brands))
 
         self._write('Starting to upload --- DISCOUNT ---')
-        discounts = self.create_dicsounts()
+        discounts = self.create_discounts()
         self._write('DISCOUNT items count %s' % len(discounts))
 
         self._write('Starting to upload --- SIZE ---')
@@ -295,7 +289,7 @@ class Command(BaseCommand):
                 product=product,
                 attribute=age,
                 attribute_name='Age',
-                value=f'{random.randint(1, 5)} {random.randint(6, 12)}'
+                value=f'{random.randint(1, 5)} {random.randint(6, 12)}',
             )
             ages.append(age_product)
             for _ in range(random.randint(3, 5)):
@@ -303,7 +297,6 @@ class Command(BaseCommand):
                 instok = InStock(
                     product=product,
                     article=self.create_unique_article(),
-
                     in_stock=random.randint(0, 50),
                 )
                 instoks.append(instok)
@@ -312,7 +305,7 @@ class Command(BaseCommand):
                     product=product,
                     attribute=size,
                     attribute_name='Size',
-                    value=random.randint(15, 38)
+                    value=random.randint(15, 38),
                 )
                 sizes.append(size_product)
 
@@ -320,12 +313,10 @@ class Command(BaseCommand):
                     product=product,
                     attribute=color,
                     attribute_name='Color',
-                    value=random.choice(COLOR_LST)
+                    value=random.choice(COLOR_LST),
                 )
 
                 colors.append(color_product)
-
-
 
         InStock.objects.bulk_create(instoks)
         AttributeProduct.objects.bulk_create(colors)
@@ -336,44 +327,39 @@ class Command(BaseCommand):
 
     def create_color_attr(self) -> Attribute:
         attribute_color = Attribute.objects.create(
-            name='Color',
-            widget='Default'
+            name='Color', widget='Default'
         )
         return attribute_color
 
-    def create_size_attr(self) ->  Attribute:
+    def create_size_attr(self) -> Attribute:
         attribute_size = Attribute.objects.create(
-            name='Size',
-            widget='Default'
+            name='Size', widget='Default'
         )
         return attribute_size
 
     def create_age_attr(self) -> Attribute:
-        attribute_age = Attribute.objects.create(
-            name='Age',
-            widget='default'
-        )
+        attribute_age = Attribute.objects.create(name='Age', widget='default')
         return attribute_age
 
-    def create_dicsounts(self) -> list[Discount]:
-        discounts = [Discount(
-            amount=discount,
-            info='Discounted products',
-            date_start=NOW,
-            date_end=NOW + timedelta(weeks=1),
-
-        )
-            for discount in DISCOUNT_LST]
+    def create_discounts(self) -> list[Discount]:
+        discounts = [
+            Discount(
+                amount=discount,
+                info='Discounted products',
+                date_start=NOW,
+                date_end=NOW + timedelta(weeks=1),
+            )
+            for discount in DISCOUNT_LST
+        ]
         Discount.objects.bulk_create(discounts, ignore_conflicts=False)
         assert len(discounts) == len(DISCOUNT_LST)
         return discounts
 
     def create_brands(self) -> list[Brand]:
-        brands = [Brand(
-            name=brand,
-            country=random.choice(COUNTRIES_LST)
-        )
-            for brand in BRANDS_LST]
+        brands = [
+            Brand(name=brand, country=random.choice(COUNTRIES_LST))
+            for brand in BRANDS_LST
+        ]
         Brand.objects.bulk_create(brands, ignore_conflicts=False)
         assert len(brands) == len(BRANDS_LST)
         return brands
@@ -390,9 +376,7 @@ class Command(BaseCommand):
             ]
 
             all_sections.extend(sections)
-            self._write(
-                f'Category {category} sections count: {len(sections)}'
-            )
+            self._write(f'Category {category} sections count: {len(sections)}')
         Category.objects.bulk_create(categories, ignore_conflicts=False)
         Section.objects.bulk_create(all_sections, ignore_conflicts=False)
         return categories, all_sections

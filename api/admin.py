@@ -68,9 +68,7 @@ class BrandAdmin(admin.ModelAdmin):
 
 @admin.register(models.Picture)
 class ProductImageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'product', 'product_image')
-    search_fields = ('id', 'product', 'product_image')
-    list_filter = ('id', 'product', 'product_image')
+    pass
 
 
 @admin.register(models.Size)

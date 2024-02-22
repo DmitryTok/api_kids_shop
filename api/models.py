@@ -73,13 +73,6 @@ class Size(models.Model):
         return f'{self.letter_size}({str(self.brand_size)})'
 
 
-class Color(models.Model):
-    name = models.CharField(max_length=120, unique=True)
-
-    def __str__(self) -> str:
-        return f'{self.name}'
-
-
 class Product(models.Model):
     name = models.CharField(max_length=150)
     category = models.ForeignKey(
@@ -162,7 +155,7 @@ class AttributeProduct(models.Model):
     value = models.CharField(max_length=120)
 
     def __str__(self) -> str:
-        return f"{self._attribute_name} {self.value}"
+        return f'{self.attribute_name} {self.value}'
 
 
 class InStock(models.Model):

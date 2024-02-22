@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
-from api.models import (Attribute, AttributeProduct, Brand, Category, Color,
-                        Discount, Favorite, InStock, Picture, Product, Section,
+from api.models import (Attribute, AttributeProduct, Brand, Category, Discount,
+                        Favorite, InStock, Picture, Product, Section,
                         ShoppingCart, Size)
 
 
@@ -58,20 +58,12 @@ class SizeSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class ColorSerializer(ModelSerializer):
-    class Meta:
-        model = Color
-        fields = ('id', 'name')
-        read_only_fields = fields
-
-
 class InStockSerializer(ModelSerializer):
-    color = ColorSerializer(read_only=True)
     product_size = SizeSerializer(read_only=True)
 
     class Meta:
         model = InStock
-        fields = ('id', 'color', 'product_size', 'in_stock')
+        fields = ('id', 'product_size', 'in_stock')
 
 
 class ProductSerializer(ModelSerializer):
