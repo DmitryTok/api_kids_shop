@@ -38,7 +38,9 @@ class ProductRepository(BaseRepository):
             Prefetch(
                 'attributes', queryset=models.AttributeProduct.objects.all()
             ),
-            Prefetch('discount', queryset=models.Discount.objects.all()),
+            Prefetch(
+                'discount', queryset=models.Discount.objects.all()
+            ),
         )
 
     def get_sorted_product_by_rate(self) -> models.Product:
@@ -53,7 +55,10 @@ class ProductRepository(BaseRepository):
                     queryset=models.Picture.objects.select_related('product'),
                 ),
                 Prefetch(
-                    'attributes', queryset=models.AttributeProduct.objects
+                    'attributes', queryset=models.AttributeProduct.objects.all()
+                ),
+                Prefetch(
+                    'discount', queryset=models.Discount.objects.all()
                 ),
             )
             .order_by('-rating')
