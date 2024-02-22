@@ -114,19 +114,12 @@ class Product(models.Model):
         verbose_name='Price',  # Human-readable name for the field.
     )
     rating = models.FloatField(null=True, blank=True)
-    # age = models.PositiveSmallIntegerField(
-    #     null=False, blank=False, validators=[MinValueValidator(0)]
-    # )
     male = models.IntegerField(
         choices=GenderChoices.choices, default=GenderChoices.male
     )
     discount = models.ForeignKey(
         Discount, related_name='discount', on_delete=models.SET_NULL, null=True
     )
-    # is_sale = models.BooleanField(default=False)
-    # discount = models.ForeignKey(
-    #     Discount, on_delete=models.CASCADE, blank=True, null=True
-    # )
 
     def __str__(self) -> str:
         return f'{self.name}'
