@@ -1,18 +1,11 @@
+import inspect
 from typing import Any
 
 from django.http import HttpRequest
 from rest_framework import status
 from rest_framework.response import Response
 
-
-def split_value(value: str) -> tuple | int:
-    parts = value.split('-')
-    if len(parts) == 2:
-        start_value, end_value = map(int, parts)
-        return start_value, end_value
-    else:
-        single_value = int(parts[0])
-        return single_value
+from api import filters
 
 
 def check_obj(
@@ -110,3 +103,34 @@ def get_products(
     serializer = obj_serializer(obj, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+def store_filters() -> dict[dict[str, str]]:
+    result = {}
+
+    filter_classes = [
+        obj
+        for name, obj in inspect.getmembers(filters)
+        if inspect.isclass(obj)
+    ]
+
+    api_filter_modules = [
+        obj for obj in filter_classes if obj.__module__ == 'api.filters'
+    ]
+
+    for filter_class in api_filter_modules:
+        meta = getattr(filter_class, 'Meta', None)
+        if meta:
+            model = getattr(meta, 'model', None)
+            if model:
+                declared_filters = getattr(
+                    filter_class, 'declared_filters', None
+                )
+                if declared_filters:
+                    filter_info = {
+                        name: filter_instance.label
+                        for name, filter_instance in declared_filters.items()
+                    }
+                    result[model.__name__] = filter_info
+
+    return result

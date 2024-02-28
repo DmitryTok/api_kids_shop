@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from api.views import (BranListView, CategoryListView, OnSaleProductView,
                        PictureListView, ProductListView, ShoppingCartViewSet,
-                       TOPProductView)
+                       TOPProductView, api_filters)
 
 router = DefaultRouter()
 router.register(r'products', ProductListView)
@@ -16,4 +16,5 @@ router.register(r'shopping_cart', ShoppingCartViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('filters/', api_filters, name='api_filters'),
 ]

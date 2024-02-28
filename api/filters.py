@@ -4,36 +4,45 @@ from functools import reduce
 from django.db.models import Q
 from django_filters import rest_framework as filters
 
-from api.models import Product
-from api.utils import split_value
+from api.models import Brand, Category, Product, Section
+
+
+def split_value(value: str) -> tuple | int:
+    parts = value.split('-')
+    if len(parts) == 2:
+        start_value, end_value = map(int, parts)
+        return start_value, end_value
+    else:
+        single_value = int(parts[0])
+        return single_value
 
 
 class ProductFilter(filters.FilterSet):
-    age = filters.CharFilter(method='filter_age')
-    price = filters.CharFilter(method='filter_price')
-    name = filters.CharFilter(method='filter_name')
-    category = filters.CharFilter(method='filter_category_name')
-    brand = filters.CharFilter(method='filter_brand_name')
-    section = filters.CharFilter(method='filter_section_name')
+    age = filters.NumberFilter(label='int', method='filter_age')
+    price = filters.NumberFilter(method='filter_price')
+    name = filters.CharFilter(label='str', method='filter_name')
+    category = filters.CharFilter(label='str', method='filter_category_name')
+    brand = filters.CharFilter(label='str', method='filter_brand_name')
+    section = filters.CharFilter(label='str', method='filter_section_name')
 
     class Meta:
         model = Product
-        fields = [
-            'rating',
-            'male',
-        ]
+        fields = []
 
     @staticmethod
     def filter_age(queryset, name, value):
         try:
-            return queryset.filter(age__range=split_value(value))
+            return queryset.filter(
+                attributes__attribute_name='Age',
+                attributes__value__icontains=value,
+            )
         except ValueError:
             return queryset.none()
 
     @staticmethod
     def filter_price(queryset, name, value):
         try:
-            return queryset.filter(price__range=(split_value(value)))
+            return queryset.filter(price__icontains=value)
         except ValueError:
             return queryset.none()
 
@@ -63,5 +72,50 @@ class ProductFilter(filters.FilterSet):
     def filter_section_name(queryset, name, value):
         try:
             return queryset.filter(section__name__icontains=value)
+        except ValueError:
+            return queryset.none()
+
+
+class CategoryFilter(filters.FilterSet):
+    name = filters.CharFilter(label='str', method='filter_name')
+
+    class Meta:
+        model = Category
+        fields = []
+
+    @staticmethod
+    def filter_name(queryset, name, value):
+        try:
+            return queryset.filter(name__icontains=value)
+        except ValueError:
+            return queryset.none()
+
+
+class SectionFilter(filters.FilterSet):
+    name = filters.CharFilter(label='str', method='filter_name')
+
+    class Meta:
+        model = Section
+        fields = []
+
+    @staticmethod
+    def filter_name(queryset, name, value):
+        try:
+            return queryset.filter(name__icontains=value)
+        except ValueError:
+            return queryset.none()
+
+
+class BrandFilter(filters.FilterSet):
+    name = filters.CharFilter(label='str', method='filter_name')
+
+    class Meta:
+        model = Brand
+        fields = []
+
+    @staticmethod
+    def filter_name(queryset, name, value):
+        try:
+            return queryset.filter(name__icontains=value)
         except ValueError:
             return queryset.none()

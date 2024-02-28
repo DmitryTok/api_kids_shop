@@ -1,17 +1,20 @@
 from django.http import HttpRequest
+from drf_spectacular.utils import extend_schema
 from rest_framework import mixins, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 
-# from api.filters import ProductFilter
+from api.filters import (BrandFilter, CategoryFilter, ProductFilter,
+                         SectionFilter)
 from api.repository import (BrandRepository, CategoryRepository,
                             FavoriteRepository, PictureRepository,
-                            ProductRepository, ShoppingCartRepository)
+                            ProductRepository, SectionRepository,
+                            ShoppingCartRepository)
 from api.serializers import (BrandSerializer, CategorySerializer,
                              FavoriteSerializer, PictureSerializer,
                              ProductSerializer, ShoppingCartSerializer)
-from api.utils import favorite_or_cart, get_products
-from kids_shop.base.base_retrieve_hendler import BaseRetrieveViewSet
+from api.utils import favorite_or_cart, get_products, store_filters
+from kids_shop.base.base_retrieve_handler import BaseRetrieveViewSet
 from kids_shop.permissions import IsOwner, IsOwnerFavoriteOrCart
 from users.users_repository import ProfileRepository
 
@@ -32,7 +35,7 @@ class ProductListView(BaseRetrieveViewSet):
     profile_repository = ProfileRepository()
     queryset = product_repository.get_all_objects_order_by_id()
     serializer_class = ProductSerializer
-    # filterset_class = ProductFilter
+    filterset_class = ProductFilter
 
     @action(
         detail=False,
@@ -114,14 +117,21 @@ class CategoryListView(BaseRetrieveViewSet):
     category_repository = CategoryRepository()
     queryset = category_repository.get_all_objects_order_by_id()
     serializer_class = CategorySerializer
-    filterset_fields = ['name']
+    filterset_class = CategoryFilter
+
+
+class SectionListView(BaseRetrieveViewSet):
+    section_repository = SectionRepository()
+    queryset = section_repository.get_all_objects_order_by_id()
+    serializer_class = None
+    filterset_class = SectionFilter
 
 
 class BranListView(BaseRetrieveViewSet):
     brand_repository = BrandRepository()
     queryset = brand_repository.get_all_objects_order_by_id()
     serializer_class = BrandSerializer
-    filterset_fields = ['name']
+    filterset_class = BrandFilter
 
 
 class PictureListView(BaseRetrieveViewSet):
@@ -149,3 +159,9 @@ class ShoppingCartViewSet(ListCreateDeleteViewSet):
     queryset = shopping_cart_repository.get_all_objects_order_by_id()
     serializer_class = ShoppingCartSerializer
     permission_classes = [IsOwner]
+
+
+@api_view(['GET'])
+@extend_schema()
+def api_filters(request: HttpRequest) -> Response:
+    return Response(store_filters())

@@ -1,4 +1,13 @@
 services:
+  test_db:
+    image: postgres:latest
+    volumes:
+      - test_db_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    ports:
+      - "5433:5433"
+
   db:
     image: postgres:latest
     env_file:
@@ -25,5 +34,6 @@ services:
 
 volumes:
   db_data:
+  test_db_data:
   static_value:
   media_value:

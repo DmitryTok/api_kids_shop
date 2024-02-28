@@ -45,6 +45,13 @@ class CategorySerializer(ModelSerializer):
         fields = ('id', 'name', 'sections')
 
 
+class CategoryListSerializer(ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name')
+
+
 class DiscountSerializer(ModelSerializer):
     class Meta:
         model = Discount
@@ -68,7 +75,7 @@ class InStockSerializer(ModelSerializer):
 
 class ProductSerializer(ModelSerializer):
     product_images = PictureSerializer(many=True, read_only=True)
-    category = CategorySerializer(read_only=True)
+    category = CategoryListSerializer(read_only=True)
     section = SectionSerializer(read_only=True)
     brand = BrandSerializer(read_only=True)
     discount = DiscountSerializer(read_only=True)

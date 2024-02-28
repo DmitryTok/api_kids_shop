@@ -29,7 +29,7 @@ class ProductRepository(BaseRepository):
 
     def get_all_objects_order_by_id(self) -> models.Product:
         return self.model.objects.select_related(
-            'category', 'section', 'brand'
+            'category', 'brand', 'section'
         ).prefetch_related(
             Prefetch(
                 'product_images',
@@ -38,9 +38,8 @@ class ProductRepository(BaseRepository):
             Prefetch(
                 'attributes', queryset=models.AttributeProduct.objects.all()
             ),
-            Prefetch(
-                'discount', queryset=models.Discount.objects.all()
-            ),
+            Prefetch('discount', queryset=models.Discount.objects.all()),
+            Prefetch('in_stock', queryset=models.InStock.objects.all()),
         )
 
     def get_sorted_product_by_rate(self) -> models.Product:
@@ -54,11 +53,10 @@ class ProductRepository(BaseRepository):
                     queryset=models.Picture.objects.select_related('product'),
                 ),
                 Prefetch(
-                    'attributes', queryset=models.AttributeProduct.objects.all()
+                    'attributes',
+                    queryset=models.AttributeProduct.objects.all(),
                 ),
-                Prefetch(
-                    'discount', queryset=models.Discount.objects.all()
-                ),
+                Prefetch('discount', queryset=models.Discount.objects.all()),
             )
             .order_by('-rating')
         )
@@ -104,6 +102,15 @@ class CategoryRepository(BaseRepository):
                 ),
             )
         ).order_by('id')
+
+
+class SectionRepository(BaseRepository):
+    @property
+    def model(self) -> type[models.Section]:
+        return models.Section
+
+    def get_all_objects_order_by_id(self) -> models.Section:
+        return self.model.objects.values('id', 'name')
 
 
 class BrandRepository(BaseRepository):
