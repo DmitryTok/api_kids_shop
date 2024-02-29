@@ -44,6 +44,7 @@ jobs:
 
     - name: Check UnitTests
       run: |
+        docker-compose up -d --build
         docker-compose run web python manage.py test
 
     - name: Finish
