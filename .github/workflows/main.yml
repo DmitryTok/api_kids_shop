@@ -32,13 +32,13 @@ jobs:
 
     - name: Create .env file
       run: |
-        touch .env && /
-        echo "DB_ENGINE=${{ secrets.DB_ENGINE }}" >> .env && \
-        echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env && \
-        echo "DB_USER=${{ secrets.DB_USER }}" >> .env && \
-        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env && \
-        echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env && \
-        echo "DB_HOST_TEST=${{ secrets.DB_HOST_TEST }}" >> .env && \
+        touch .env
+        echo "DB_ENGINE=${{ secrets.DB_ENGINE }}" >> .env
+        echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
+        echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+        echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+        echo "DB_HOST_TEST=${{ secrets.DB_HOST_TEST }}" >> .env
         echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env'
 
     - name: Check UnitTests
