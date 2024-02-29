@@ -31,7 +31,7 @@ jobs:
       run: isort .
 
     - name: Check UnitTests
-      run: python manage.py test
+      run: docker-compose run web python manage.py test
 
     - name: Finish
       run: echo "Code style checks passed"
