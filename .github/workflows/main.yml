@@ -32,8 +32,7 @@ jobs:
 
     - name: Check UnitTests
       run: |
-        docker-compose up -d
-        docker-compose exec web sh -c 'touch .env && \
+        docker-compose run web sh -c 'touch .env && \
             echo "DB_ENGINE=${{ secrets.DB_ENGINE }}" >> .env && \
             echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env && \
             echo "DB_USER=${{ secrets.DB_USER }}" >> .env && \
@@ -41,7 +40,7 @@ jobs:
             echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env && \
             echo "DB_HOST_TEST=${{ secrets.DB_HOST_TEST }}" >> .env && \
             echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env'
-        docker-compose exec web python manage.py test
+        docker-compose run web python manage.py test
 
     - name: Finish
       run: echo "Code style checks passed"
