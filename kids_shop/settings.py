@@ -8,13 +8,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 SUPER_LOGIN = os.environ.get('SUPER_LOGIN')
 SUPER_PASSWORD = os.environ.get('SUPER_PASSWORD')
 
-
-def show_toolbar(request) -> bool:
-    return True
-
-
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
 }
 
 DEBUG = True
