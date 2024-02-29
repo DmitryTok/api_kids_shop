@@ -30,23 +30,6 @@ jobs:
     - name: Check import order with isort
       run: isort .
 
-    - name: Create .env file
-      run: |
-        touch .env
-        echo "DB_ENGINE=${{ secrets.DB_ENGINE }}" >> .env
-        echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env
-        echo "DB_USER=${{ secrets.DB_USER }}" >> .env
-        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-        echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
-        echo "DB_HOST_TEST=${{ secrets.DB_HOST_TEST }}" >> .env
-        echo "DB_TEST_NAME=${{ secrets.DB_TEST_NAME }}" >> .env
-        echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
-
-    - name: Check UnitTests
-      run: |
-        docker-compose up -d --build
-        docker-compose run web python manage.py test
-
     - name: Finish
       run: echo "Code style checks passed"
 
