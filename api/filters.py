@@ -57,21 +57,32 @@ class ProductFilter(filters.FilterSet):
     @staticmethod
     def filter_brand_name(queryset, name, value):
         try:
-            return queryset.filter(brand__name__icontains=value)
+            names = [
+                Q(brand__name__icontains=brand) for brand in value.split(', ')
+            ]
+            return queryset.filter(reduce(operator.or_, names))
         except ValueError:
             return queryset.none()
 
     @staticmethod
     def filter_category_name(queryset, name, value):
         try:
-            return queryset.filter(category__name__icontains=value)
+            names = [
+                Q(category__name__icontains=category)
+                for category in value.split(', ')
+            ]
+            return queryset.filter(reduce(operator.or_, names))
         except ValueError:
             return queryset.none()
 
     @staticmethod
     def filter_section_name(queryset, name, value):
         try:
-            return queryset.filter(section__name__icontains=value)
+            names = [
+                Q(section__name__icontains=section)
+                for section in value.split(', ')
+            ]
+            return queryset.filter(reduce(operator.or_, names))
         except ValueError:
             return queryset.none()
 
@@ -86,7 +97,10 @@ class CategoryFilter(filters.FilterSet):
     @staticmethod
     def filter_name(queryset, name, value):
         try:
-            return queryset.filter(name__icontains=value)
+            names = [
+                Q(name__icontains=category) for category in value.split(', ')
+            ]
+            return queryset.filter(reduce(operator.or_, names))
         except ValueError:
             return queryset.none()
 
