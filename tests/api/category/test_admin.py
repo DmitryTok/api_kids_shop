@@ -5,7 +5,7 @@ from api.admin import CategoryAdmin
 from api.models import Category
 
 
-class CategoryTest(APITestCase):
+class CategoryAdminTest(APITestCase):
     def setUp(self):
         self.site = admin.site
         self.category_admin = CategoryAdmin(Category, self.site)

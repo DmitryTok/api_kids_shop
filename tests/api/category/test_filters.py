@@ -4,7 +4,7 @@ from api.filters import CategoryFilter
 from api.models import Category
 
 
-class CategoryTest(APITestCase):
+class CategoryFilterTest(APITestCase):
     def setUp(self) -> None:
         self.filter = CategoryFilter(data={}, queryset=Category.objects.all())
         self.filter_none = CategoryFilter(

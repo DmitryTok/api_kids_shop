@@ -115,7 +115,10 @@ class SectionFilter(filters.FilterSet):
     @staticmethod
     def filter_name(queryset, name, value):
         try:
-            return queryset.filter(name__icontains=value)
+            names = [
+                Q(name__icontains=section) for section in value.split(', ')
+            ]
+            return queryset.filter(reduce(operator.or_, names))
         except ValueError:
             return queryset.none()
 
@@ -130,6 +133,7 @@ class BrandFilter(filters.FilterSet):
     @staticmethod
     def filter_name(queryset, name, value):
         try:
-            return queryset.filter(name__icontains=value)
+            names = [Q(name__icontains=brand) for brand in value.split(', ')]
+            return queryset.filter(reduce(operator.or_, names))
         except ValueError:
             return queryset.none()
