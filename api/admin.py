@@ -47,12 +47,12 @@ class DiscountAdmin(admin.ModelAdmin):
 
 @admin.register(models.Category)
 class CategoryAdmin(admin.ModelAdmin):
-    inlines = [SectionInLine]
+    pass
 
 
 @admin.register(models.Section)
 class SectionAdmin(admin.ModelAdmin):
-    pass
+    fields = ['name']
 
 
 @admin.register(models.Brand)

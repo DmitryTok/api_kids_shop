@@ -27,7 +27,7 @@ class PictureSerializer(ModelSerializer):
 class BrandSerializer(ModelSerializer):
     class Meta:
         model = Brand
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'country')
         read_only_fields = fields
 
 
