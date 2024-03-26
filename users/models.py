@@ -57,12 +57,10 @@ class Kid(models.Model):
     male = models.CharField(
         choices=[(male.value, male.name) for male in MaleChoices],
         blank=True,
-        null=True
+        null=True,
     )
     birth_date = models.CharField(
-        blank=True,
-        null=True,
-        validators=[validate_date_format]
+        blank=True, null=True, validators=[validate_date_format]
     )
 
     def __str__(self) -> str:
@@ -70,30 +68,16 @@ class Kid(models.Model):
 
 
 class Address(models.Model):
-    first_delivery_address = models.CharField(
-        blank=False,
-        null=False
-    )
-    second_delivery_address = models.CharField(
-        blank=True,
-        null=True
-    )
-    city = models.CharField(
-        blank=False,
-        null=False
-    )
-    street = models.CharField(
-        blank=False,
-        null=False
-    )
-    building = models.CharField(
-        blank=False,
-        null=False
-    )
-    apartment = models.IntegerField(
-        blank=True,
-        null=True
-    )
+    first_delivery_address = models.CharField(blank=False, null=False)
+    second_delivery_address = models.CharField(blank=True, null=True)
+    city = models.CharField(blank=False, null=False)
+    street = models.CharField(blank=False, null=False)
+    building = models.CharField(blank=False, null=False)
+    apartment = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Address'
+        verbose_name_plural = 'Addresses'
 
     def __str__(self) -> str:
         return f'{self.first_delivery_address}'
@@ -109,53 +93,29 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         related_name='users_profile',
         blank=False,
-        null=False
+        null=False,
     )
     address = models.ForeignKey(
         Address,
         on_delete=models.CASCADE,
         related_name='users_address',
         blank=True,
-        null=True
+        null=True,
     )
-    kids = models.ManyToManyField(
-        Kid,
-        blank=True,
-        related_name='profile_kids'
-    )
+    kids = models.ManyToManyField(Kid, blank=True, related_name='profile_kids')
     gender = models.CharField(
         choices=[(gender.value, gender.name) for gender in GenderChoices],
         blank=True,
-        null=True
-    )
-    first_name = models.CharField(
-        max_length=125,
-        blank=True,
-        null=True
-    )
-    middle_name = models.CharField(
-        max_length=125,
-        blank=True,
-        null=True
-    )
-    last_name = models.CharField(
-        max_length=125,
-        blank=True,
-        null=True
-    )
-    birth_date = models.CharField(
-        blank=True,
         null=True,
-        validators=[validate_date_format]
     )
-    first_phone = models.IntegerField(
-        blank=True,
-        null=True
+    first_name = models.CharField(max_length=125, blank=True, null=True)
+    middle_name = models.CharField(max_length=125, blank=True, null=True)
+    last_name = models.CharField(max_length=125, blank=True, null=True)
+    birth_date = models.CharField(
+        blank=True, null=True, validators=[validate_date_format]
     )
-    second_phone = models.IntegerField(
-        blank=True,
-        null=True
-    )
+    first_phone = models.IntegerField(blank=True, null=True)
+    second_phone = models.IntegerField(blank=True, null=True)
 
     def __str__(self) -> str:
         return f'{self.last_name}'
