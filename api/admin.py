@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.db.models import Sum
 
 from api import models
 
@@ -27,6 +26,11 @@ class SectionInLine(admin.TabularInline):
 
 class InStockInline(admin.TabularInline):
     model = models.InStock
+    extra = 1
+
+
+class ImageInline(admin.TabularInline):
+    model = models.Picture
     extra = 1
 
 
@@ -60,11 +64,6 @@ class BrandAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(models.Picture)
-class ProductImageAdmin(admin.ModelAdmin):
-    pass
-
-
 @admin.register(models.Size)
 class SizeAdmin(admin.ModelAdmin):
     pass
@@ -73,6 +72,7 @@ class SizeAdmin(admin.ModelAdmin):
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     inlines = [
+        ImageInline,
         ProductAttributeInline,
         InStockInline,
     ]
@@ -82,32 +82,8 @@ class ProductAdmin(admin.ModelAdmin):
         'rating',
         'male',
         'discount',
-        'in_stock_display',
-        'total_in_stock',
     )
     list_display_links = ('name',)
-
-    def in_stock_display(self, obj):
-        in_stock_info = obj.in_stock.all()
-        return ', '.join(
-            [
-                f'{item.product.id} {item.article}: {item.in_stock}'
-                for item in in_stock_info
-            ]
-        )
-
-    def get_queryset(self, request):
-        queryset = (
-            super()
-            .get_queryset(request)
-            .annotate(total_in_stock=Sum('in_stock__in_stock'))
-        )
-        return queryset
-
-    def total_in_stock(self, obj):
-        return obj.total_in_stock
-
-    in_stock_display.short_description = 'In Stock'
 
 
 @admin.register(models.Favorite)
@@ -126,4 +102,12 @@ class ShoppingCartAdmin(admin.ModelAdmin):
 
 @admin.register(models.InStock)
 class InStockAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('article', 'product', 'in_stock')
+    list_display_links = ('article', 'product')
+    search_fields = ('article', 'product__name')
+
+
+@admin.register(models.Picture)
+class PictureAdmin(admin.ModelAdmin):
+    list_display = ['product']
+    list_display_links = ['product']

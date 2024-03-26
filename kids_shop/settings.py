@@ -196,7 +196,7 @@ JAZZMIN_SETTINGS = {
     'site_icon': 'Logo.png',
     'welcome_sign': 'Lama Shop',
     'search_model': [],
-    'topmenu_links': [{'model': 'api.product'}, {'model': 'api.instock'}],
+    'topmenu_links': [{'app': 'api'}],
     'show_sidebar': True,
     'navigation_expanded': True,
     'hide_models': [
@@ -211,8 +211,8 @@ JAZZMIN_SETTINGS = {
         'api',
         'users.profile',
         'users.customuser',
-        'api.product',
         'api.instock',
+        'api.product',
         'api.brand',
         'api.category',
         'api.section',
