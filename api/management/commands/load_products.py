@@ -260,7 +260,7 @@ class Command(BaseCommand):
     ) -> list[Product]:
         products = []
         for item in reader:
-            male = True if item['male'] == IDENTIFICATOR_MALE else False
+            male = random.randint(0, 1)
             is_sale = random.choice((True, False))
             section = random.choice(sections)
 

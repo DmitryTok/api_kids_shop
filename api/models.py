@@ -9,7 +9,6 @@ from users.models import Profile
 class GenderChoices(models.IntegerChoices):
     male = 0
     female = 1
-    unisex = 2
 
 
 class Discount(models.Model):
@@ -106,9 +105,9 @@ class Product(models.Model):
         max_digits=10,
         decimal_places=2,  # Number of decimal places.
         default=0.00,  # Default value for the field.
-        null=False,  # Whether the field can be NULL in the database.
-        blank=True,  # Whether the field is allowed to be blank in forms.
-        verbose_name='Price',  # Human-readable name for the field.
+        null=False,
+        blank=True,
+        verbose_name='Price',
     )
     rating = models.FloatField(null=True, blank=True)
     male = models.IntegerField(

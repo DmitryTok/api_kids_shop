@@ -45,25 +45,6 @@ class ProductRepository(BaseRepository):
             .order_by('id')
         )
 
-    def get_sorted_product_by_rate(self) -> models.Product:
-        return (
-            self.model.objects.select_related(
-                'category', 'section', 'brand', 'discount'
-            )
-            .prefetch_related(
-                Prefetch(
-                    'product_images',
-                    queryset=models.Picture.objects.select_related('product'),
-                ),
-                Prefetch(
-                    'attributes',
-                    queryset=models.AttributeProduct.objects.all(),
-                ),
-                Prefetch('discount', queryset=models.Discount.objects.all()),
-            )
-            .order_by('-rating')
-        )
-
     def get_sorted_products_by_sale(self) -> models.Product:
         return (
             self.model.objects.filter(discount__isnull=False)

@@ -1,7 +1,7 @@
 from django.http import HttpRequest
-from drf_spectacular.utils import extend_schema
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action, api_view
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from api.filters import (BrandFilter, CategoryFilter, ProductFilter,
@@ -36,6 +36,48 @@ class ProductListView(BaseRetrieveViewSet):
     queryset = product_repository.get_all_objects_order_by_id()
     serializer_class = ProductSerializer
     filterset_class = ProductFilter
+
+    @action(
+        detail=False,
+        methods=['GET'],
+        permission_classes=[AllowAny],
+        url_path=r'max_price',
+    )
+    def max_price(self, request: HttpRequest) -> Response:
+        product_repository = ProductRepository()
+        obj = product_repository.get_all_objects_order_by_id().order_by(
+            '-price'
+        )
+        serializer = ProductSerializer(obj, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=['GET'],
+        permission_classes=[AllowAny],
+        url_path=r'min_price',
+    )
+    def min_price(self, request: HttpRequest) -> Response:
+        product_repository = ProductRepository()
+        obj = product_repository.get_all_objects_order_by_id().order_by(
+            'price'
+        )
+        serializer = ProductSerializer(obj, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=['GET'],
+        permission_classes=[AllowAny],
+        url_path=r'rating',
+    )
+    def rating(self, request: HttpRequest) -> Response:
+        product_repository = ProductRepository()
+        obj = product_repository.get_all_objects_order_by_id().order_by(
+            '-rating'
+        )
+        serializer = ProductSerializer(obj, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(
         detail=False,
@@ -140,13 +182,6 @@ class PictureListView(BaseRetrieveViewSet):
     serializer_class = PictureSerializer
 
 
-class TOPProductView(BaseRetrieveViewSet):
-    product_repository = ProductRepository()
-    queryset = product_repository.get_sorted_product_by_rate()
-    serializer_class = ProductSerializer
-    pagination_class = None
-
-
 class OnSaleProductView(BaseRetrieveViewSet):
     product_repository = ProductRepository()
     queryset = product_repository.get_sorted_products_by_sale()
@@ -162,6 +197,5 @@ class ShoppingCartViewSet(ListCreateDeleteViewSet):
 
 
 @api_view(['GET'])
-@extend_schema()
 def api_filters(request: HttpRequest) -> Response:
     return Response(store_filters())
