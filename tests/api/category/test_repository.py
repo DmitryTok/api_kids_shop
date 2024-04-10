@@ -1,13 +1,12 @@
 from django.db.models import F, Prefetch
-from rest_framework.test import APITestCase
 
 from api.models import Category, Section
 from api.repository import CategoryRepository
+from tests.base.base_test_case import BaseTestCase
 
 
-class CategoryRepositoryTest(APITestCase):
+class CategoryRepositoryTest(BaseTestCase):
     def setUp(self) -> None:
-        self.category = Category.objects.create(name='Test')
         self.category_repository = CategoryRepository()
 
     def test_category_model_property(self):

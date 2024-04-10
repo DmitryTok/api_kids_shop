@@ -1,19 +1,11 @@
 from django.db.utils import DataError
 from django.utils import timezone
-from rest_framework.test import APITestCase
 
 from api.models import Discount
+from tests.base.base_test_case import BaseTestCase
 
 
-class BrandModelTest(APITestCase):
-
-    def setUp(self):
-        self.discount = Discount.objects.create(
-            amount=5,
-            info='INFO',
-            date_start=timezone.now(),
-            date_end=timezone.now(),
-        )
+class DiscountModelTest(BaseTestCase):
 
     def test_name_length(self):
         with self.assertRaises(DataError):
@@ -25,7 +17,7 @@ class BrandModelTest(APITestCase):
             )
 
     def test_str(self):
-        expected_str = '5 INFO'
+        expected_str = '10 INFO'
         self.assertEqual(
             expected_str,
             str(self.discount),

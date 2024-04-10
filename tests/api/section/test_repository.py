@@ -1,12 +1,10 @@
-from rest_framework.test import APITestCase
-
 from api.models import Section
 from api.repository import SectionRepository
+from tests.base.base_test_case import BaseTestCase
 
 
-class SectionRepositoryTest(APITestCase):
+class SectionRepositoryTest(BaseTestCase):
     def setUp(self) -> None:
-        self.section = Section.objects.create(name='Test')
         self.section_repository = SectionRepository()
 
     def test_category_model_property(self):

@@ -1,13 +1,9 @@
 from rest_framework.reverse import reverse
-from rest_framework.test import APITestCase
 
-from api.models import Category
+from tests.base.base_test_case import BaseTestCase
 
 
-class CategoryViewTest(APITestCase):
-
-    def setUp(self) -> None:
-        self.category = Category.objects.create(name='TestCategory')
+class CategoryViewTest(BaseTestCase):
 
     def test_list_view(self):
         response = self.client.get(reverse('category-list'))

@@ -72,9 +72,6 @@ class Size(models.Model):
         null=True,
     )
 
-    def __str__(self) -> str:
-        return f'{self.letter_size}({str(self.brand_size)})'
-
 
 class Product(models.Model):
     name = models.CharField(max_length=150)
@@ -229,6 +226,3 @@ class ShoppingCart(models.Model):
                 name='unique_shopping_cart',
             )
         ]
-
-    def __str__(self) -> str:
-        return f'{self.profile.user}: {self.product}'

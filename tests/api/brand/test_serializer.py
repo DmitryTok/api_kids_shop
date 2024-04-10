@@ -1,12 +1,9 @@
-from rest_framework.test import APITestCase
-
-from api.models import Brand
 from api.serializers import BrandSerializer
+from tests.base.base_test_case import BaseTestCase
 
 
-class BrandSerializerTest(APITestCase):
+class BrandSerializerTest(BaseTestCase):
     def setUp(self):
-        self.brand = Brand.objects.create(name='name', country='country')
         self.serializer = BrandSerializer(instance=self.brand)
 
     def test_serializer(self):
