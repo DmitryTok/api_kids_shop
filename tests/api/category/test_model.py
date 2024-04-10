@@ -19,4 +19,4 @@ class CategoryModelTest(APITestCase):
 
     def test_str(self):
         expected_str = 'Unique_Name'
-        self.assertEqual(expected_str, str(self.category.name))
+        self.assertEqual(expected_str, str(self.category))

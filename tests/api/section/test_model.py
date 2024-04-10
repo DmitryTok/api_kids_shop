@@ -19,4 +19,4 @@ class SectionModelTest(APITestCase):
 
     def test_str(self):
         expected_str = 'Unique_Name'
-        self.assertEqual(expected_str, str(self.section.name))
+        self.assertEqual(expected_str, str(self.section))

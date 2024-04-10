@@ -1,12 +1,10 @@
-from rest_framework.test import APITestCase
-
 from api.models import Brand
 from api.repository import BrandRepository
+from tests.base.base_test_case import BaseTestCase
 
 
-class BrandRepositoryTest(APITestCase):
+class BrandRepositoryTest(BaseTestCase):
     def setUp(self) -> None:
-        self.brand = Brand.objects.create(name='Test')
         self.brand_repository = BrandRepository()
 
     def test_category_model_property(self):
