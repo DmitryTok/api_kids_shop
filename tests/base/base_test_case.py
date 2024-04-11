@@ -1,14 +1,58 @@
+from django.test import Client
 from django.utils import timezone
 from rest_framework.test import APITestCase
 
 from api.models import (Attribute, AttributeProduct, Brand, Category, Discount,
                         InStock, Picture, Product, Section)
+from users.models import Address, CustomUser, Kid, Profile
 
 
 class BaseTestCase(APITestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.client = Client()
+        cls.auth_client = Client()
+
+        # User Objects
+        cls.user = CustomUser.objects.create(
+            email='test_user@example.com',
+            password='password123',
+        )
+        cls.superuser = CustomUser.objects.create_superuser(
+            email='admin@example.com', password='admin123'
+        )
+        cls.auth_client.force_login(cls.superuser)
+
+        # Kid Objects
+        cls.kid = Kid.objects.create(
+            male=Kid.MaleChoices.Male,
+            birth_date='01/01/2000',
+        )
+
+        # Address Object
+        cls.address = Address.objects.create(
+            first_delivery_address='first_delivery_address',
+            second_delivery_address='second_delivery_address',
+            city='city',
+            street='street',
+            building='building',
+            apartment=1,
+        )
+
+        # Profile Objects
+        cls.profile = Profile.objects.create(
+            user=cls.user,
+            address=cls.address,
+            gender=Profile.GenderChoices.Man,
+            first_name='John',
+            middle_name='Gary',
+            last_name='Doe',
+            birth_date='01/01/2000',
+            first_phone=1234567890,
+            second_phone=1234567890,
+        )
+        cls.profile.kids.add(cls.kid)
 
         # Attribute Objects
         cls.attribute = Attribute.objects.create(
@@ -82,6 +126,18 @@ class BaseTestCase(APITestCase):
         )
 
     def test_create_objects(cls):
+
+        # Users
+        cls.assertIsNotNone(cls.user)
+
+        # Kids
+        cls.assertIsNotNone(cls.kid)
+
+        # Addresses
+        cls.assertIsNotNone(cls.address)
+
+        # Profiles
+
         # Attributes
         cls.assertIsNotNone(cls.attribute)
 

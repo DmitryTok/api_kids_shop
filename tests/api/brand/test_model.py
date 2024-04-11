@@ -18,6 +18,6 @@ class BrandModelTest(BaseTestCase):
         with self.assertRaises(DataError):
             Brand.objects.create(name='name', country='country' * 31)
 
-    def test_str(self):
+    def test_str_representation(self):
         expected_str = 'Unique_Name'
         self.assertEqual(expected_str, str(self.brand))

@@ -14,6 +14,6 @@ class CategoryModelTest(BaseTestCase):
         with self.assertRaises(DataError):
             Category.objects.create(name='name' * 201)
 
-    def test_str(self):
+    def test_str_representation(self):
         expected_str = 'Category'
         self.assertEqual(expected_str, str(self.category))

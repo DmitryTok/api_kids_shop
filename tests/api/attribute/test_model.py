@@ -11,7 +11,7 @@ class AttributeModelTest(BaseTestCase):
         expected_str = 'Color'
         self.assertEqual(expected_str, str(self.attribute))
 
-    def test_name_length(self):
+    def test_info_length(self):
         with self.assertRaises(DataError):
             Discount.objects.create(
                 amount=5,

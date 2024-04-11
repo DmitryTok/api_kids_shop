@@ -6,11 +6,20 @@ from tests.base.base_test_case import BaseTestCase
 
 class AttributeProductModelTest(BaseTestCase):
 
-    def test_name_length(self):
+    def test_attribute_name_length(self):
         with self.assertRaises(DataError):
             AttributeProduct.objects.create(
                 attribute=self.attribute,
                 attribute_name='Attribute Name' * 121,
+                product=self.product,
+                value='Value',
+            )
+
+    def test_value_length(self):
+        with self.assertRaises(DataError):
+            AttributeProduct.objects.create(
+                attribute=self.attribute,
+                attribute_name='Attribute Name',
                 product=self.product,
                 value='Value' * 121,
             )
