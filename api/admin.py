@@ -86,6 +86,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display_links = ('name',)
 
 
+
 @admin.register(models.Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ('id', 'profile', 'product')

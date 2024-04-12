@@ -109,13 +109,14 @@ class Product(models.Model):
         null=False,  # Whether the field can be NULL in the database.
         blank=True,  # Whether the field is allowed to be blank in forms.
         verbose_name='Price',  # Human-readable name for the field.
+
     )
     rating = models.FloatField(null=True, blank=True)
     male = models.IntegerField(
         choices=GenderChoices.choices, default=GenderChoices.male
     )
     discount = models.ForeignKey(
-        Discount, related_name='discount', on_delete=models.SET_NULL, null=True
+        Discount, related_name='discount', on_delete=models.SET_NULL, null=True, blank=True
     )
 
     def __str__(self) -> str:
