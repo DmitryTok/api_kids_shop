@@ -3,7 +3,7 @@ import datetime
 from django.core.exceptions import ValidationError
 
 
-def validate_date_format(value):
+def validate_date_format(value: datetime.datetime) -> bool | ValidationError:
     try:
         datetime.datetime.strptime(value, '%d/%m/%Y')
         return True

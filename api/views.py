@@ -44,10 +44,8 @@ class ProductListView(BaseRetrieveViewSet):
         url_path=r'max_price',
     )
     def max_price(self, request: HttpRequest) -> Response:
-        product_repository = ProductRepository()
-        obj = product_repository.get_all_objects_order_by_id().order_by(
-            '-price'
-        )
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = queryset.order_by('-price')
         serializer = ProductSerializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -58,10 +56,8 @@ class ProductListView(BaseRetrieveViewSet):
         url_path=r'min_price',
     )
     def min_price(self, request: HttpRequest) -> Response:
-        product_repository = ProductRepository()
-        obj = product_repository.get_all_objects_order_by_id().order_by(
-            'price'
-        )
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = obj = queryset.order_by('price')
         serializer = ProductSerializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -72,10 +68,8 @@ class ProductListView(BaseRetrieveViewSet):
         url_path=r'rating',
     )
     def rating(self, request: HttpRequest) -> Response:
-        product_repository = ProductRepository()
-        obj = product_repository.get_all_objects_order_by_id().order_by(
-            '-rating'
-        )
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = queryset.order_by('-rating')
         serializer = ProductSerializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

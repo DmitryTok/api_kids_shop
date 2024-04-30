@@ -100,8 +100,8 @@ class Product(models.Model):
 
     price = models.DecimalField(
         max_digits=10,
-        decimal_places=2,  # Number of decimal places.
-        default=0.00,  # Default value for the field.
+        decimal_places=2,
+        default=0.00,
         null=False,
         blank=True,
         verbose_name='Price',
