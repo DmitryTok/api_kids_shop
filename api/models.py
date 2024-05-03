@@ -9,6 +9,9 @@ from users.models import Profile
 class GenderChoices(models.IntegerChoices):
     male = 0
     female = 1
+    father = 2
+    mother = 3
+    babies = 4
 
 
 class Discount(models.Model):
