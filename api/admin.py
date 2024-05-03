@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.db.models import QuerySet
+from django.http import HttpRequest
+from django.utils.safestring import SafeText, mark_safe
 
 from api import models
 
@@ -77,6 +80,7 @@ class ProductAdmin(admin.ModelAdmin):
         InStockInline,
     ]
     list_display = (
+        'img',
         'name',
         'price',
         'rating',
@@ -84,6 +88,17 @@ class ProductAdmin(admin.ModelAdmin):
         'discount',
     )
     list_display_links = ('name',)
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet:
+        queryset = super().get_queryset(request)
+        return queryset.prefetch_related('product_images', 'discount')
+
+    def img(self, obj: models.Product) -> SafeText | str:
+        images = obj.product_images.all()
+        if images:
+            image = images[0]
+            return mark_safe(f'<img src="{image.product_image.url}" width=80>')
+        return '-'
 
 
 @admin.register(models.Favorite)

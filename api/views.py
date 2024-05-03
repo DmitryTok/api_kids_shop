@@ -57,7 +57,7 @@ class ProductListView(BaseRetrieveViewSet):
     )
     def min_price(self, request: HttpRequest) -> Response:
         queryset = self.filter_queryset(self.get_queryset())
-        obj = obj = queryset.order_by('price')
+        obj = queryset.order_by('price')
         serializer = ProductSerializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
