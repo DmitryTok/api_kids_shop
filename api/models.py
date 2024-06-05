@@ -119,6 +119,13 @@ class Product(models.Model):
         Discount, related_name='discount', on_delete=models.SET_NULL, null=True, blank=True
     )
 
+    family_look = models.ForeignKey(
+        'FamilyLook',
+        on_delete=models.CASCADE,
+        related_name='products',
+        null=True,
+        blank=True
+    )
     def __str__(self) -> str:
         return f'{self.name}'
 
@@ -162,6 +169,11 @@ class AttributeProduct(models.Model):
     def __str__(self) -> str:
         return f'{self.attribute_name} {self.value}'
 
+class FamilyLook(models.Model):
+
+    male = models.IntegerField(
+        choices=GenderChoices.choices, default=GenderChoices.male
+    )
 
 class InStock(models.Model):
     product = models.ForeignKey(
