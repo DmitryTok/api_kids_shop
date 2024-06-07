@@ -57,8 +57,8 @@ class CustomUser(AbstractUser):
         default='email'
     )
 
-    # def __str__(self):
-    #     return self.username
+    def __str__(self):
+        return str(self.username)
 
 
 class Kid(models.Model):
