@@ -9,7 +9,9 @@ from users.models import Profile
 class GenderChoices(models.IntegerChoices):
     male = 0
     female = 1
-    unisex = 2
+    father = 2
+    mother = 3
+    babies = 4
 
 
 class Discount(models.Model):
@@ -73,9 +75,6 @@ class Size(models.Model):
         null=True,
     )
 
-    def __str__(self) -> str:
-        return f'{self.letter_size}({str(self.brand_size)})'
-
 
 class Product(models.Model):
     name = models.CharField(max_length=150)
@@ -109,7 +108,6 @@ class Product(models.Model):
         null=False,  # Whether the field can be NULL in the database.
         blank=True,  # Whether the field is allowed to be blank in forms.
         verbose_name='Price',  # Human-readable name for the field.
-
     )
     rating = models.FloatField(null=True, blank=True)
     male = models.IntegerField(
@@ -243,6 +241,3 @@ class ShoppingCart(models.Model):
                 name='unique_shopping_cart',
             )
         ]
-
-    def __str__(self) -> str:
-        return f'{self.profile.user}: {self.product}'

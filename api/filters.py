@@ -24,16 +24,27 @@ class ProductFilter(filters.FilterSet):
     category = filters.CharFilter(label='str', method='filter_category_name')
     brand = filters.CharFilter(label='str', method='filter_brand_name')
     section = filters.CharFilter(label='str', method='filter_section_name')
+    color = filters.CharFilter(label='str', method='filter_color')
 
     class Meta:
         model = Product
-        fields = []
+        fields = ['male']
 
     @staticmethod
     def filter_age(queryset, name, value):
         try:
             return queryset.filter(
                 attributes__attribute_name='Age',
+                attributes__value__icontains=value,
+            )
+        except ValueError:
+            return queryset.none()
+
+    @staticmethod
+    def filter_color(queryset, name, value):
+        try:
+            return queryset.filter(
+                attributes__attribute_name='Color',
                 attributes__value__icontains=value,
             )
         except ValueError:

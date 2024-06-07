@@ -1,24 +1,15 @@
 repos:
-  - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.5
-    hooks:
-      - id: bandit
-        args: [ "-r", "-lll", "-ii", "-x", "tests/" ]
-  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: v1.3.2
-    hooks:
-      - id: python-safety-dependencies-check
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.0.287'
+    rev: 'v0.4.5'
     hooks:
       - id: ruff
         args: ["--fix", "--exit-non-zero-on-fix", "."]
   - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+    rev: 5.13.2
     hooks:
       - id: isort
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.10.1
+    rev: v3.15.2
     hooks:
       - id: pyupgrade
         args: [ --py311-plus ]

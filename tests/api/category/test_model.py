@@ -1,22 +1,19 @@
 from django.db.utils import DataError, IntegrityError
-from rest_framework.test import APITestCase
 
 from api.models import Category
+from tests.base.base_test_case import BaseTestCase
 
 
-class CategoryModelTest(APITestCase):
-
-    def setUp(self):
-        self.category = Category.objects.create(name='Unique_Name')
+class CategoryModelTest(BaseTestCase):
 
     def test_unique_name(self):
         with self.assertRaises(IntegrityError):
-            Category.objects.create(name='Unique_Name')
+            Category.objects.create(name='Category')
 
     def test_name_length(self):
         with self.assertRaises(DataError):
             Category.objects.create(name='name' * 201)
 
-    def test_str(self):
-        expected_str = 'Unique_Name'
-        self.assertEqual(expected_str, str(self.category.name))
+    def test_str_representation(self):
+        expected_str = 'Category'
+        self.assertEqual(expected_str, str(self.category))

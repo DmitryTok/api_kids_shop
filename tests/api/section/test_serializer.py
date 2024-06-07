@@ -1,12 +1,9 @@
-from rest_framework.test import APITestCase
-
-from api.models import Section
 from api.serializers import SectionSerializer
+from tests.base.base_test_case import BaseTestCase
 
 
-class SectionSerializerTest(APITestCase):
+class SectionSerializerTest(BaseTestCase):
     def setUp(self):
-        self.section = Section.objects.create(name='Test')
         self.serializer = SectionSerializer(instance=self.section)
 
     def test_serializer(self):
