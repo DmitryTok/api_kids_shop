@@ -75,6 +75,30 @@ class ProductListView(BaseRetrieveViewSet):
 
     @action(
         detail=False,
+        methods=['GET'],
+        permission_classes=[AllowAny],
+        url_path=r'min_sale',
+    )
+    def min_sale(self, request: HttpRequest) -> Response:
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = queryset.filter(discount__isnull=False).order_by('discount')
+        serializer = ProductSerializer(obj, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=['GET'],
+        permission_classes=[AllowAny],
+        url_path=r'max_sale',
+    )
+    def max_sale(self, request: HttpRequest) -> Response:
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = queryset.filter(discount__isnull=False).order_by('-discount')
+        serializer = ProductSerializer(obj, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
         methods=['POST', 'DELETE'],
         permission_classes=[IsOwnerFavoriteOrCart],
         url_path=r'(?P<product_id>\d+)/favorite/(?P<profile_id>\d+)',
@@ -176,11 +200,11 @@ class PictureListView(BaseRetrieveViewSet):
     serializer_class = PictureSerializer
 
 
-class OnSaleProductView(BaseRetrieveViewSet):
-    product_repository = ProductRepository()
-    queryset = product_repository.get_sorted_products_by_sale()
-    serializer_class = ProductSerializer
-    pagination_class = None
+# class OnSaleProductView(BaseRetrieveViewSet):
+#     product_repository = ProductRepository()
+#     queryset = product_repository.get_sorted_products_by_sale()
+#     serializer_class = ProductSerializer
+#     pagination_class = None
 
 
 class ShoppingCartViewSet(ListCreateDeleteViewSet):
