@@ -46,7 +46,13 @@ class ProductListView(BaseRetrieveViewSet):
     def max_price(self, request: HttpRequest) -> Response:
         queryset = self.filter_queryset(self.get_queryset())
         obj = queryset.order_by('-price')
-        serializer = ProductSerializer(obj, many=True)
+
+        page = self.paginate_queryset(obj)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(
@@ -58,7 +64,13 @@ class ProductListView(BaseRetrieveViewSet):
     def min_price(self, request: HttpRequest) -> Response:
         queryset = self.filter_queryset(self.get_queryset())
         obj = queryset.order_by('price')
-        serializer = ProductSerializer(obj, many=True)
+
+        page = self.paginate_queryset(obj)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(
@@ -70,7 +82,31 @@ class ProductListView(BaseRetrieveViewSet):
     def rating(self, request: HttpRequest) -> Response:
         queryset = self.filter_queryset(self.get_queryset())
         obj = queryset.order_by('-rating')
-        serializer = ProductSerializer(obj, many=True)
+
+        page = self.paginate_queryset(obj)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(obj, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=['GET'],
+        permission_classes=[AllowAny],
+        url_path=r'sale',
+    )
+    def sale(self, request: HttpRequest) -> Response:
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = queryset.filter(discount__isnull=False)
+
+        page = self.paginate_queryset(obj)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(
@@ -82,7 +118,13 @@ class ProductListView(BaseRetrieveViewSet):
     def min_sale(self, request: HttpRequest) -> Response:
         queryset = self.filter_queryset(self.get_queryset())
         obj = queryset.filter(discount__isnull=False).order_by('discount')
-        serializer = ProductSerializer(obj, many=True)
+
+        page = self.paginate_queryset(obj)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(
@@ -94,7 +136,13 @@ class ProductListView(BaseRetrieveViewSet):
     def max_sale(self, request: HttpRequest) -> Response:
         queryset = self.filter_queryset(self.get_queryset())
         obj = queryset.filter(discount__isnull=False).order_by('-discount')
-        serializer = ProductSerializer(obj, many=True)
+
+        page = self.paginate_queryset(obj)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(
@@ -198,13 +246,6 @@ class PictureListView(BaseRetrieveViewSet):
     picture_repository = PictureRepository()
     queryset = picture_repository.get_all_objects_order_by_id()
     serializer_class = PictureSerializer
-
-
-# class OnSaleProductView(BaseRetrieveViewSet):
-#     product_repository = ProductRepository()
-#     queryset = product_repository.get_sorted_products_by_sale()
-#     serializer_class = ProductSerializer
-#     pagination_class = None
 
 
 class ShoppingCartViewSet(ListCreateDeleteViewSet):
