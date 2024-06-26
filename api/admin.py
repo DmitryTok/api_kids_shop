@@ -101,6 +101,7 @@ class ProductAdmin(admin.ModelAdmin):
         return '-'
 
 
+
 @admin.register(models.Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = ('id', 'profile', 'product')
@@ -126,3 +127,8 @@ class InStockAdmin(admin.ModelAdmin):
 class PictureAdmin(admin.ModelAdmin):
     list_display = ['product']
     list_display_links = ['product']
+
+
+@admin.register(models.FamilyLook)
+class FamilyLookAdmin(admin.ModelAdmin):
+    inlines = [ProductInline]

@@ -47,6 +47,19 @@ class CustomUser(AbstractUser):
 
     objects = CustomUserManager()
 
+    REGISTRATION_CHOICES = [
+        ('email', 'Email'),
+        ('google', 'Google'),
+    ]
+    registration_method = models.CharField(
+        max_length=10,
+        choices=REGISTRATION_CHOICES,
+        default='email'
+    )
+
+    def __str__(self):
+        return str(self.username)
+
 
 class Kid(models.Model):
 

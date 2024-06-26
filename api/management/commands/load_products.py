@@ -119,7 +119,7 @@ class Command(BaseCommand):
         if is_exists:
             self._write('Data has already been uploaded')
         else:
-            self.upload_data(path, reader)
+            # self.upload_data(path, reader)
             self._write('Data has been uploaded successfully')
 
     def upload_data(self, path: str, reader: list[dict[str, t.Any]]) -> None:

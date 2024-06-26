@@ -103,20 +103,27 @@ class Product(models.Model):
 
     price = models.DecimalField(
         max_digits=10,
-        decimal_places=2,
-        default=0.00,
-        null=False,
-        blank=True,
-        verbose_name='Price',
+        decimal_places=2,  # Number of decimal places.
+        default=0.00,  # Default value for the field.
+        null=False,  # Whether the field can be NULL in the database.
+        blank=True,  # Whether the field is allowed to be blank in forms.
+        verbose_name='Price',  # Human-readable name for the field.
     )
     rating = models.FloatField(null=True, blank=True)
     male = models.IntegerField(
         choices=GenderChoices.choices, default=GenderChoices.male
     )
     discount = models.ForeignKey(
-        Discount, related_name='discount', on_delete=models.SET_NULL, null=True
+        Discount, related_name='discount', on_delete=models.SET_NULL, null=True, blank=True
     )
 
+    family_look = models.ForeignKey(
+        'FamilyLook',
+        on_delete=models.CASCADE,
+        related_name='products',
+        null=True,
+        blank=True
+    )
     def __str__(self) -> str:
         return f'{self.name}'
 
@@ -160,6 +167,11 @@ class AttributeProduct(models.Model):
     def __str__(self) -> str:
         return f'{self.attribute_name} {self.value}'
 
+class FamilyLook(models.Model):
+
+    male = models.IntegerField(
+        choices=GenderChoices.choices, default=GenderChoices.male
+    )
 
 class InStock(models.Model):
     product = models.ForeignKey(
