@@ -8,6 +8,7 @@ repos:
     rev: 5.13.2
     hooks:
       - id: isort
+        args: ["-m","3"]
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.15.2
     hooks:

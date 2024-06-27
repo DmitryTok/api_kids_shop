@@ -1,18 +1,34 @@
 from django.http import HttpRequest
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from api.filters import (BrandFilter, CategoryFilter, ProductFilter,
-                         SectionFilter)
-from api.repository import (BrandRepository, CategoryRepository,
-                            FavoriteRepository, PictureRepository,
-                            ProductRepository, SectionRepository,
-                            ShoppingCartRepository)
-from api.serializers import (BrandSerializer, CategorySerializer,
-                             FavoriteSerializer, PictureSerializer,
-                             ProductSerializer, ShoppingCartSerializer)
+from api.filters import (
+    BrandFilter,
+    CategoryFilter,
+    ProductFilter,
+    SectionFilter
+)
+from api.repository import (
+    BrandRepository,
+    CategoryRepository,
+    FavoriteRepository,
+    PictureRepository,
+    ProductRepository,
+    SectionRepository,
+    ShoppingCartRepository
+)
+from api.serializers import (
+    BrandSerializer,
+    CategorySerializer,
+    FavoriteSerializer,
+    PictureSerializer,
+    ProductSerializer,
+    ShoppingCartSerializer
+)
 from api.utils import favorite_or_cart, get_products, store_filters
 from kids_shop.base.base_retrieve_handler import BaseRetrieveViewSet
 from kids_shop.permissions import IsOwner, IsOwnerFavoriteOrCart
@@ -37,6 +53,39 @@ class ProductListView(BaseRetrieveViewSet):
     serializer_class = ProductSerializer
     filterset_class = ProductFilter
 
+    def base_action_sorted_response(
+        self, request: HttpRequest, field: str
+    ) -> Response:
+        queryset = self.filter_queryset(self.get_queryset())
+        obj = queryset.order_by(field)
+
+        page = self.paginate_queryset(obj)
+        if page:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(obj, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        description='Get all products ordered by price from max to min',
+        request=ProductSerializer,
+        responses={200: ProductSerializer()},
+        parameters=[
+            OpenApiParameter(
+                name='limit',
+                description='Number of objects to return per page.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+            OpenApiParameter(
+                name='offset',
+                description='The initial number from which object to return the results.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+        ],
+    )
     @action(
         detail=False,
         methods=['GET'],
@@ -44,17 +93,27 @@ class ProductListView(BaseRetrieveViewSet):
         url_path=r'max_price',
     )
     def max_price(self, request: HttpRequest) -> Response:
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = queryset.order_by('-price')
+        return self.base_action_sorted_response(request, '-price')
 
-        page = self.paginate_queryset(obj)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(obj, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+    @extend_schema(
+        description='Get all products ordered by price from max to min',
+        request=ProductSerializer,
+        responses={200: ProductSerializer()},
+        parameters=[
+            OpenApiParameter(
+                name='limit',
+                description='Number of objects to return per page.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+            OpenApiParameter(
+                name='offset',
+                description='The initial number from which object to return the results.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+        ],
+    )
     @action(
         detail=False,
         methods=['GET'],
@@ -62,17 +121,27 @@ class ProductListView(BaseRetrieveViewSet):
         url_path=r'min_price',
     )
     def min_price(self, request: HttpRequest) -> Response:
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = queryset.order_by('price')
+        return self.base_action_sorted_response(request, 'price')
 
-        page = self.paginate_queryset(obj)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(obj, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+    @extend_schema(
+        description='Get all products ordered by price from max to min',
+        request=ProductSerializer,
+        responses={200: ProductSerializer()},
+        parameters=[
+            OpenApiParameter(
+                name='limit',
+                description='Number of objects to return per page.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+            OpenApiParameter(
+                name='offset',
+                description='The initial number from which object to return the results.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+        ],
+    )
     @action(
         detail=False,
         methods=['GET'],
@@ -80,17 +149,27 @@ class ProductListView(BaseRetrieveViewSet):
         url_path=r'rating',
     )
     def rating(self, request: HttpRequest) -> Response:
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = queryset.order_by('-rating')
+        return self.base_action_sorted_response(request, 'rating')
 
-        page = self.paginate_queryset(obj)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(obj, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+    @extend_schema(
+        description='Get all products ordered by price from max to min',
+        request=ProductSerializer,
+        responses={200: ProductSerializer()},
+        parameters=[
+            OpenApiParameter(
+                name='limit',
+                description='Number of objects to return per page.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+            OpenApiParameter(
+                name='offset',
+                description='The initial number from which object to return the results.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+        ],
+    )
     @action(
         detail=False,
         methods=['GET'],
@@ -109,6 +188,25 @@ class ProductListView(BaseRetrieveViewSet):
         serializer = self.get_serializer(obj, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @extend_schema(
+        description='Get all products ordered by price from max to min',
+        request=ProductSerializer,
+        responses={200: ProductSerializer()},
+        parameters=[
+            OpenApiParameter(
+                name='limit',
+                description='Number of objects to return per page.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+            OpenApiParameter(
+                name='offset',
+                description='The initial number from which object to return the results.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+        ],
+    )
     @action(
         detail=False,
         methods=['GET'],
@@ -116,17 +214,27 @@ class ProductListView(BaseRetrieveViewSet):
         url_path=r'min_sale',
     )
     def min_sale(self, request: HttpRequest) -> Response:
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = queryset.filter(discount__isnull=False).order_by('discount')
+        return self.base_action_sorted_response(request, 'discount')
 
-        page = self.paginate_queryset(obj)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(obj, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+    @extend_schema(
+        description='Get all products ordered by price from max to min',
+        request=ProductSerializer,
+        responses={200: ProductSerializer()},
+        parameters=[
+            OpenApiParameter(
+                name='limit',
+                description='Number of objects to return per page.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+            OpenApiParameter(
+                name='offset',
+                description='The initial number from which object to return the results.',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+            ),
+        ],
+    )
     @action(
         detail=False,
         methods=['GET'],
@@ -134,16 +242,7 @@ class ProductListView(BaseRetrieveViewSet):
         url_path=r'max_sale',
     )
     def max_sale(self, request: HttpRequest) -> Response:
-        queryset = self.filter_queryset(self.get_queryset())
-        obj = queryset.filter(discount__isnull=False).order_by('-discount')
-
-        page = self.paginate_queryset(obj)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(obj, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return self.base_action_sorted_response(request, '-discount')
 
     @action(
         detail=False,
