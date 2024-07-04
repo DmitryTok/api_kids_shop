@@ -114,7 +114,11 @@ class Product(models.Model):
         choices=GenderChoices.choices, default=GenderChoices.male
     )
     discount = models.ForeignKey(
-        Discount, related_name='discount', on_delete=models.SET_NULL, null=True
+        Discount,
+        related_name='discount',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
     )
 
     def __str__(self) -> str:
