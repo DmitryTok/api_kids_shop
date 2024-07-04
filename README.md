@@ -17,7 +17,7 @@
 
 ### Create .env file and fill with required data
 ```
-SECRET_KEY=<SEKRET_KEY>
+SECRET_KEY=<SECRET_KEY>
 DB_ENGINE=<DB ENGINE postgres, mysql ...>
 DB_NAME=<database name>
 DB_USER=<database user>
