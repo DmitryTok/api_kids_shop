@@ -118,4 +118,4 @@ class Profile(models.Model):
     second_phone = models.IntegerField(blank=True, null=True)
 
     def __str__(self) -> str:
-        return f'{self.last_name}'
+        return f'{self.user.email}'
