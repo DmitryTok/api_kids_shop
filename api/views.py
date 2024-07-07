@@ -10,7 +10,7 @@ from api.filters import (
     BrandFilter,
     CategoryFilter,
     ProductFilter,
-    SectionFilter,
+    SectionFilter
 )
 from api.repository import (
     BrandRepository,
@@ -19,7 +19,7 @@ from api.repository import (
     PictureRepository,
     ProductRepository,
     SectionRepository,
-    ShoppingCartRepository,
+    ShoppingCartRepository
 )
 from api.serializers import (
     BrandSerializer,
@@ -27,7 +27,7 @@ from api.serializers import (
     FavoriteSerializer,
     PictureSerializer,
     ProductSerializer,
-    ShoppingCartSerializer,
+    ShoppingCartSerializer
 )
 from api.utils import favorite_or_cart, get_products, store_filters
 from kids_shop.base.base_retrieve_handler import BaseRetrieveViewSet
