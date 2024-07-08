@@ -300,7 +300,7 @@ class ProductListView(BaseRetrieveViewSet):
             request=request,
             profile_id=profile_id,
             repository=self.favorite_repository,
-            obj_serializer=FavoriteSerializer,
+            obj_serializer=ProductSerializer,
         )
 
     @action(

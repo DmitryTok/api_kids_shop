@@ -69,6 +69,11 @@ def favorite_or_cart(
     product = product_repository.get_obj(product_id)
 
     if request.method == 'POST':
+        if repository.get_obj(profile_id, product_id).exists():
+            return Response(
+                {'error': 'This product already added to favorite'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         obj = is_shop_check(
             profile=profile,
             product=product,

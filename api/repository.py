@@ -1,4 +1,4 @@
-from django.db.models import F, Prefetch
+from django.db.models import F, Prefetch, Subquery
 
 from api import models
 from kids_shop.base.base_repository import BaseRepository
@@ -107,6 +107,21 @@ class FavoriteRepository(BaseRepository):
     @property
     def model(self) -> type[models.Favorite]:
         return models.Favorite
+
+    def get_all_products(self, profile_id: int) -> models.Product:
+        favorite_products = self.model.objects.filter(profile_id=profile_id)
+        return ProductRepository().model.objects.filter(
+            id__in=Subquery(favorite_products.values('product_id'))
+        )
+    
+    def get_obj(self, profile_id: int, product_id: int) -> models.Favorite:
+        return self.model.objects.filter(
+            profile_id=profile_id, product_id=product_id
+        )
+    
+    def create_obj(self, profile, product) -> models.Favorite:
+        return self.model.objects.create(profile=profile, product=product)
+
 
 
 class ShoppingCartRepository(BaseRepository):
