@@ -128,3 +128,19 @@ class ShoppingCartRepository(BaseRepository):
     @property
     def model(self) -> type[models.ShoppingCart]:
         return models.ShoppingCart
+
+    def get_obj(self, profile_id: int, product_id: int) -> models.ShoppingCart:
+        return self.model.objects.filter(
+            profile_id=profile_id, product_id=product_id
+        )
+
+    def create_obj(self, profile, product, quantity) -> models.ShoppingCart:
+        return self.model.objects.create(
+            profile=profile, product=product, quantity=quantity
+        )
+
+    def get_all_products(self, profile_id: int) -> models.Product:
+        products = self.model.objects.filter(profile_id=profile_id)
+        return ProductRepository().model.objects.filter(
+            id__in=Subquery(products.values('product_id'))
+        )

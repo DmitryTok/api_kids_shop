@@ -9,20 +9,13 @@ from api import filters
 
 
 def check_obj(
-    repository, profile_id, product_id, quantity=None, is_shop=None
-) -> Response:
-    if is_shop is True:
-        if repository.get_obj(profile_id, product_id, quantity).exists():
-            return Response(
-                {'error': 'This product already added'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-    else:
-        if repository.get_obj(profile_id, product_id).exists():
-            return Response(
-                {'error': 'This product already added'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+    repository, profile_id, product_id
+) -> Response | None:
+    if repository.get_obj(profile_id, product_id).exists():
+        return Response(
+            {'error': 'This product already added'},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 def is_shop_check(
@@ -34,23 +27,16 @@ def is_shop_check(
     is_shop: bool = None,
     quantity: int = None,
 ) -> Response:
-    if is_shop is True:
-        check_obj(
-            product_id=product_id,
-            profile_id=profile_id,
-            repository=repository,
-            quantity=quantity,
-            is_shop=is_shop,
-        )
+    response = check_obj(
+        product_id=product_id,
+        profile_id=profile_id,
+        repository=repository
+    )
+    if response:
+        return response
+    if is_shop:
         return repository.create_obj(profile, product, quantity)
     else:
-        check_obj(
-            product_id=product_id,
-            profile_id=profile_id,
-            repository=repository,
-            quantity=quantity,
-            is_shop=is_shop,
-        )
         return repository.create_obj(profile, product)
 
 
@@ -69,10 +55,14 @@ def favorite_or_cart(
     product = product_repository.get_obj(product_id)
 
     if request.method == 'POST':
-        if repository.get_obj(profile_id, product_id).exists():
+        quantity = request.data.get('quantity')
+        if (
+                profile.id != request.data.get('profile') or
+                product.id != request.data.get('product')
+        ):
             return Response(
-                {'error': 'This product already added to favorite'},
-                status=status.HTTP_400_BAD_REQUEST,
+                {'error': 'Provided data does not match'},
+                status=status.HTTP_400_BAD_REQUEST
             )
         obj = is_shop_check(
             profile=profile,
@@ -83,12 +73,14 @@ def favorite_or_cart(
             is_shop=is_shop,
             quantity=quantity,
         )
+        if isinstance(obj, Response):
+            return obj
         serializer = obj_serializer(obj)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     if request.method == 'DELETE':
         if is_shop is True:
-            obj = repository.get_obj(profile_id, product_id, quantity)
+            obj = repository.get_obj(profile_id, product_id)
         else:
             obj = repository.get_obj(profile_id, product_id)
 
