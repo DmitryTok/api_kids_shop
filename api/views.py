@@ -266,7 +266,7 @@ class ProductListView(BaseRetrieveViewSet):
 
     @action(
         detail=False,
-        methods=['POST', 'DELETE'],
+        methods=['POST', 'PATCH', 'DELETE'],
         permission_classes=[IsOwnerFavoriteOrCart],
         url_path=r'(?P<product_id>\d+)/shopping_cart/(?P<profile_id>\d+)',
         serializer_class=ShoppingCartSerializer,

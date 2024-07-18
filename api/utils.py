@@ -40,6 +40,20 @@ def is_shop_check(
         return repository.create_obj(profile, product)
 
 
+def check_match(
+        request: HttpRequest,
+        profile_id: int,
+        product_id: int
+) -> Response | None:
+    if (
+            profile_id != request.data.get('profile') or
+            product_id != request.data.get('product')
+    ):
+        return Response(
+            {'error': 'Provided data does not match'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
 def favorite_or_cart(
     request: HttpRequest,
     product_id: int,
@@ -55,15 +69,10 @@ def favorite_or_cart(
     product = product_repository.get_obj(product_id)
 
     if request.method == 'POST':
-        quantity = request.data.get('quantity')
-        if (
-                profile.id != request.data.get('profile') or
-                product.id != request.data.get('product')
-        ):
-            return Response(
-                {'error': 'Provided data does not match'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        if is_shop:
+            quantity = request.data.get('quantity')
+            if response:=check_match(request, profile.id, product.id):
+                return response
         obj = is_shop_check(
             profile=profile,
             product=product,
@@ -78,12 +87,19 @@ def favorite_or_cart(
         serializer = obj_serializer(obj)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    if request.method == 'DELETE':
-        if is_shop is True:
-            obj = repository.get_obj(profile_id, product_id)
-        else:
-            obj = repository.get_obj(profile_id, product_id)
+    if request.method == 'PATCH':
+        quantity = request.data.get('quantity')
+        if response:=check_match(request, profile.id, product.id):
+            return response
+        if (obj := repository.get_obj(profile_id, product_id).first()) is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        obj.quantity = quantity
+        obj.save()
+        serializer = obj_serializer(obj)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
+    if request.method == 'DELETE':
+        obj = repository.get_obj(profile_id, product_id)
         if obj.exists():
             obj.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
