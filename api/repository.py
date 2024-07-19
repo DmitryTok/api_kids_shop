@@ -134,9 +134,11 @@ class ShoppingCartRepository(BaseRepository):
             profile_id=profile_id, product_id=product_id
         )
 
-    def create_obj(self, profile, product, quantity) -> models.ShoppingCart:
+    def create_obj(
+            self, profile_id: int, product_id: int, quantity: int
+    ) -> models.ShoppingCart:
         return self.model.objects.create(
-            profile=profile, product=product, quantity=quantity
+            profile=profile_id, product=product_id, quantity=quantity
         )
 
     def get_all_products(self, profile_id: int) -> models.Product:
