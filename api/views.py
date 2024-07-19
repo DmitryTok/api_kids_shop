@@ -266,16 +266,16 @@ class ProductListView(BaseRetrieveViewSet):
 
     @action(
         detail=False,
-        methods=['POST', 'DELETE'],
+        methods=['POST', 'PATCH', 'DELETE'],
         permission_classes=[IsOwnerFavoriteOrCart],
-        url_path=r'(?P<product_id>\d+)/(?P<quantity>\d+)/shopping_cart/(?P<profile_id>\d+)',
+        url_path=r'(?P<product_id>\d+)/shopping_cart/(?P<profile_id>\d+)',
+        serializer_class=ShoppingCartSerializer,
     )
     def shopping_card(
         self,
         request: HttpRequest,
         profile_id: int,
         product_id: int,
-        quantity: int,
     ) -> Response:
         return favorite_or_cart(
             request=request,
@@ -285,7 +285,6 @@ class ProductListView(BaseRetrieveViewSet):
             product_repository=self.product_repository,
             repository=self.shopping_cart_repository,
             obj_serializer=ShoppingCartSerializer,
-            quantity=quantity,
             is_shop=True,
         )
 
@@ -316,7 +315,7 @@ class ProductListView(BaseRetrieveViewSet):
             request=request,
             profile_id=profile_id,
             repository=self.shopping_cart_repository,
-            obj_serializer=ShoppingCartSerializer,
+            obj_serializer=ProductSerializer,
         )
 
 
@@ -345,13 +344,6 @@ class PictureListView(BaseRetrieveViewSet):
     picture_repository = PictureRepository()
     queryset = picture_repository.get_all_objects_order_by_id()
     serializer_class = PictureSerializer
-
-
-class ShoppingCartViewSet(ListCreateDeleteViewSet):
-    shopping_cart_repository = ShoppingCartRepository()
-    queryset = shopping_cart_repository.get_all_objects_order_by_id()
-    serializer_class = ShoppingCartSerializer
-    permission_classes = [IsOwner]
 
 
 @api_view(['GET'])
