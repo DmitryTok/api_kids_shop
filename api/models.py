@@ -1,6 +1,6 @@
 from enum import Enum
 
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from users.models import Profile
@@ -233,3 +233,107 @@ class ShoppingCart(models.Model):
                 name='unique_shopping_cart',
             )
         ]
+
+
+class Promocode(models.Model):
+    code = models.CharField(max_length=150, unique=True)
+    discount_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(100)
+        ]
+    )
+    expiration_date = models.DateTimeField(null=True, blank=True)
+    usage_limit = models.PositiveIntegerField(null=True, blank=True)
+    times_used = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.code
+
+    def is_valid(self):
+        if self.expiration_date and self.expiration_date < timezone.now():
+            return False
+        if self.usage_limit is not None and self.times_used >= self.usage_limit:
+            return False
+        return True
+
+
+ORDER_STATUS_CHOICES = (
+    ('Pending', 'Pending'),
+    ('Confirmed', 'Confirmed'),
+    ('Declined', 'Declined'),
+    ('Out for shipping', 'Out for shipping'),
+    ('Completed', 'Completed'),
+)
+
+PAYMENT_STATUS_CHOICES = (
+    ('Unpaid', 'Unpaid'),
+    ('Paid', 'Paid'),
+    ('Refunded', 'Refunded'),
+)
+
+
+class Order(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    patronymic = models.CharField(max_length=150, blank=True, null=True)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20)
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=150)
+    state = models.CharField(max_length=150, blank=True, null=True)
+    country = models.CharField(max_length=150)
+    postal_code = models.CharField(max_length=20)
+    total_price = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0.00
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(
+        max_length=50,
+        choices=ORDER_STATUS_CHOICES,
+        default='Pending'
+    )
+    payment_status = models.CharField(
+        max_length=50,
+        choices=PAYMENT_STATUS_CHOICES,
+        default='Unpaid'
+    )
+    promocode = models.ForeignKey(
+        Promocode,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    comment = models.TextField(blank=True, null=True)
+    # TODO: tracking_number?
+
+    def __str__(self):
+        return f'Order {self.id} by {self.user.username}'
+
+class OrderedProduct(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE
+    )
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE
+    )
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.00,
+        null=False,
+        blank=True,
+        verbose_name='Price',
+    )
+    quantity = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1)]
+    )
+
+    def __str__(self):
+        return f'{self.product.name} ({self.quantity}) in Order {self.order.id}'
