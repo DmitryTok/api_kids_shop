@@ -3,6 +3,7 @@
 import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
@@ -17,23 +18,19 @@ class Migration(migrations.Migration):
             name='Order',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
                 ('first_name', models.CharField(max_length=150)),
                 ('last_name', models.CharField(max_length=150)),
                 ('patronymic', models.CharField(blank=True, max_length=150, null=True)),
                 ('email', models.EmailField(max_length=254)),
                 ('phone', models.CharField(max_length=20)),
-                ('address', models.CharField(max_length=255)),
-                ('city', models.CharField(max_length=150)),
-                ('state', models.CharField(blank=True, max_length=150, null=True)),
-                ('country', models.CharField(max_length=150)),
-                ('postal_code', models.CharField(max_length=20)),
+                ('address', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='users.address')),
                 ('total_price', models.DecimalField(decimal_places=2, default=0.0, max_digits=10)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('status', models.CharField(choices=[('Pending', 'Pending'), ('Confirmed', 'Confirmed'), ('Declined', 'Declined'), ('Out for shipping', 'Out for shipping'), ('Completed', 'Completed')], default='Pending', max_length=50)),
-                ('payment_status', models.CharField(choices=[('Unpaid', 'Unpaid'), ('Paid', 'Paid'), ('Refunded', 'Refunded')], default='Unpaid', max_length=50)),
+                ('status', models.CharField(choices=[(0, 'Pending'), (1, 'Confirmed'), (2, 'Declined'), (3, 'Out for shipping'), (4, 'Completed')], default=0, max_length=50)),
+                ('payment_status', models.CharField(choices=[(0, 'Unpaid'), (1, 'Paid'), (2, 'Refunded')], default=0, max_length=50)),
                 ('comment', models.TextField(blank=True, null=True)),
-                ('profile', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='users.profile')),
             ],
         ),
         migrations.CreateModel(

@@ -74,6 +74,7 @@ class Address(models.Model):
     street = models.CharField(blank=False, null=False)
     building = models.CharField(blank=False, null=False)
     apartment = models.IntegerField(blank=True, null=True)
+    postal_code = models.CharField(blank=True, null=True, max_length=10)
 
     class Meta:
         verbose_name = 'Address'

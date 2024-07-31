@@ -4,6 +4,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from users.models import Profile
+from users.models import CustomUser
+from users.models import Address
 
 
 class GenderChoices(models.IntegerChoices):
@@ -261,32 +263,28 @@ class Promocode(models.Model):
 
 
 ORDER_STATUS_CHOICES = (
-    ('Pending', 'Pending'),
-    ('Confirmed', 'Confirmed'),
-    ('Declined', 'Declined'),
-    ('Out for shipping', 'Out for shipping'),
-    ('Completed', 'Completed'),
+    (0, 'Pending'),
+    (1, 'Confirmed'),
+    (2, 'Declined'),
+    (3, 'Out for shipping'),
+    (4, 'Completed'),
 )
 
 PAYMENT_STATUS_CHOICES = (
-    ('Unpaid', 'Unpaid'),
-    ('Paid', 'Paid'),
-    ('Refunded', 'Refunded'),
+    (0, 'Unpaid'),
+    (1, 'Paid'),
+    (2, 'Refunded'),
 )
 
 
 class Order(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     patronymic = models.CharField(max_length=150, blank=True, null=True)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
-    address = models.CharField(max_length=255)
-    city = models.CharField(max_length=150)
-    state = models.CharField(max_length=150, blank=True, null=True)
-    country = models.CharField(max_length=150)
-    postal_code = models.CharField(max_length=20)
+    address = models.ForeignKey(Address, on_delete=models.PROTECT)
     total_price = models.DecimalField(
         max_digits=10, decimal_places=2, default=0.00
     )
@@ -295,12 +293,12 @@ class Order(models.Model):
     status = models.CharField(
         max_length=50,
         choices=ORDER_STATUS_CHOICES,
-        default='Pending'
+        default=0
     )
     payment_status = models.CharField(
         max_length=50,
         choices=PAYMENT_STATUS_CHOICES,
-        default='Unpaid'
+        default=0
     )
     promocode = models.ForeignKey(
         Promocode,
@@ -313,6 +311,12 @@ class Order(models.Model):
 
     def __str__(self):
         return f'Order {self.id} by {self.user.username}'
+
+    def get_status_display(self):
+        return ORDER_STATUS_CHOICES[self.status][1]
+
+    def get_payment_status_display(self):
+        return PAYMENT_STATUS_CHOICES[self.payment_status][1]
 
 class OrderedProduct(models.Model):
     product = models.ForeignKey(
