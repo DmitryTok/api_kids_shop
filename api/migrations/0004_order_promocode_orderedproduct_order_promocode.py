@@ -38,8 +38,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('code', models.CharField(max_length=150, unique=True)),
-                ('discount_amount', models.DecimalField(decimal_places=2, max_digits=10, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(100)])),
-                ('expiration_date', models.DateTimeField(blank=True, null=True)),
+                ('discount', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='api.discount')),
                 ('usage_limit', models.PositiveIntegerField(blank=True, null=True)),
                 ('times_used', models.PositiveIntegerField(default=0)),
             ],

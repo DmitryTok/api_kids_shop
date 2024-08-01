@@ -239,15 +239,7 @@ class ShoppingCart(models.Model):
 
 class Promocode(models.Model):
     code = models.CharField(max_length=150, unique=True)
-    discount_amount = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        validators=[
-            MinValueValidator(0),
-            MaxValueValidator(100)
-        ]
-    )
-    expiration_date = models.DateTimeField(null=True, blank=True)
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE, default=None)
     usage_limit = models.PositiveIntegerField(null=True, blank=True)
     times_used = models.PositiveIntegerField(default=0)
 
@@ -255,7 +247,7 @@ class Promocode(models.Model):
         return self.code
 
     def is_valid(self):
-        if self.expiration_date and self.expiration_date < timezone.now():
+        if self.discount.date_end < timezone.now():
             return False
         if self.usage_limit is not None and self.times_used >= self.usage_limit:
             return False
@@ -317,6 +309,7 @@ class Order(models.Model):
 
     def get_payment_status_display(self):
         return PAYMENT_STATUS_CHOICES[self.payment_status][1]
+
 
 class OrderedProduct(models.Model):
     product = models.ForeignKey(
