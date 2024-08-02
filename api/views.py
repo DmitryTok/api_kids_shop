@@ -27,12 +27,14 @@ from api.serializers import (
     FavoriteSerializer,
     PictureSerializer,
     ProductSerializer,
-    ShoppingCartSerializer
+    ShoppingCartSerializer,
+    OrderSerializer
 )
 from api.utils import favorite_or_cart, get_products, store_filters
 from kids_shop.base.base_retrieve_handler import BaseRetrieveViewSet
 from kids_shop.permissions import IsOwner, IsOwnerFavoriteOrCart
 from users.users_repository import ProfileRepository
+from api.models import Order
 
 
 class ListCreateDeleteViewSet(
@@ -344,6 +346,13 @@ class PictureListView(BaseRetrieveViewSet):
     picture_repository = PictureRepository()
     queryset = picture_repository.get_all_objects_order_by_id()
     serializer_class = PictureSerializer
+
+
+class OrderListView(BaseRetrieveViewSet):
+    pass
+    # repository = OrderRepository()
+    # queryset = Order.objects.all()
+    # serializer_class = OrderSerializer
 
 
 @api_view(['GET'])
