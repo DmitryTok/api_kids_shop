@@ -1,8 +1,8 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, CharField
 
 from api.models import (Attribute, AttributeProduct, Brand, Category, Discount,
                         Favorite, InStock, Picture, Product, Section,
-                        ShoppingCart, Size)
+                        ShoppingCart, OrderedProduct, Order, Size)
 
 
 class AttributeSerializer(ModelSerializer):
@@ -98,3 +98,42 @@ class ShoppingCartSerializer(ModelSerializer):
     class Meta:
         model = ShoppingCart
         fields = ('id', 'profile', 'product', 'quantity')
+
+
+class OrderedProductSerializer(ModelSerializer):
+    class Meta:
+        model = OrderedProduct
+        fields = ['product', 'price', 'quantity']
+
+
+class OrderSerializer(ModelSerializer):
+    ordered_products = OrderedProductSerializer(many=True, read_only=True)
+    promocode = CharField(max_length=150, required=False, allow_blank=True)
+
+    class Meta:
+        model = Order
+        fields = [
+            'id',
+            'user',
+            'first_name',
+            'last_name',
+            'patronymic',
+            'email',
+            'phone',
+            'address',
+            'total_price',
+            'created_at',
+            'updated_at',
+            'status',
+            'payment_status',
+            'promocode',
+            'comment',
+            'ordered_products',
+        ]
+        read_only_fields = [
+            'id',
+            'created_at',
+            'updated_at',
+            'total_price',
+            'ordered_products'
+        ]

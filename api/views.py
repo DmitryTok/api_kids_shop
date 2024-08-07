@@ -19,7 +19,8 @@ from api.repository import (
     PictureRepository,
     ProductRepository,
     SectionRepository,
-    ShoppingCartRepository
+    ShoppingCartRepository,
+    OrderRepository,
 )
 from api.serializers import (
     BrandSerializer,
@@ -27,12 +28,14 @@ from api.serializers import (
     FavoriteSerializer,
     PictureSerializer,
     ProductSerializer,
-    ShoppingCartSerializer
+    ShoppingCartSerializer,
+    OrderSerializer
 )
 from api.utils import favorite_or_cart, get_products, store_filters
 from kids_shop.base.base_retrieve_handler import BaseRetrieveViewSet
-from kids_shop.permissions import IsOwner, IsOwnerFavoriteOrCart
+from kids_shop.permissions import IsOwner, IsOwnerFavoriteOrCart, IsOwnerOrReadOnly
 from users.users_repository import ProfileRepository
+from api.models import Order
 
 
 class ListCreateDeleteViewSet(
@@ -344,6 +347,47 @@ class PictureListView(BaseRetrieveViewSet):
     picture_repository = PictureRepository()
     queryset = picture_repository.get_all_objects_order_by_id()
     serializer_class = PictureSerializer
+
+
+class OrderListView(BaseRetrieveViewSet):
+    order_repository = OrderRepository()
+    queryset = order_repository.get_all_orders()
+    serializer_class = OrderSerializer
+
+    @action(
+        detail=False,
+        methods=['POST'],
+        permission_classes=[IsOwnerOrReadOnly],
+    )
+    def create_order(self, request):
+        data = request.data
+        user = None if not request.user.is_authenticated else request.user
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid():
+            ordered_products = data.pop('ordered_products', [])
+            order = self.order_repository.create_obj(
+                user_id=user.id if user else None,
+                first_name=data.get('first_name'),
+                last_name=data.get('last_name'),
+                patronymic=data.get('patronymic'),
+                email=data.get('email'),
+                phone=data.get('phone'),
+                address_id=data.get('address'),
+                status=data.get('status'),
+                payment_status=data.get('payment_status'),
+                ordered_products=ordered_products,
+                promocode=data.get('promocode'),
+                comment=data.get('comment')
+            )
+            return Response(
+                self.serializer_class(order).data,
+                status=status.HTTP_201_CREATED
+            )
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 @api_view(['GET'])

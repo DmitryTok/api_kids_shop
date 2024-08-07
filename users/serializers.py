@@ -48,6 +48,7 @@ class AddressSerializer(ModelSerializer):
             'street',
             'building',
             'apartment',
+            'postal_code'
         )
 
 
