@@ -107,7 +107,7 @@ class OrderedProductSerializer(ModelSerializer):
 
 
 class OrderSerializer(ModelSerializer):
-    ordered_products = OrderedProductSerializer(many=True)
+    ordered_products = OrderedProductSerializer(many=True, read_only=True)
     promocode = CharField(max_length=150, required=False, allow_blank=True)
 
     class Meta:
@@ -130,4 +130,10 @@ class OrderSerializer(ModelSerializer):
             'comment',
             'ordered_products',
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at', 'status', 'total_price']
+        read_only_fields = [
+            'id',
+            'created_at',
+            'updated_at',
+            'total_price',
+            'ordered_products'
+        ]

@@ -2,6 +2,7 @@ from enum import Enum
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import Sum, F
 
 from users.models import Profile
 from users.models import CustomUser
@@ -310,14 +311,25 @@ class Order(models.Model):
     def get_payment_status_display(self):
         return PAYMENT_STATUS_CHOICES[self.payment_status][1]
 
+    def calculate_total_price(self):
+        total_price = OrderedProduct.objects.filter(
+            order=self
+        ).aggregate(
+            total_price=models.Sum(models.F('price') * models.F('quantity'))
+        )['total_price'] or 0.00
+        self.total_price = total_price
+        # TODO: calculate with promocode
+        self.save(update_fields=['total_price'])
+
 
 class OrderedProduct(models.Model):
     product = models.ForeignKey(
         Product,
+        related_name='ordered_products',
         on_delete=models.CASCADE
     )
     order = models.ForeignKey(
-        Order,
+        'Order',
         on_delete=models.CASCADE
     )
     price = models.DecimalField(

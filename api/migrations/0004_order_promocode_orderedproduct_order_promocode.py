@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
                 ('price', models.DecimalField(blank=True, decimal_places=2, default=0.0, max_digits=10, verbose_name='Price')),
                 ('quantity', models.PositiveSmallIntegerField(validators=[django.core.validators.MinValueValidator(1)])),
                 ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.order')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='api.product')),
+                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='ordered_products', to='api.product')),
             ],
         ),
         migrations.AddField(
